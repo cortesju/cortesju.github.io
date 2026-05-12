@@ -1,0 +1,603 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Geography of Noise — Juan Sebastian Cortes</title>
+  <link href="https://fonts.googleapis.com/css2?family=Rubik:wght@400;500;700;900&display=swap" rel="stylesheet"/>
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    :root {
+      --white:      #faf9f7;
+      --text:       #1a1a1a;
+      --muted:      #888;
+      --border:     #d5cfc8;
+      --warm-gray:  #e8e4df;
+      --night:      #0a0e1a;
+      --midnight:   #111827;
+      --deep-blue:  #1e2d4a;
+      --blue-accent:#3b82f6;
+      --hot:        #ef4444;
+      --highlight:  #f59e0b;
+      --body-font:  "Neue Haas Grotesk","Haas Grot Text","Helvetica Neue",Arial,sans-serif;
+      --head-font:  'Rubik', sans-serif;
+    }
+
+    body { font-family: var(--body-font); background: var(--white); color: var(--text); font-size: 14.5px; line-height: 1.65; }
+    a { text-decoration: none; color: inherit; }
+
+    /* ── NAV ── */
+    nav { display: flex; align-items: center; justify-content: space-between; padding: 18px 40px; border-bottom: 0.8px solid #000; position: sticky; top: 0; background: var(--white); z-index: 100; }
+    .nav-name { font-family: var(--head-font); font-weight: 700; font-size: 13px; letter-spacing: 0.06em; text-transform: uppercase; line-height: 1.3; }
+    .nav-right { display: flex; gap: 32px; font-family: var(--head-font); font-weight: 700; font-size: 12px; letter-spacing: 0.08em; text-transform: uppercase; }
+    .nav-right a { color: var(--muted); } .nav-right a:hover { color: var(--text); }
+
+    /* ── META BAR ── */
+    .project-meta-bar { display: flex; align-items: center; justify-content: space-between; padding: 10.4px 40px; border-bottom: 0.8px solid #000; }
+    .project-title-bar { font-family: var(--head-font); font-weight: 700; font-size: 13px; letter-spacing: 0.06em; text-transform: uppercase; color: rgba(0,0,0,0.75); }
+    .project-nav-links { display: flex; gap: 16px; font-family: var(--body-font); font-size: 13px; color: rgba(0,0,0,0.7); }
+    .project-nav-links a { color: rgba(0,0,0,0.7); } .project-nav-links a:hover { color: #000; }
+
+    /* ── HERO ── */
+    .hero { position: relative; width: 100%; height: 480px; overflow: hidden; background: var(--night); }
+    .hero img { width: 100%; height: 100%; object-fit: cover; opacity: 0.55; }
+    .hero-waves { position: absolute; inset: 0; display: flex; align-items: center; justify-content: center; opacity: 0.07; pointer-events: none; }
+    .hero-waves svg { width: 100%; height: 200px; }
+    .hero-overlay { position: absolute; inset: 0; background: linear-gradient(to top, rgba(10,14,26,0.96) 0%, rgba(10,14,26,0.3) 60%, transparent 100%); pointer-events: none; }
+    .hero-content { position: absolute; bottom: 40px; left: 40px; right: 40px; display: flex; align-items: flex-end; justify-content: space-between; gap: 24px; }
+    .hero-eyebrow { font-family: var(--head-font); font-weight: 700; font-size: 11px; letter-spacing: 0.16em; text-transform: uppercase; color: var(--blue-accent); margin-bottom: 12px; }
+    .hero-title { font-family: var(--head-font); font-weight: 900; font-size: clamp(32px, 4.5vw, 56px); color: white; line-height: 1.1; margin-bottom: 10px; }
+    .hero-title em { font-style: italic; font-weight: 400; color: rgba(255,255,255,0.7); }
+    .hero-sub { font-family: var(--head-font); font-size: 11px; color: rgba(255,255,255,0.45); letter-spacing: 0.06em; line-height: 1.6; max-width: 500px; text-transform: uppercase; }
+    .hero-live-btn { display: inline-flex; align-items: center; gap: 8px; background: rgba(59,130,246,0.2); border: 1px solid rgba(59,130,246,0.5); color: #93c5fd; font-family: var(--head-font); font-weight: 700; font-size: 11px; letter-spacing: 0.1em; text-transform: uppercase; padding: 12px 20px; white-space: nowrap; transition: all 0.2s; flex-shrink: 0; }
+    .hero-live-btn:hover { background: rgba(59,130,246,0.35); color: white; }
+    .live-dot { width: 6px; height: 6px; border-radius: 50%; background: #93c5fd; animation: pulse 2s infinite; flex-shrink: 0; }
+    @keyframes pulse { 0%,100%{opacity:1} 50%{opacity:0.3} }
+
+    /* ── LAYOUT ── */
+    .project-body { display: grid; grid-template-columns: 220px 1fr; max-width: 1200px; margin: 0 auto; padding: 60px 40px; }
+    .sidebar { padding-right: 48px; border-right: 0.8px solid #000; }
+    .sidebar-block { margin-bottom: 36px; }
+    .sidebar-label { font-family: var(--head-font); font-size: 10px; letter-spacing: 0.12em; text-transform: uppercase; color: var(--muted); margin-bottom: 6px; }
+    .sidebar-value { font-size: 13.5px; font-weight: 500; line-height: 1.6; }
+    .sidebar-value a { color: var(--blue-accent); font-family: var(--head-font); font-size: 12px; font-weight: 700; }
+    .sidebar-value a:hover { text-decoration: underline; }
+    .tag-list { display: flex; flex-wrap: wrap; gap: 6px; margin-top: 4px; }
+    .tag { font-family: var(--head-font); font-weight: 700; font-size: 10px; letter-spacing: 0.06em; text-transform: uppercase; padding: 3px 8px; border: 0.8px solid var(--border); color: var(--muted); }
+    .tag.blue { border-color: var(--blue-accent); color: var(--blue-accent); }
+    .tag.red  { border-color: var(--hot); color: var(--hot); background: #fef2f2; }
+
+    .main-content { padding-left: 56px; }
+    h2.section-heading { font-family: var(--head-font); font-weight: 700; font-size: 11px; letter-spacing: 0.14em; text-transform: uppercase; color: var(--muted); margin-bottom: 16px; margin-top: 52px; padding-bottom: 10px; border-bottom: 0.8px solid #000; }
+    h2.section-heading:first-child { margin-top: 0; }
+    p { font-size: 14px; line-height: 1.75; color: #333; margin-bottom: 18px; }
+
+    /* ── STATS ── */
+    .stats-bar { display: grid; grid-template-columns: repeat(4,1fr); gap: 1px; background: var(--border); border: 0.8px solid #000; margin: 36px 0; }
+    .stat-item { background: var(--white); padding: 24px 16px; text-align: center; }
+    .stat-number { font-family: var(--head-font); font-weight: 900; font-size: 26px; color: var(--deep-blue); display: block; line-height: 1; margin-bottom: 7px; }
+    .stat-number.hot  { color: var(--hot); }
+    .stat-number.blue { color: var(--blue-accent); }
+    .stat-label { font-size: 10px; letter-spacing: 0.08em; text-transform: uppercase; color: var(--muted); line-height: 1.4; }
+
+    /* ── STORYMAP EMBED ── */
+    .storymap-embed { width: 100%; height: 500px; border: 0.8px solid #000; margin: 28px 0; overflow: hidden; position: relative; background: var(--night); }
+    .storymap-embed iframe { width: 100%; height: 100%; border: none; }
+    .embed-label { position: absolute; top: 12px; left: 12px; background: rgba(10,14,26,0.88); color: var(--blue-accent); font-family: var(--head-font); font-weight: 700; font-size: 10px; letter-spacing: 0.1em; text-transform: uppercase; padding: 5px 12px; z-index: 10; pointer-events: none; }
+
+    /* ── STORYMAP PREVIEW CARD ── */
+    .storymap-card { display: block; position: relative; width: 100%; height: 340px; overflow: hidden; margin: 28px 0; border: 0.8px solid #000; cursor: pointer; }
+    .storymap-card-bg { position: absolute; inset: 0; }
+    .storymap-card-bg img { width: 100%; height: 100%; object-fit: cover; transition: transform 0.4s ease; }
+    .storymap-card:hover .storymap-card-bg img { transform: scale(1.03); }
+    .storymap-card-overlay { position: absolute; inset: 0; background: linear-gradient(to top, rgba(10,14,26,0.97) 0%, rgba(10,14,26,0.55) 50%, rgba(10,14,26,0.2) 100%); }
+    .storymap-card-content { position: absolute; bottom: 0; left: 0; right: 0; padding: 32px 36px; }
+    .storymap-card-label { display: flex; align-items: center; gap: 8px; font-family: var(--head-font); font-weight: 700; font-size: 10px; letter-spacing: 0.14em; text-transform: uppercase; color: var(--blue-accent); margin-bottom: 12px; }
+    .storymap-card-title { font-family: var(--head-font); font-weight: 900; font-size: 26px; color: white; line-height: 1.2; margin-bottom: 8px; }
+    .storymap-card-sub { font-family: var(--head-font); font-size: 11px; color: rgba(255,255,255,0.45); letter-spacing: 0.06em; text-transform: uppercase; margin-bottom: 20px; }
+    .storymap-card-btn { display: inline-block; background: rgba(59,130,246,0.2); border: 1px solid rgba(59,130,246,0.5); color: #93c5fd; font-family: var(--head-font); font-weight: 700; font-size: 11px; letter-spacing: 0.1em; text-transform: uppercase; padding: 10px 20px; transition: all 0.2s; }
+    .storymap-card:hover .storymap-card-btn { background: rgba(59,130,246,0.4); color: white; }
+
+    /* ── ARCGIS MAP EMBED ── */
+    .map-embed { width: 100%; height: 440px; border: 0.8px solid #000; margin: 20px 0; overflow: hidden; position: relative; background: #0d1117; }
+    .map-embed iframe { width: 100%; height: 100%; border: none; }
+
+    /* ── WORKFLOW STEPS ── */
+    .workflow-steps { list-style: none; margin: 24px 0; }
+    .workflow-steps li { display: flex; gap: 20px; margin-bottom: 20px; padding-bottom: 20px; border-bottom: 0.8px solid var(--border); }
+    .workflow-steps li:last-child { border-bottom: none; }
+    .wf-num { font-family: var(--head-font); font-weight: 700; font-size: 11px; color: var(--blue-accent); min-width: 24px; padding-top: 2px; }
+    .wf-body strong { display: block; font-size: 13.5px; font-weight: 600; margin-bottom: 4px; }
+    .wf-body p { font-size: 13px; color: #555; margin: 0; }
+
+    /* ── MODEL CARDS ── */
+    .model-cards { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 1px; background: var(--border); border: 0.8px solid #000; margin: 24px 0; }
+    .model-card { background: var(--white); padding: 22px 20px; }
+    .model-tag { font-family: var(--head-font); font-weight: 700; font-size: 10px; letter-spacing: 0.1em; text-transform: uppercase; padding: 3px 8px; display: inline-block; margin-bottom: 12px; }
+    .mt-ols { background: #f0f4ff; color: #3b5bdb; }
+    .mt-slm { background: #fff0f6; color: #c2255c; }
+    .mt-sem { background: #ebfbee; color: #2f9e44; }
+    .model-name { font-family: var(--head-font); font-weight: 700; font-size: 16px; margin-bottom: 8px; }
+    .model-stat { font-family: var(--head-font); font-size: 13px; font-weight: 700; color: var(--deep-blue); margin-bottom: 6px; }
+    .model-stat span { color: var(--hot); }
+    .model-card p { font-size: 12.5px; color: #555; margin: 0; line-height: 1.6; margin-top: 8px; }
+    .model-best { display: inline-block; margin-top: 8px; font-family: var(--head-font); font-weight: 700; font-size: 9px; letter-spacing: 0.08em; text-transform: uppercase; padding: 2px 8px; background: #ebfbee; color: #2f9e44; }
+
+    /* ── VARIABLE TABLE ── */
+    .var-table { width: 100%; border-collapse: collapse; margin: 20px 0; font-size: 13px; }
+    .var-table th { font-family: var(--head-font); font-weight: 700; font-size: 10px; letter-spacing: 0.1em; text-transform: uppercase; color: var(--muted); text-align: left; padding: 9px 14px; border-bottom: 2px solid var(--border); background: var(--warm-gray); }
+    .var-table td { padding: 9px 14px; border-bottom: 0.8px solid var(--border); vertical-align: middle; }
+    .var-table tr:last-child td { border-bottom: none; }
+    .var-table tr:hover td { background: #f5f2ee; }
+    .vname { font-family: var(--head-font); font-weight: 700; font-size: 11px; color: var(--deep-blue); }
+    .vdir { display: inline-block; font-family: var(--head-font); font-weight: 900; font-size: 14px; width: 24px; text-align: center; }
+    .vdir.pos { color: var(--hot); }
+    .vdir.neg { color: var(--blue-accent); }
+    .vsig { font-family: var(--head-font); font-weight: 700; font-size: 11px; }
+    .vsig.yes  { color: var(--hot); }
+    .vsig.some { color: var(--highlight); }
+    .vsig.no   { color: var(--muted); }
+
+    /* ── LISA LEGEND ── */
+    .lisa-legend { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; margin: 24px 0; }
+    .lisa-item { display: flex; align-items: flex-start; gap: 12px; border: 0.8px solid var(--border); padding: 14px; }
+    .lisa-dot { width: 14px; height: 14px; border-radius: 50%; flex-shrink: 0; margin-top: 3px; }
+    .lisa-item strong { display: block; font-size: 13px; font-weight: 600; margin-bottom: 3px; }
+    .lisa-item p { font-size: 12px; color: #555; margin: 0; line-height: 1.5; }
+
+    /* ── IMAGES ── */
+    .image-grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin: 28px 0; }
+    .image-grid-3 { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 12px; margin: 28px 0; }
+    .image-slot { background: var(--warm-gray); overflow: hidden; display: flex; align-items: center; justify-content: center; }
+    .image-slot.ar-43  { aspect-ratio: 4/3; }
+    .image-slot.ar-169 { aspect-ratio: 16/9; }
+    .image-slot.ar-32  { aspect-ratio: 3/2; }
+    .image-slot.ar-11  { aspect-ratio: 1/1; }
+    .image-slot img { width: 100%; height: 100%; object-fit: contain; background: white; display: block; }
+    .image-slot img.cover { object-fit: cover; }
+    .image-full { width: 100%; margin: 28px 0; }
+    .image-full img { width: 100%; display: block; }
+    .image-caption { font-family: var(--head-font); font-size: 10px; color: var(--muted); margin-top: 6px; line-height: 1.5; letter-spacing: 0.03em; }
+
+    /* ── CALLOUT ── */
+    .callout { border-left: 3px solid var(--blue-accent); padding: 16px 20px; background: #eff6ff; margin: 28px 0; }
+    .callout p { font-size: 14px; color: #444; margin: 0; font-style: italic; }
+    .callout.red { border-color: var(--hot); background: #fef2f2; }
+
+    /* ── FINDINGS ── */
+    .finding-list { list-style: none; margin: 20px 0; }
+    .finding-list li { display: flex; gap: 14px; padding: 14px 0; border-bottom: 0.8px solid var(--border); font-size: 13.5px; color: #333; line-height: 1.65; }
+    .finding-list li:last-child { border-bottom: none; }
+    .f-icon { font-size: 16px; flex-shrink: 0; padding-top: 1px; }
+
+    /* ── POLICY CARDS ── */
+    .policy-cards { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin: 24px 0; }
+    .policy-card { border: 0.8px solid var(--border); padding: 18px; }
+    .policy-card .icon { font-size: 18px; margin-bottom: 10px; }
+    .policy-card strong { display: block; font-family: var(--head-font); font-weight: 700; font-size: 11px; letter-spacing: 0.07em; text-transform: uppercase; margin-bottom: 8px; }
+    .policy-card p { font-size: 12.5px; color: #555; margin: 0; line-height: 1.6; }
+
+    /* ── SOURCE LIST ── */
+    .source-list { list-style: none; margin: 16px 0; }
+    .source-list li { display: flex; gap: 14px; padding: 11px 0; border-bottom: 0.8px solid var(--border); font-size: 13px; color: #444; align-items: flex-start; }
+    .source-list li:last-child { border-bottom: none; }
+    .src-name { font-family: var(--head-font); font-weight: 700; font-size: 11px; color: var(--deep-blue); min-width: 180px; flex-shrink: 0; }
+
+    footer { border-top: 0.8px solid #000; padding: 28px 40px; display: flex; justify-content: space-between; align-items: center; font-family: var(--head-font); font-size: 11px; color: var(--muted); letter-spacing: 0.06em; text-transform: uppercase; margin-top: 80px; }
+    footer a { color: var(--muted); } footer a:hover { color: var(--text); }
+
+    @media (max-width: 768px) {
+      .project-body { grid-template-columns: 1fr; padding: 36px 20px; }
+      .sidebar { border-right: none; border-bottom: 0.8px solid #000; padding-right: 0; padding-bottom: 32px; margin-bottom: 32px; }
+      .main-content { padding-left: 0; }
+      .stats-bar, .model-cards { grid-template-columns: repeat(2,1fr); }
+      .image-grid-2, .image-grid-3, .lisa-legend, .policy-cards { grid-template-columns: 1fr; }
+      nav, .project-meta-bar { padding: 14px 20px; }
+      .hero-content { flex-direction: column; align-items: flex-start; gap: 16px; }
+    }
+  </style>
+</head>
+<body>
+
+<nav>
+  <div class="nav-name">Juan Sebastian<br>Cortes</div>
+  <div class="nav-right">
+    <a href="index.html">Portfolio</a>
+    <a href="#">About</a>
+    <a href="#">Contact</a>
+  </div>
+</nav>
+
+<div class="project-meta-bar">
+  <div class="project-title-bar">Understanding the Geography of Noise</div>
+  <div class="project-nav-links">
+    <a href="project5.html">← Prev</a>
+    <a href="index.html">All Projects</a>
+    <a href="#">Next →</a>
+  </div>
+</div>
+
+<!-- HERO -->
+<div class="hero">
+  <img src="assets/P6/los-angeles-landscape-city.jpg" alt="Los Angeles at night" class="cover">
+  <div class="hero-waves">
+    <svg viewBox="0 0 1400 200" preserveAspectRatio="none">
+      <path d="M0,100 C100,20 200,180 300,100 C400,20 500,180 600,100 C700,20 800,180 900,100 C1000,20 1100,180 1200,100 C1300,20 1400,100 1400,100" stroke="white" stroke-width="3" fill="none"/>
+      <path d="M0,100 C80,60 160,140 240,100 C320,60 400,140 480,100 C560,60 640,140 720,100 C800,60 880,140 960,100 C1040,60 1120,140 1200,100 C1280,60 1400,100 1400,100" stroke="white" stroke-width="1.5" fill="none" opacity="0.5"/>
+    </svg>
+  </div>
+  <div class="hero-overlay"></div>
+  <div class="hero-content">
+    <div>
+      <div class="hero-eyebrow">Spatial Econometrics · 311 Data · ACS · LISA · OLS · SLM · SEM</div>
+      <div class="hero-title">Understanding the<br><em>Geography of Noise</em></div>
+      <div class="hero-sub">311 complaint data · ACS socioeconomic indicators · Spatial modeling<br>across 2,498 census tracts in Los Angeles County · December 2025</div>
+    </div>
+    <a class="hero-live-btn" href="https://arcg.is/1braeD2" target="_blank">
+      <span class="live-dot"></span>View StoryMap
+    </a>
+  </div>
+</div>
+
+<div class="project-body">
+
+  <!-- SIDEBAR -->
+  <aside class="sidebar">
+    <div class="sidebar-block">
+      <div class="sidebar-label">Date</div>
+      <div class="sidebar-value">December 3, 2025</div>
+    </div>
+    <div class="sidebar-block">
+      <div class="sidebar-label">Role</div>
+      <div class="sidebar-value">Solo — Data pipeline,<br>spatial analysis,<br>econometric modeling,<br>StoryMap authoring</div>
+    </div>
+    <div class="sidebar-block">
+      <div class="sidebar-label">Methods</div>
+      <div class="tag-list">
+        <span class="tag blue">Global Moran's I</span>
+        <span class="tag blue">LISA</span>
+        <span class="tag blue">OLS</span>
+        <span class="tag blue">SLM</span>
+        <span class="tag blue">SEM</span>
+        <span class="tag">ESDA</span>
+        <span class="tag">AIC</span>
+      </div>
+    </div>
+    <div class="sidebar-block">
+      <div class="sidebar-label">Tools</div>
+      <div class="tag-list">
+        <span class="tag">R (spdep, spatialreg)</span>
+        <span class="tag">tigris</span>
+        <span class="tag">ggplot2</span>
+        <span class="tag">ArcGIS StoryMaps</span>
+      </div>
+    </div>
+    <div class="sidebar-block">
+      <div class="sidebar-label">Study Area</div>
+      <div class="sidebar-value" style="font-size:13px;">Los Angeles County<br><span style="font-family:var(--head-font);font-size:11px;color:var(--muted);">≈ 2,498 census tracts<br>2023 TIGER/Line boundaries</span></div>
+    </div>
+    <div class="sidebar-block">
+      <div class="sidebar-label">Key Result</div>
+      <div class="sidebar-value" style="font-size:13px;">SEM best fit<br><span style="font-family:var(--head-font);font-size:11px;color:var(--muted);">λ = 0.762 (p &lt; 2.2e-16)<br>ρ = 0.740 in SLM</span></div>
+    </div>
+    <div class="sidebar-block">
+      <div class="sidebar-label">StoryMap</div>
+      <div class="sidebar-value"><a href="https://arcg.is/1braeD2" target="_blank">→ Open StoryMap</a></div>
+    </div>
+  </aside>
+
+  <!-- MAIN -->
+  <main class="main-content">
+
+    <h2 class="section-heading">Overview</h2>
+    <p>
+      Urban noise is one of the most common — and most unequally distributed — environmental stressors in large cities. This project analyzes over 2,498 census tracts across Los Angeles County to answer a deceptively simple question: where do noise complaints cluster, and why do they occur where they do?
+    </p>
+    <p>
+      Using 311 service request data from 2022–2023, demographic variables from the American Community Survey, land-use indicators, and the CDC Social Vulnerability Index, the analysis applies a full spatial econometrics workflow — from exploratory mapping to LISA cluster detection to three regression models — to identify the socioeconomic and built-environment drivers of noise complaint density across LA neighborhoods.
+    </p>
+    <div class="callout">
+      <p>Are noise complaints significantly clustered across Los Angeles, and how do socioeconomic and land-use characteristics shape these clusters? The answer turns out to be yes — with extremely strong spatial dependence that ordinary regression cannot capture.</p>
+    </div>
+
+    <div class="stats-bar">
+      <div class="stat-item"><span class="stat-number">2,498</span><span class="stat-label">Census tracts<br>analyzed</span></div>
+      <div class="stat-item"><span class="stat-number blue">0.74</span><span class="stat-label">Spatial lag ρ<br>(SLM model)</span></div>
+      <div class="stat-item"><span class="stat-number hot">0.76</span><span class="stat-label">Spatial error λ<br>(SEM — best fit)</span></div>
+      <div class="stat-item"><span class="stat-number">3</span><span class="stat-label">Regression models<br>compared</span></div>
+    </div>
+
+    <!-- DISTRIBUTION -->
+    <h2 class="section-heading">Noise Rate Distribution</h2>
+    <div class="image-grid-2">
+      <div>
+        <div class="image-slot ar-43">
+          <img src="assets/P6/noise_histogram.png" alt="Noise complaint rate histogram">
+        </div>
+        <p class="image-caption">Distribution of noise complaint rates per 1,000 residents across LA census tracts — right-skewed with a long tail of high-complaint areas.</p>
+      </div>
+      <div>
+        <div class="image-slot ar-43">
+          <img src="assets/P6/boxplot_noise_rate.png" alt="Boxplot of noise complaint rate">
+        </div>
+        <p class="image-caption">Boxplot of tract-level noise complaint rates — median, spread, and outliers across the 2,498-tract study area.</p>
+      </div>
+    </div>
+
+    <!-- STORYMAP -->
+    <h2 class="section-heading">Live StoryMap</h2>
+    <p>The full analysis — maps, scatterplots, model outputs, and spatial cluster visualizations — is presented as an interactive ArcGIS StoryMap.</p>
+    <a href="https://storymaps.arcgis.com/stories/66d084d37d0c45b59bc8e06ad1a375d0" target="_blank" class="storymap-card">
+      <div class="storymap-card-bg">
+        <img src="assets/P6/los-angeles-landscape-city.jpg" alt="StoryMap preview">
+      </div>
+      <div class="storymap-card-overlay"></div>
+      <div class="storymap-card-content">
+        <div class="storymap-card-label">
+          <span class="live-dot"></span> ArcGIS StoryMap — Public
+        </div>
+        <div class="storymap-card-title">Understanding the Geography of Noise</div>
+        <div class="storymap-card-sub">Los Angeles County · 311 Data · Spatial Econometrics · December 2025</div>
+        <div class="storymap-card-btn">Open StoryMap &rarr;</div>
+      </div>
+    </a>
+
+    <!-- DATA SOURCES -->
+    <h2 class="section-heading">Data Sources</h2>
+    <ul class="source-list">
+      <li><span class="src-name">MyLA311 (2022–2023)</span><span>Noise and nuisance complaint records — point-level, geocoded, filtered and aggregated to tracts per 1,000 residents. City of Los Angeles open data portal.</span></li>
+      <li><span class="src-name">ACS 5-Year Estimates</span><span>Median household income (B19013), percent renters (B25003), housing structure type (B25024), age distribution (B01001), poverty rate (S1701). U.S. Census Bureau.</span></li>
+      <li><span class="src-name">TIGER/Line Tracts</span><span>2023 census tract boundaries for Los Angeles County, loaded via the tigris R package for spatial alignment.</span></li>
+      <li><span class="src-name">CDC Social Vulnerability Index</span><span>CDC/ATSDR SVI 2020 (California) — composite socioeconomic disadvantage index for contextualizing complaint patterns.</span></li>
+    </ul>
+
+    <!-- METHODOLOGY -->
+    <h2 class="section-heading">Analytical Workflow</h2>
+    <ul class="workflow-steps">
+      <li>
+        <span class="wf-num">01</span>
+        <div class="wf-body">
+          <strong>Data assembly & normalization</strong>
+          <p>311 records filtered to noise/nuisance requests, geocoded, spatially joined to 2023 census tracts, and normalized by ACS population totals to create a tract-level noise complaint rate. Sociodemographic variables merged via shared GEOID.</p>
+        </div>
+      </li>
+      <li>
+        <span class="wf-num">02</span>
+        <div class="wf-body">
+          <strong>Exploratory Spatial Data Analysis (ESDA)</strong>
+          <p>Global Moran's I tested whether complaint rates were spatially autocorrelated across the county. Local Moran's I (LISA) identified statistically significant hotspot clusters, coldspot clusters, and spatial outliers at the neighborhood level.</p>
+        </div>
+      </li>
+      <li>
+        <span class="wf-num">03</span>
+        <div class="wf-body">
+          <strong>OLS baseline regression</strong>
+          <p>Ordinary Least Squares provided a baseline model predicting noise rate from socioeconomic variables. Residual analysis revealed systematic spatial patterns — violating the independence assumption and motivating spatial econometric models.</p>
+        </div>
+      </li>
+      <li>
+        <span class="wf-num">04</span>
+        <div class="wf-body">
+          <strong>Spatial Lag Model (SLM) & Spatial Error Model (SEM)</strong>
+          <p>SLM added a spatially lagged dependent variable to capture spillover effects between adjacent tracts. SEM modeled spatial dependence in the error term. Model fit compared via AIC and residual diagnostics.</p>
+        </div>
+      </li>
+    </ul>
+
+    <!-- MORAN'S I -->
+    <h2 class="section-heading">Global Moran's I — Spatial Autocorrelation</h2>
+    <p>The Global Moran's I test revealed extremely strong positive spatial autocorrelation in noise complaint rates across LA census tracts — complaints are not randomly distributed, they cluster significantly in space.</p>
+    <div class="image-grid-2">
+      <div>
+        <div class="image-slot ar-43">
+          <img src="assets/P6/moran_scatterplot.png" alt="Moran's I scatterplot">
+        </div>
+        <p class="image-caption">Moran's I scatterplot — steep positive slope confirms that tracts with high complaint rates are surrounded by other high-rate tracts.</p>
+      </div>
+      <div>
+        <div class="image-slot ar-43">
+          <img src="assets/P6/income_vs_noise_scatter.png" alt="Median income vs noise rate">
+        </div>
+        <p class="image-caption">Median household income vs. noise complaint rate — lower-income tracts systematically bear higher noise complaint burdens.</p>
+      </div>
+    </div>
+
+    <!-- INTERACTIVE MAP 1 — Noise Rate -->
+    <h2 class="section-heading">Interactive Map — Noise Rate by Tract</h2>
+    <p>Explore the normalized noise complaint rate across all 2,498 LA County census tracts. The map reveals the sharp spatial gradient between the dense urban core and suburban periphery.</p>
+    <div class="map-embed">
+      <div class="embed-label">● ArcGIS — Noise Rate by Census Tract</div>
+      <iframe src="https://www.arcgis.com/apps/mapviewer/index.html?webmap=b33c141582774bf6af5fde0dadbce707&ui=min" title="Noise Rate Map" allowfullscreen loading="lazy"></iframe>
+    </div>
+
+    <!-- LISA -->
+    <h2 class="section-heading">LISA — Local Spatial Cluster Detection</h2>
+    <p>Local Moran's I (LISA) identified statistically significant hotspot and coldspot neighborhoods. Results confirm that noise inequality in LA is not random — it maps onto well-known patterns of socioeconomic stratification.</p>
+
+    <div class="lisa-legend">
+      <div class="lisa-item">
+        <div class="lisa-dot" style="background:#c0392b"></div>
+        <div>
+          <strong>High–High Clusters</strong>
+          <p>Central LA — Koreatown, Westlake, Pico-Union, Downtown. Dense multifamily housing, renter-heavy populations, high complaint density surrounded by similarly high tracts.</p>
+        </div>
+      </div>
+      <div class="lisa-item">
+        <div class="lisa-dot" style="background:#3b82f6"></div>
+        <div>
+          <strong>Low–Low Clusters</strong>
+          <p>Affluent or suburban tracts — the Valley, Palos Verdes, hillside neighborhoods. Quiet areas surrounded by similarly quiet neighbors.</p>
+        </div>
+      </div>
+      <div class="lisa-item">
+        <div class="lisa-dot" style="background:#f59e0b"></div>
+        <div>
+          <strong>High–Low Outliers</strong>
+          <p>Transitional areas at the edges of hotspot clusters — tracts with elevated complaints surrounded by lower-rate neighbors.</p>
+        </div>
+      </div>
+      <div class="lisa-item">
+        <div class="lisa-dot" style="background:#8b5cf6"></div>
+        <div>
+          <strong>Low–High Outliers</strong>
+          <p>Quiet tracts embedded within noisier surroundings — spatial anomalies highlighting localized noise management or underreporting.</p>
+        </div>
+      </div>
+    </div>
+
+    <!-- INTERACTIVE MAP 2 — Noise Rate vs Income -->
+    <h2 class="section-heading">Interactive Map — Noise Rate vs. Median Income</h2>
+    <p>This bivariate map overlays noise complaint density with median household income, making the environmental justice dimension of noise distribution directly visible.</p>
+    <div class="map-embed">
+      <div class="embed-label">● ArcGIS — Noise Rate × Median Income</div>
+      <iframe src="https://www.arcgis.com/apps/mapviewer/index.html?webmap=663da9c880c343d295668e2b9799b018&ui=min" title="Noise Rate vs Median Income Map" allowfullscreen loading="lazy"></iframe>
+    </div>
+
+    <!-- SCATTER PLOTS -->
+    <h2 class="section-heading">Predictor Relationships</h2>
+    <p>Bivariate scatterplots showing the relationship between noise complaint rate and each socioeconomic predictor variable used in the regression models.</p>
+    <div class="image-grid-3">
+      <div>
+        <div class="image-slot ar-43">
+          <img src="assets/P6/scatter_noise_vs_renters.png" alt="Noise rate vs % renters">
+        </div>
+        <p class="image-caption">Noise rate vs. % renters — renter-heavy tracts show consistently higher complaint density, significant in OLS and SLM.</p>
+      </div>
+      <div>
+        <div class="image-slot ar-43">
+          <img src="assets/P6/scatter_noise_vs_poverty.png" alt="Noise rate vs poverty rate">
+        </div>
+        <p class="image-caption">Noise rate vs. poverty rate — positive relationship confirms that lower-income tracts bear a disproportionate noise burden.</p>
+      </div>
+      <div>
+        <div class="image-slot ar-43">
+          <img src="assets/P6/scatter_noise_vs_young.png" alt="Noise rate vs % young adults">
+        </div>
+        <p class="image-caption">Noise rate vs. young adults (20–34) — negative relationship across all three models; younger neighborhoods report fewer complaints.</p>
+      </div>
+    </div>
+
+    <!-- REGRESSION MODELS -->
+    <h2 class="section-heading">Regression Models — OLS → SLM → SEM</h2>
+    <p>OLS regression established significant predictors but residual analysis showed systematic spatial clustering — violating OLS assumptions and requiring spatial econometric models.</p>
+    <div class="model-cards">
+      <div class="model-card">
+        <span class="model-tag mt-ols">OLS</span>
+        <div class="model-name">Ordinary Least Squares</div>
+        <div class="model-stat">Baseline — <span>spatial residuals persist</span></div>
+        <p>Identifies significant predictors but violates the independent residuals assumption. Residuals show systematic spatial patterns.</p>
+      </div>
+      <div class="model-card">
+        <span class="model-tag mt-slm">SLM</span>
+        <div class="model-name">Spatial Lag Model</div>
+        <div class="model-stat">ρ = <span>0.7404</span> (p &lt; 2.2e-16)</div>
+        <p>Adds a spatially lagged dependent variable. Strong ρ confirms that a neighborhood's noise rate is strongly predicted by its neighbors'.</p>
+      </div>
+      <div class="model-card">
+        <span class="model-tag mt-sem">SEM</span>
+        <div class="model-name">Spatial Error Model</div>
+        <div class="model-stat">λ = <span>0.7620</span> (p &lt; 2.2e-16)</div>
+        <p>Models spatial dependence in the error term. Best AIC fit among all three models. <span class="model-best">✓ Best fit</span></p>
+      </div>
+    </div>
+
+    <!-- VARIABLE TABLE -->
+    <h2 class="section-heading">Variable Significance Across Models</h2>
+    <table class="var-table">
+      <thead>
+        <tr><th>Variable</th><th>Description</th><th>OLS</th><th>SLM</th><th>SEM</th><th>Direction</th></tr>
+      </thead>
+      <tbody>
+        <tr><td class="vname">pct_renters</td><td>% households renting</td><td><span class="vsig yes">✓ Sig</span></td><td><span class="vsig yes">✓ Sig</span></td><td><span class="vsig no">—</span></td><td><span class="vdir pos">+</span></td></tr>
+        <tr><td class="vname">pct_poverty</td><td>% below poverty line</td><td><span class="vsig yes">✓ Sig</span></td><td><span class="vsig no">—</span></td><td><span class="vsig no">—</span></td><td><span class="vdir pos">+</span></td></tr>
+        <tr><td class="vname">pct_young</td><td>% adults age 20–34</td><td><span class="vsig yes">✓ Sig</span></td><td><span class="vsig yes">✓ Sig</span></td><td><span class="vsig yes">✓ Sig</span></td><td><span class="vdir neg">–</span></td></tr>
+        <tr><td class="vname">med_income</td><td>Median household income</td><td><span class="vsig no">—</span></td><td><span class="vsig no">—</span></td><td><span class="vsig yes">✓ Sig</span></td><td><span class="vdir neg">–</span></td></tr>
+        <tr><td class="vname">pct_multiunit</td><td>% multi-family housing</td><td><span class="vsig no">—</span></td><td><span class="vsig yes">✓ Sig</span></td><td><span class="vsig yes">✓ Sig</span></td><td><span class="vdir neg">–</span></td></tr>
+      </tbody>
+    </table>
+
+    <!-- MODEL DIAGNOSTICS -->
+    <h2 class="section-heading">Model Diagnostics & Residual Analysis</h2>
+    <div class="image-grid-2">
+      <div>
+        <div class="image-slot ar-43">
+          <img src="assets/P6/ols_residuals_vs_fitted.png" alt="OLS residuals vs fitted values">
+        </div>
+        <p class="image-caption">OLS residuals vs. fitted — non-random pattern confirms spatial dependency, motivating the move to spatial econometric models.</p>
+      </div>
+      <div>
+        <div class="image-slot ar-43">
+          <img src="assets/P6/aic_comparison.png" alt="AIC comparison across models">
+        </div>
+        <p class="image-caption">AIC comparison — SEM achieves the lowest AIC, confirming that spatial error structure explains noise patterns better than pure spillover (SLM) or no spatial modeling (OLS).</p>
+      </div>
+    </div>
+    <div class="image-grid-2">
+      <div>
+        <div class="image-slot ar-43">
+          <img src="assets/P6/sem_coefficient_plot.png" alt="SEM coefficient plot">
+        </div>
+        <p class="image-caption">SEM coefficient plot — direction and significance of each predictor after accounting for spatial error dependence. Income effect becomes clearly negative.</p>
+      </div>
+      <div>
+        <div class="image-slot ar-43">
+          <img src="assets/P6/residual_distribution_comparison.png" alt="Residual distribution comparison">
+        </div>
+        <p class="image-caption">Residual distribution comparison across OLS, SLM, and SEM — SEM residuals most closely approximate a normal distribution, validating model fit.</p>
+      </div>
+    </div>
+
+    <!-- KEY FINDINGS -->
+    <h2 class="section-heading">Key Findings</h2>
+    <ul class="finding-list">
+      <li><span class="f-icon">🔴</span><span><strong>Noise is highly clustered.</strong> Global Moran's I confirms extremely strong positive spatial autocorrelation — noise complaints do not occur randomly across LA's neighborhoods.</span></li>
+      <li><span class="f-icon">🏘️</span><span><strong>Renters and lower-income residents bear a higher noise burden.</strong> Percent renters and poverty rate are significant positive predictors of complaint density in OLS and SLM models.</span></li>
+      <li><span class="f-icon">💰</span><span><strong>Income is protective — but only in spatial models.</strong> Median household income shows a significant negative effect in SEM, confirming that affluence reduces noise exposure when unobserved spatial processes are properly controlled.</span></li>
+      <li><span class="f-icon">🔊</span><span><strong>Noise is a contagious phenomenon.</strong> The SLM spatial lag coefficient ρ = 0.74 means that a neighborhood's noise level is strongly predicted by its neighbors' — complaints spill across boundaries.</span></li>
+      <li><span class="f-icon">❓</span><span><strong>Young neighborhoods report fewer complaints.</strong> The negative effect of young adult share may reflect noise tolerance, different 311 usage patterns, or genuine behavioral differences in reporting.</span></li>
+      <li><span class="f-icon">✅</span><span><strong>SEM outperforms OLS and SLM.</strong> The Spatial Error Model achieves the best AIC fit, confirming that unobserved spatial processes — not just neighbor spillover — are the primary driver of structured noise patterns.</span></li>
+    </ul>
+
+    <div class="callout red">
+      <p>The High–High LISA clusters — concentrated in Koreatown, Westlake, Pico-Union, and Downtown — are predominantly lower-income, renter-heavy, and minority neighborhoods. This reflects a well-documented pattern of environmental burden falling disproportionately on communities with the least political and economic power to address it.</p>
+    </div>
+
+    <!-- POLICY -->
+    <h2 class="section-heading">Policy Implications</h2>
+    <div class="policy-cards">
+      <div class="policy-card">
+        <div class="icon">🎯</div>
+        <strong>Targeted Noise Mitigation</strong>
+        <p>Direct noise enforcement resources to High–High LISA cluster neighborhoods — Koreatown, Westlake, and Pico-Union — where complaint density and spatial spillover are both highest.</p>
+      </div>
+      <div class="policy-card">
+        <div class="icon">🏗️</div>
+        <strong>Housing Insulation Standards</strong>
+        <p>Improve acoustic insulation requirements in renter-heavy, multifamily housing tracts. Noise burden in dense residential areas is partly a structural problem addressable through building codes.</p>
+      </div>
+      <div class="policy-card">
+        <div class="icon">⚖️</div>
+        <strong>Environmental Justice Framing</strong>
+        <p>Treat noise complaint density as an environmental justice indicator. 311 analytics can serve as an early warning system for neighborhood stress before more severe decline patterns emerge.</p>
+      </div>
+      <div class="policy-card">
+        <div class="icon">📊</div>
+        <strong>311 as Urban Sensing</strong>
+        <p>Use spatially modeled 311 data — not raw counts — as input to urban monitoring systems. Normalizing by population and accounting for spatial dependence transforms complaint data into a meaningful policy signal.</p>
+      </div>
+    </div>
+
+    <h2 class="section-heading">Future Work</h2>
+    <p>Three directions would strengthen this analysis. First, integrating land-use zoning and night economy data (bars, venues, commercial density) would sharpen the built-environment predictors. Second, multi-year time-series spatial models would reveal whether noise inequality is growing or shrinking. Third, comparing 311 patterns against actual decibel readings from street sensors would clarify how much of the spatial signal reflects real acoustic exposure versus differential reporting behavior across communities.</p>
+
+  </main>
+</div>
+
+<footer>
+  <span>Juan Sebastian Cortes — Portfolio</span>
+  <a href="index.html">← Back to all projects</a>
+</footer>
+
+<script src="lightbox.js"></script>
+</body>
+</html>

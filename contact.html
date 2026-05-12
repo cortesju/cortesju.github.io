@@ -1,0 +1,469 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Contact — Juan Sebastian Cortes</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Rubik:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="styles.css">
+  <style>
+    *, *::before, *::after { box-sizing: border-box; }
+
+    :root {
+      --ink:    #111111;
+      --muted:  #888888;
+      --border: #e0e0e0;
+      --warm:   #f7f5f2;
+    }
+
+    body {
+      font-family: "Helvetica Neue", Arial, sans-serif;
+      background: #faf9f7;
+      color: var(--ink);
+      margin: 0;
+    }
+
+    /* ── Hero ──────────────────────────────────────── */
+    .contact-hero {
+      padding: 80px 64px 64px;
+      border-bottom: 1px solid var(--border);
+      background: var(--ink);
+      position: relative;
+      overflow: hidden;
+    }
+    .contact-hero::before {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background: radial-gradient(ellipse at 80% 50%, rgba(200,145,42,0.15) 0%, transparent 60%);
+      pointer-events: none;
+    }
+    .contact-eyebrow {
+      font-size: 10px;
+      font-weight: 700;
+      letter-spacing: 0.18em;
+      text-transform: uppercase;
+      color: rgba(255,255,255,0.4);
+      margin-bottom: 18px;
+    }
+    .contact-hero h1 {
+      font-family: 'Rubik', sans-serif;
+      font-size: clamp(2.8rem, 6vw, 5rem);
+      font-weight: 800;
+      line-height: 1.0;
+      letter-spacing: -0.03em;
+      color: #faf9f7;
+      margin: 0 0 20px;
+    }
+    .contact-hero p {
+      font-size: 15px;
+      line-height: 1.75;
+      color: rgba(255,255,255,0.55);
+      max-width: 520px;
+      margin: 0;
+    }
+
+    /* ── Contact Grid ──────────────────────────────── */
+    .contact-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      max-width: 1100px;
+      margin: 0 auto;
+      padding: 72px 64px;
+      gap: 64px;
+      align-items: start;
+    }
+
+    .contact-left h2 {
+      font-family: 'Rubik', sans-serif;
+      font-size: 1rem;
+      font-weight: 700;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      color: var(--muted);
+      margin: 0 0 28px;
+      padding-bottom: 10px;
+      border-bottom: 1px solid var(--border);
+    }
+
+    /* ── Contact Cards ─────────────────────────────── */
+    .contact-cards { display: flex; flex-direction: column; gap: 12px; }
+    .contact-card {
+      display: flex;
+      align-items: center;
+      gap: 18px;
+      padding: 20px 22px;
+      border: 1px solid var(--border);
+      text-decoration: none;
+      color: var(--ink);
+      transition: border-color .2s, background .2s;
+      background: #fff;
+    }
+    .contact-card:hover {
+      border-color: var(--ink);
+      background: var(--warm);
+    }
+    .contact-card-icon {
+      width: 44px; height: 44px;
+      border-radius: 50%;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 1.2rem;
+      flex-shrink: 0;
+    }
+    .icon-email   { background: #fef0e0; }
+    .icon-linkedin { background: #e8f0f8; }
+    .icon-location { background: #f0f8f0; }
+    .icon-phone   { background: #f5f0f8; }
+
+    .contact-card-label {
+      font-size: 9.5px;
+      font-weight: 700;
+      letter-spacing: 0.14em;
+      text-transform: uppercase;
+      color: var(--muted);
+      margin-bottom: 3px;
+    }
+    .contact-card-value {
+      font-family: 'Rubik', sans-serif;
+      font-size: 14px;
+      font-weight: 600;
+      color: var(--ink);
+    }
+    .contact-card-action {
+      margin-left: auto;
+      font-size: 10px;
+      font-weight: 700;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      color: var(--muted);
+      flex-shrink: 0;
+      transition: color .2s;
+    }
+    .contact-card:hover .contact-card-action { color: var(--ink); }
+
+    /* ── Resume ────────────────────────────────────── */
+    .contact-right h2 {
+      font-family: 'Rubik', sans-serif;
+      font-size: 1rem;
+      font-weight: 700;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      color: var(--muted);
+      margin: 0 0 28px;
+      padding-bottom: 10px;
+      border-bottom: 1px solid var(--border);
+    }
+
+    .resume-card {
+      background: var(--ink);
+      padding: 32px;
+      margin-bottom: 20px;
+      position: relative;
+      overflow: hidden;
+    }
+    .resume-card::before {
+      content: '';
+      position: absolute;
+      top: -30px; right: -30px;
+      width: 120px; height: 120px;
+      border-radius: 50%;
+      background: rgba(200,145,42,0.12);
+    }
+    .resume-card h3 {
+      font-family: 'Rubik', sans-serif;
+      font-size: 14px;
+      font-weight: 700;
+      color: #fff;
+      margin: 0 0 8px;
+      position: relative;
+    }
+    .resume-card p {
+      font-size: 12.5px;
+      color: rgba(255,255,255,0.5);
+      line-height: 1.65;
+      margin: 0 0 24px;
+      position: relative;
+    }
+    .resume-card a {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      background: #c8912a;
+      color: #1a1208;
+      font-family: 'Rubik', sans-serif;
+      font-size: 11px;
+      font-weight: 700;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      text-decoration: none;
+      padding: 11px 22px;
+      transition: background .2s;
+      position: relative;
+    }
+    .resume-card a:hover { background: #e0a830; }
+
+    /* ── Quick Bio ──────────────────────────────────── */
+    .quick-bio {
+      background: var(--warm);
+      border: 1px solid var(--border);
+      padding: 24px;
+    }
+    .quick-bio h3 {
+      font-family: 'Rubik', sans-serif;
+      font-size: 11px;
+      font-weight: 700;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      color: var(--muted);
+      margin: 0 0 14px;
+    }
+    .bio-row {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 8px 0;
+      border-bottom: 1px solid var(--border);
+      font-size: 13px;
+    }
+    .bio-row:last-child { border-bottom: none; }
+    .bio-row-label { color: var(--muted); font-weight: 500; }
+    .bio-row-value { color: var(--ink); font-weight: 600; font-family: 'Rubik', sans-serif; font-size: 12.5px; }
+
+    /* ── Portfolio Strip ───────────────────────────── */
+    .portfolio-strip {
+      background: var(--warm);
+      border-top: 1px solid var(--border);
+      padding: 48px 64px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 32px;
+    }
+    .portfolio-strip-text h3 {
+      font-family: 'Rubik', sans-serif;
+      font-size: 1.3rem;
+      font-weight: 700;
+      color: var(--ink);
+      margin: 0 0 6px;
+      letter-spacing: -0.01em;
+    }
+    .portfolio-strip-text p {
+      font-size: 13.5px;
+      color: var(--muted);
+      margin: 0;
+    }
+    .btn-dark {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      background: var(--ink);
+      color: #fff;
+      font-family: 'Rubik', sans-serif;
+      font-size: 12px;
+      font-weight: 700;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      text-decoration: none;
+      padding: 14px 28px;
+      white-space: nowrap;
+      flex-shrink: 0;
+      transition: background .2s;
+    }
+    .btn-dark:hover { background: #333; }
+
+    /* ── Page Footer ───────────────────────────────── */
+    .page-footer {
+      border-top: 1px solid var(--border);
+      padding: 28px 64px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      font-size: 11px;
+      color: var(--muted);
+      letter-spacing: 0.06em;
+      text-transform: uppercase;
+    }
+    .page-footer a { color: var(--muted); text-decoration: none; }
+    .page-footer a:hover { color: var(--ink); }
+
+    @media (max-width: 860px) {
+      .contact-hero { padding: 56px 32px 48px; }
+      .contact-grid { grid-template-columns: 1fr; padding: 48px 32px; gap: 48px; }
+      .portfolio-strip { flex-direction: column; align-items: flex-start; padding: 40px 32px; }
+      .page-footer { padding: 24px 32px; flex-direction: column; gap: 8px; text-align: center; }
+    }
+  </style>
+</head>
+<body>
+
+  <div class="salmon-glow" aria-hidden="true"></div>
+
+  <!-- ── Sidebar ──────────────────────────────────── -->
+  <aside class="sidebar" aria-label="Site navigation">
+    <button class="hamburger-btn" id="hamburgerBtn" aria-label="Open menu" aria-expanded="false" aria-controls="drawer">
+      <span class="hamburger-icon" aria-hidden="true">
+        <span></span><span></span><span></span>
+      </span>
+    </button>
+  </aside>
+
+  <!-- ── Drawer ───────────────────────────────────── -->
+  <div class="drawer-overlay" id="drawerOverlay" aria-hidden="true"></div>
+  <nav class="drawer" id="drawer" aria-label="Main menu" aria-hidden="true">
+    <button class="drawer-close-btn" id="drawerCloseBtn" aria-label="Close menu">&#x2715;</button>
+    <a href="index.html" class="drawer-wordmark" tabindex="-1">
+      <span class="wm-line">PORTFOLIO&nbsp;&nbsp;</span>
+      <span class="wm-line">&nbsp;&nbsp;&nbsp;&nbsp;MENU</span>
+    </a>
+    <div class="drawer-nav">
+      <div class="drawer-nav-group">
+        <a href="index.html">ALL PROJECTS &rarr;</a>
+        <a href="about.html">ABOUT &rarr;</a>
+      </div>
+      <div class="drawer-nav-group">
+        <a href="https://www.linkedin.com/in/juan-cortes-7421b6398/" target="_blank" rel="noopener">LinkedIn</a>
+        <a href="contact.html">CONTACT</a>
+      </div>
+    </div>
+  </nav>
+
+  <!-- ── Main ─────────────────────────────────────── -->
+  <div class="main-content">
+
+    <header class="site-header">
+      <a href="index.html" class="wordmark" aria-label="Portfolio home">
+        <span class="wm-line">JUAN&nbsp;&nbsp;SEBASTIAN</span>
+        <span class="wm-line">CORTES&nbsp;&nbsp;&nbsp;&nbsp;</span>
+      </a>
+      <div class="portfolio-logo">CONTACT</div>
+    </header>
+
+    <!-- ── Hero ─────────────────────────────────────── -->
+    <div class="contact-hero">
+      <p class="contact-eyebrow">Get in Touch</p>
+      <h1>Let's<br>Connect.</h1>
+      <p>I'm open to conversations about GIS research, spatial storytelling, project collaborations, and opportunities in the geospatial field. Don't hesitate to reach out.</p>
+    </div>
+
+    <!-- ── Contact Grid ───────────────────────────── -->
+    <div class="contact-grid">
+
+      <!-- Left: Contact Info -->
+      <div class="contact-left">
+        <h2>Contact</h2>
+        <div class="contact-cards">
+
+          <a href="mailto:sebastian.co.fe@gmail.com" class="contact-card">
+            <div class="contact-card-icon icon-email"></div>
+            <div>
+              <div class="contact-card-label">Email</div>
+              <div class="contact-card-value">sebastian.co.fe@gmail.com</div>
+            </div>
+            <span class="contact-card-action">Write &rarr;</span>
+          </a>
+
+          <a href="https://www.linkedin.com/in/juan-cortes-7421b6398/" target="_blank" rel="noopener" class="contact-card">
+            <div class="contact-card-icon icon-linkedin"></div>
+            <div>
+              <div class="contact-card-label">LinkedIn</div>
+              <div class="contact-card-value">juan-cortes-7421b6398</div>
+            </div>
+            <span class="contact-card-action">Visit &rarr;</span>
+          </a>
+
+          <div class="contact-card" style="cursor:default;">
+            <div class="contact-card-icon icon-location"></div>
+            <div>
+              <div class="contact-card-label">Location</div>
+              <div class="contact-card-value">Denver, CO &nbsp;·&nbsp; Los Angeles, CA</div>
+            </div>
+          </div>
+
+        </div>
+      </div>
+
+      <!-- Right: Resume + Bio -->
+      <div class="contact-right">
+        <h2>Resume &amp; Background</h2>
+
+        <div class="resume-card">
+          <h3>Resume, Juan S. Cortes</h3>
+          <p>M.S. GIST · USC Spatial Sciences Institute<br>GIS Research · Web Mapping · Spatial Analysis<br>Expected graduation December 2026</p>
+          <a href="assets/resume.pdf" target="_blank" rel="noopener">
+            ↓ &nbsp;Download Resume (PDF)
+          </a>
+        </div>
+
+        <div class="quick-bio">
+          <h3>At a glance</h3>
+          <div class="bio-row">
+            <span class="bio-row-label">Degree</span>
+            <span class="bio-row-value">M.S. GIST, USC</span>
+          </div>
+          <div class="bio-row">
+            <span class="bio-row-label">Background</span>
+            <span class="bio-row-value">Architecture → GIS</span>
+          </div>
+          <div class="bio-row">
+            <span class="bio-row-label">Languages</span>
+            <span class="bio-row-value">Spanish · English</span>
+          </div>
+          <div class="bio-row">
+            <span class="bio-row-label">Organizations</span>
+            <span class="bio-row-value">AAG · APCG</span>
+          </div>
+          <div class="bio-row">
+            <span class="bio-row-label">Awards</span>
+            <span class="bio-row-value">APCG 2025 · Esri StoryMaps 2025</span>
+          </div>
+          <div class="bio-row">
+            <span class="bio-row-label">Tools</span>
+            <span class="bio-row-value">ArcGIS Pro · Python · Adobe · AutoCAD · Revit</span>
+          </div>
+        </div>
+      </div>
+
+    </div><!-- /.contact-grid -->
+
+    <!-- ── Portfolio Strip ─────────────────────────── -->
+    <div class="portfolio-strip">
+      <div class="portfolio-strip-text">
+        <h3>See the work</h3>
+        <p>12 projects in GIS analysis, web mapping, Python tooling, and spatial data storytelling.</p>
+      </div>
+      <a href="index.html" class="btn-dark">View Portfolio &rarr;</a>
+    </div>
+
+    <div class="page-footer">
+      <span>Juan Sebastian Cortes &nbsp;·&nbsp; USC Spatial Sciences Institute &nbsp;·&nbsp; 2026</span>
+      <a href="about.html">About &rarr;</a>
+    </div>
+
+  </div><!-- /.main-content -->
+
+  <script>
+    (function () {
+      const hamburgerBtn   = document.getElementById('hamburgerBtn');
+      const drawerCloseBtn = document.getElementById('drawerCloseBtn');
+      const drawer         = document.getElementById('drawer');
+      const overlay        = document.getElementById('drawerOverlay');
+      function openDrawer() {
+        drawer.classList.add('is-open'); overlay.classList.add('is-open');
+        drawer.setAttribute('aria-hidden','false'); overlay.setAttribute('aria-hidden','false');
+        hamburgerBtn.setAttribute('aria-expanded','true'); drawerCloseBtn.focus();
+      }
+      function closeDrawer() {
+        drawer.classList.remove('is-open'); overlay.classList.remove('is-open');
+        drawer.setAttribute('aria-hidden','true'); overlay.setAttribute('aria-hidden','true');
+        hamburgerBtn.setAttribute('aria-expanded','false'); hamburgerBtn.focus();
+      }
+      hamburgerBtn.addEventListener('click', openDrawer);
+      drawerCloseBtn.addEventListener('click', closeDrawer);
+      overlay.addEventListener('click', closeDrawer);
+      document.addEventListener('keydown', e => { if (e.key==='Escape' && drawer.classList.contains('is-open')) closeDrawer(); });
+    })();
+  </script>
+</body>
+</html>

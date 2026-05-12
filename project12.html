@@ -1,0 +1,547 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Vanishing Clouds — Juan Sebastian Cortes</title>
+  <link href="https://fonts.googleapis.com/css2?family=Rubik:wght@400;500;700&display=swap" rel="stylesheet"/>
+  <link rel="stylesheet" href="styles.css">
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --white:        #faf9f7;
+      --text:         #1a1a1a;
+      --muted:        #888;
+      --border:       #d5cfc8;
+      --warm-gray:    #e8e4df;
+      --dark:         #0d1a12;
+      --forest:       #1a3a24;
+      --gold:         #c8912a;
+      --gold-light:   #f5e8ce;
+      --teal:         #2a7a5a;
+      --green-accent: #3dba7e;
+      --body-font: "Neue Haas Grotesk", "Helvetica Neue", Arial, sans-serif;
+      --head-font: 'Rubik', sans-serif;
+    }
+
+    body { font-family: var(--body-font); background: var(--white); color: var(--text); font-size: 14.5px; line-height: 1.5; }
+    a { text-decoration: none; color: inherit; }
+
+    /* ── NAV ── */
+    nav {
+      display: flex; align-items: center; justify-content: space-between;
+      padding: 18px 40px; border-bottom: 0.8px solid #000;
+      position: sticky; top: 0; background: var(--white); z-index: 100;
+    }
+    .nav-name { font-family: var(--head-font); font-weight: 700; font-size: 13px; letter-spacing: 0.06em; text-transform: uppercase; line-height: 1.3; }
+    .nav-right { display: flex; gap: 32px; font-family: var(--head-font); font-weight: 700; font-size: 12px; letter-spacing: 0.08em; text-transform: uppercase; }
+    .nav-right a { color: var(--muted); } .nav-right a:hover { color: var(--text); }
+
+    /* ── META BAR ── */
+    .project-meta-bar { display: flex; align-items: center; justify-content: space-between; padding: 10.4px 40px; border-bottom: 0.8px solid #000; }
+    .project-title-bar { font-family: var(--head-font); font-weight: 700; font-size: 13px; letter-spacing: 0.06em; text-transform: uppercase; color: rgba(0,0,0,0.75); }
+    .project-nav-links { display: flex; gap: 16px; font-family: var(--body-font); font-size: 13px; color: rgba(0,0,0,0.7); }
+    .project-nav-links a { color: rgba(0,0,0,0.7); } .project-nav-links a:hover { color: #000; }
+
+    /* ── HERO ── */
+    .hero { position: relative; width: 100%; height: 520px; overflow: hidden; background: var(--dark); }
+    .hero video { width: 100%; height: 100%; object-fit: cover; opacity: 0.88; display: block; }
+    .hero-overlay { position: absolute; inset: 0; background: linear-gradient(to top, rgba(13,26,18,0.90) 0%, rgba(13,26,18,0.25) 60%, transparent 100%); pointer-events: none; }
+    .hero-content { position: absolute; bottom: 36px; left: 40px; right: 40px; display: flex; align-items: flex-end; justify-content: space-between; gap: 24px; }
+    .hero-title h1 { font-family: var(--head-font); font-weight: 700; font-size: 11px; letter-spacing: 0.14em; text-transform: uppercase; color: var(--gold); margin-bottom: 8px; }
+    .hero-title p { font-size: 11px; color: rgba(255,255,255,0.50); letter-spacing: 0.04em; margin: 0; line-height: 1.6; }
+    .hero-live-btn {
+      display: inline-flex; align-items: center; gap: 8px;
+      background: var(--gold); color: #1a1208;
+      font-family: var(--head-font); font-weight: 700; font-size: 11px;
+      letter-spacing: 0.10em; text-transform: uppercase;
+      padding: 12px 20px; white-space: nowrap; flex-shrink: 0;
+      transition: background 0.2s;
+    }
+    .hero-live-btn:hover { background: #e0a830; }
+    .live-dot { width: 7px; height: 7px; border-radius: 50%; background: #1a1208; animation: pulse 2s infinite; flex-shrink: 0; }
+    @keyframes pulse { 0%,100%{opacity:1} 50%{opacity:0.3} }
+
+    /* ── LAYOUT ── */
+    .project-body { display: grid; grid-template-columns: 220px 1fr; max-width: 1200px; margin: 0 auto; padding: 60px 40px; }
+
+    /* ── SIDEBAR ── */
+    .sidebar-meta { padding-right: 48px; border-right: 0.8px solid var(--border); }
+    .sidebar-block { margin-bottom: 36px; }
+    .sidebar-label { font-family: var(--head-font); font-weight: 700; font-size: 10px; letter-spacing: 0.12em; text-transform: uppercase; color: var(--muted); margin-bottom: 6px; }
+    .sidebar-value { font-size: 14px; font-weight: 500; line-height: 1.6; color: rgba(0,0,0,0.75); }
+    .sidebar-value a { color: var(--teal); font-size: 13px; } .sidebar-value a:hover { text-decoration: underline; }
+    .tag-list { display: flex; flex-wrap: wrap; gap: 6px; margin-top: 4px; }
+    .tag { font-family: var(--head-font); font-weight: 500; font-size: 10px; letter-spacing: 0.06em; text-transform: uppercase; padding: 3px 8px; border: 0.8px solid var(--border); color: var(--muted); }
+    .tag.gold { border-color: var(--gold); color: var(--gold); }
+    .tag.green { border-color: var(--teal); color: var(--teal); }
+
+    /* ── MAIN ── */
+    .main-col { padding-left: 56px; }
+    h2.section-heading {
+      font-family: var(--head-font); font-weight: 700; font-size: 11px;
+      letter-spacing: 0.14em; text-transform: uppercase; color: var(--muted);
+      margin-bottom: 16px; margin-top: 52px; padding-bottom: 10px;
+      border-bottom: 0.8px solid var(--border);
+    }
+    h2.section-heading:first-child { margin-top: 0; }
+    p.body-p { font-size: 14.5px; line-height: 1.75; color: rgba(0,0,0,0.75); margin-bottom: 18px; }
+
+    /* ── STATS ── */
+    .stats-bar { display: grid; grid-template-columns: repeat(4,1fr); gap: 1px; background: var(--border); border: 0.8px solid var(--border); margin: 36px 0; }
+    .stat-item { background: var(--white); padding: 24px 16px; text-align: center; }
+    .stat-number { font-family: var(--head-font); font-weight: 700; font-size: 26px; color: var(--gold); display: block; line-height: 1; margin-bottom: 7px; }
+    .stat-label { font-size: 10px; letter-spacing: 0.08em; text-transform: uppercase; color: var(--muted); line-height: 1.4; }
+
+    /* ── LIVE MAP EMBED ── */
+    .map-embed-full { width: 100%; height: 520px; border: 0.8px solid var(--border); margin: 28px 0; overflow: hidden; position: relative; }
+    .map-embed-full iframe { width: 100%; height: 100%; border: none; display: block; }
+    .map-embed-label { position: absolute; top: 12px; left: 12px; background: rgba(13,26,18,0.85); color: var(--gold); font-family: var(--head-font); font-weight: 700; font-size: 10px; letter-spacing: 0.10em; text-transform: uppercase; padding: 5px 12px; z-index: 10; pointer-events: none; }
+
+    /* ── MODULE CARDS ── */
+    .module-cards { display: grid; grid-template-columns: 1fr; gap: 20px; margin: 28px 0; }
+    .module-card { border: 0.8px solid var(--border); overflow: hidden; }
+    .module-card-header { background: var(--dark); color: white; padding: 14px 20px; display: flex; align-items: center; gap: 14px; }
+    .module-num { font-family: var(--head-font); font-weight: 700; font-size: 10px; color: var(--gold); letter-spacing: 0.10em; }
+    .module-title { font-family: var(--head-font); font-weight: 700; font-size: 12px; letter-spacing: 0.06em; text-transform: uppercase; }
+    .module-body { display: grid; grid-template-columns: 1fr 1fr; }
+    .module-media { aspect-ratio: 16/10; background: var(--dark); overflow: hidden; position: relative; }
+    .module-media img,
+    .module-media video { width: 100%; height: 100%; object-fit: cover; display: block; }
+    .module-desc { padding: 24px; background: #f7f5f2; border-left: 0.8px solid var(--border); }
+    .module-desc p.body-p { font-size: 13.5px; color: #444; margin-bottom: 10px; } .module-desc p.body-p:last-child { margin-bottom: 0; }
+    .layer-chips { display: flex; flex-wrap: wrap; gap: 6px; margin-top: 14px; }
+    .layer-chip { font-family: var(--head-font); font-weight: 500; font-size: 10px; padding: 3px 9px; background: rgba(200,145,42,0.10); color: var(--gold); border: 0.8px solid rgba(200,145,42,0.25); }
+    .layer-chip.green { background: rgba(42,122,90,0.10); color: var(--teal); border-color: rgba(42,122,90,0.25); }
+
+    /* ── IMAGE GRID ── */
+    .image-grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin: 28px 0; }
+    .image-slot { aspect-ratio: 16/10; background: var(--dark); overflow: hidden; }
+    .image-slot img { width: 100%; height: 100%; object-fit: cover; display: block; cursor: zoom-in; transition: transform .3s; }
+    .image-slot img:hover { transform: scale(1.03); }
+    .image-caption { font-size: 10.4px; color: rgba(0,0,0,0.55); margin-top: 6px; line-height: 1.4; }
+
+    /* ── DESIGN CARDS ── */
+    .design-cards { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin: 24px 0; }
+    .design-card { border: 0.8px solid var(--border); padding: 20px; }
+    .design-card .icon { font-size: 20px; margin-bottom: 10px; }
+    .design-card strong { display: block; font-family: var(--head-font); font-weight: 700; font-size: 11px; letter-spacing: 0.07em; text-transform: uppercase; margin-bottom: 8px; }
+    .design-card p { font-size: 13px; color: rgba(0,0,0,0.6); margin: 0; line-height: 1.65; }
+
+    /* ── DATA TABLE ── */
+    .data-table { width: 100%; border-collapse: collapse; font-size: 13px; margin: 20px 0; }
+    .data-table th { font-family: var(--head-font); font-weight: 700; font-size: 10px; letter-spacing: 0.10em; text-transform: uppercase; color: var(--muted); text-align: left; padding: 10px 12px; border-bottom: 1.5px solid var(--border); background: var(--warm-gray); }
+    .data-table td { padding: 9px 12px; border-bottom: 0.8px solid var(--border); vertical-align: top; color: rgba(0,0,0,0.75); line-height: 1.5; }
+    .data-table tr:last-child td { border-bottom: none; }
+    .data-table tr:hover td { background: #f5f2ee; }
+    code { background: #eeebe6; padding: 1px 5px; font-size: 11.5px; font-family: monospace; }
+
+    /* ── CHALLENGE LIST ── */
+    .challenge-list { list-style: none; margin: 16px 0; }
+    .challenge-list li { display: flex; gap: 16px; padding: 14px 0; border-bottom: 0.8px solid var(--border); font-size: 14px; color: rgba(0,0,0,0.65); line-height: 1.65; }
+    .challenge-list li:last-child { border-bottom: none; }
+    .ch-num { font-family: var(--head-font); font-weight: 700; font-size: 10px; color: var(--gold); min-width: 20px; padding-top: 3px; }
+
+    /* ── CALLOUT ── */
+    .callout { border-left: 3px solid var(--gold); padding: 16px 20px; background: var(--gold-light); margin: 28px 0; }
+    .callout p { font-size: 14px; color: #444; margin: 0; font-style: italic; line-height: 1.7; }
+
+    /* ── FOOTER ── */
+    footer { border-top: 0.8px solid var(--border); padding: 28px 40px; display: flex; justify-content: space-between; align-items: center; font-family: var(--head-font); font-weight: 700; font-size: 11px; color: var(--muted); letter-spacing: 0.06em; text-transform: uppercase; margin-top: 80px; }
+    footer a { color: var(--muted); } footer a:hover { color: var(--text); }
+
+    @media (max-width: 768px) {
+      .project-body { grid-template-columns: 1fr; padding: 36px 20px; }
+      .sidebar-meta { border-right: none; border-bottom: 0.8px solid var(--border); padding-right: 0; padding-bottom: 32px; margin-bottom: 32px; }
+      .main-col { padding-left: 0; }
+      .stats-bar { grid-template-columns: repeat(2,1fr); }
+      .module-body, .image-grid-2, .design-cards { grid-template-columns: 1fr; }
+      nav, .project-meta-bar { padding: 14px 20px; }
+      .hero-content { flex-direction: column; align-items: flex-start; }
+    }
+  </style>
+</head>
+<body>
+
+<!-- NAV -->
+<nav>
+  <div class="nav-name">Juan Sebastian<br>Cortes</div>
+  <div class="nav-right">
+    <a href="index.html">Portfolio</a>
+    <a href="#">About</a>
+    <a href="#">Contact</a>
+  </div>
+</nav>
+
+<!-- META BAR -->
+<div class="project-meta-bar">
+  <div class="project-title-bar">Vanishing Clouds &mdash; Colombia's Páramo Crisis</div>
+  <div class="project-nav-links">
+    <a href="index.html">&larr; All Projects</a>
+    <a href="project.html">Next &rarr;</a>
+  </div>
+</div>
+
+<!-- HERO -->
+<div class="hero">
+  <video autoplay muted loop playsinline preload="auto" poster="assets/P12/Screenshot 2026-05-12 105944.png">
+    <source src="assets/P12/Cover.mp4" type="video/mp4">
+  </video>
+  <div class="hero-overlay"></div>
+  <div class="hero-content">
+    <div class="hero-title">
+      <h1>Interactive Web Atlas &middot; Leaflet.js &middot; GitHub Pages</h1>
+      <p>GBIF &middot; iNaturalist &middot; Instituto Humboldt &middot; MapBiomas Colombia &middot; NASA FIRMS &middot; ArcGIS Pro</p>
+    </div>
+    <a class="hero-live-btn" href="https://cortesju.github.io/vanishing-clouds/" target="_blank" rel="noopener">
+      <span class="live-dot"></span>Explore Live Atlas
+    </a>
+  </div>
+</div>
+
+<!-- BODY -->
+<div class="project-body">
+
+  <!-- SIDEBAR -->
+  <aside class="sidebar-meta">
+    <div class="sidebar-block">
+      <div class="sidebar-label">Course</div>
+      <div class="sidebar-value">SSCI 589 &mdash; Cartography &amp; Visualization<br>USC Spatial Sciences Institute</div>
+    </div>
+    <div class="sidebar-block">
+      <div class="sidebar-label">Year</div>
+      <div class="sidebar-value">2026</div>
+    </div>
+    <div class="sidebar-block">
+      <div class="sidebar-label">Role</div>
+      <div class="sidebar-value">Solo &mdash; Web map dev, data pipeline, design, cartography</div>
+    </div>
+    <div class="sidebar-block">
+      <div class="sidebar-label">Study Area</div>
+      <div class="sidebar-value">Colombia &mdash; Andean Páramos<br>Three Cordilleras</div>
+    </div>
+    <div class="sidebar-block">
+      <div class="sidebar-label">Tools</div>
+      <div class="tag-list">
+        <span class="tag gold">Leaflet.js</span>
+        <span class="tag gold">GitHub Pages</span>
+        <span class="tag green">ArcGIS Pro</span>
+        <span class="tag">HTML / CSS / JS</span>
+        <span class="tag">GeoJSON</span>
+        <span class="tag">GBIF API</span>
+      </div>
+    </div>
+    <div class="sidebar-block">
+      <div class="sidebar-label">Data Sources</div>
+      <div class="sidebar-value" style="font-size:13px;line-height:1.8;">
+        GBIF<br>
+        iNaturalist<br>
+        Instituto Humboldt (IAvH)<br>
+        MapBiomas Colombia<br>
+        NASA FIRMS<br>
+        ArcGIS Pro layers
+      </div>
+    </div>
+    <div class="sidebar-block">
+      <div class="sidebar-label">Live Project</div>
+      <div class="sidebar-value">
+        <a href="https://cortesju.github.io/vanishing-clouds/" target="_blank" rel="noopener">&rarr; Open Web Atlas</a>
+      </div>
+    </div>
+  </aside>
+
+  <!-- MAIN -->
+  <main class="main-col">
+
+    <h2 class="section-heading">Overview</h2>
+    <p class="body-p">
+      <em>Vanishing Clouds: Colombia's Hidden Páramo Crisis</em> is an interactive web atlas documenting the accelerating decline of Colombia's páramo ecosystems — the high-altitude tropical wetlands that supply drinking water to 48 million people, host over 500 endemic species, and represent more than 70% of the world's páramos. The atlas is organized into six thematic modules: Páramos, Build a Páramo, Species, Threats, Urgency, and About.
+    </p>
+    <p class="body-p">
+      The project's central argument is that Colombia holds an ecosystem that is, in effect, endemic at the landscape scale — not just in its species, but in the very conditions that allow it to exist. The site was designed to guide viewers through a narrative sequence: first understand what a páramo is, then how it forms, what lives there, what threatens it, and why conservation action matters.
+    </p>
+
+    <div class="callout">
+      <p>"I wanted viewers to understand that the páramo is not just a remote landscape, but a rare ecological system tied to water regulation, biodiversity, and national environmental identity — an ecosystem that is itself almost endemic to Colombia."</p>
+    </div>
+
+    <!-- STATS -->
+    <div class="stats-bar">
+      <div class="stat-item"><span class="stat-number">37</span><span class="stat-label">Páramo complexes<br>mapped</span></div>
+      <div class="stat-item"><span class="stat-number">201</span><span class="stat-label">Species occurrence<br>records</span></div>
+      <div class="stat-item"><span class="stat-number">40</span><span class="stat-label">Fire alerts<br>detected</span></div>
+      <div class="stat-item"><span class="stat-number">45</span><span class="stat-label">Urgency<br>zones</span></div>
+    </div>
+
+    <!-- LIVE EMBED -->
+    <h2 class="section-heading">Live Interactive Atlas</h2>
+    <p class="body-p">Embedded below — explore all six modules using the top navigation. Click any green páramo polygon to open its detail card, toggle environmental layers in Build a Páramo, filter species by threat status, and step through land-cover change from 1986 to 2024 in the Threats timeline.</p>
+    <div class="map-embed-full">
+      <div class="map-embed-label">&#9679; Live &mdash; cortesju.github.io/vanishing-clouds</div>
+      <iframe src="https://cortesju.github.io/vanishing-clouds/" title="Vanishing Clouds — Colombia's Páramo Crisis" allowfullscreen loading="lazy"></iframe>
+    </div>
+
+    <!-- SIX MODULES -->
+    <h2 class="section-heading">Six Interactive Modules</h2>
+    <p class="body-p">Each module focuses on one dimension of the páramo — from geography and ecology to biodiversity and human pressure — building toward a composite understanding of why these ecosystems are both extraordinary and urgently at risk.</p>
+
+    <div class="module-cards">
+
+      <!-- Module 01 -->
+      <div class="module-card">
+        <div class="module-card-header">
+          <span class="module-num">01</span>
+          <span class="module-title">Páramos &mdash; Geography &amp; Distribution</span>
+        </div>
+        <div class="module-body">
+          <div class="module-media">
+            <img src="assets/P12/Screenshot 2026-05-12 105958.png" alt="Páramos tab — complex detail popup for Nevado del Huila-Moras">
+          </div>
+          <div class="module-desc">
+            <p class="body-p">The main view displays all 37 of Colombia's officially recognized páramo complexes as interactive polygons distributed across the three Andean cordilleras. Clicking any complex opens a detail card showing its code, district, biome, surface area, and elevation range.</p>
+            <p class="body-p">360° field-view markers appear as users zoom in, revealing georeferenced photographs taken directly inside the páramo. A dynamic elevation cross-section at the bottom of the screen renders the terrain profile at the current latitude in real time.</p>
+            <div class="layer-chips">
+              <span class="layer-chip">37 páramo complexes</span>
+              <span class="layer-chip">360° field-view markers</span>
+              <span class="layer-chip">Complex detail cards</span>
+              <span class="layer-chip green">Elevation cross-section</span>
+              <span class="layer-chip green">IAvH boundaries</span>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Module 02 -->
+      <div class="module-card">
+        <div class="module-card-header">
+          <span class="module-num">02</span>
+          <span class="module-title">Build a Páramo &mdash; Environmental Conditions</span>
+        </div>
+        <div class="module-body">
+          <div class="module-media">
+            <video autoplay muted loop playsinline preload="auto" poster="assets/P12/Screenshot 2026-05-12 110036.png">
+              <source src="assets/P12/Screen Recording 2026-05-12 110335.mp4" type="video/mp4">
+            </video>
+          </div>
+          <div class="module-desc">
+            <p class="body-p">Páramos don't emerge at random — they require five converging conditions. This module lets users toggle each environmental layer individually and watch the map respond: high elevation (≥2,800m), cold temperatures (2–10°C), abundant moisture, tropical latitude, and Andean geography.</p>
+            <p class="body-p">A composite <strong>Climate Match Score</strong> layer synthesizes temperature and precipitation to show where páramo-like conditions exist globally, revealing that the Colombian Andes are the only place where all factors converge at scale. Pan around the globe to compare.</p>
+            <div class="layer-chips">
+              <span class="layer-chip">Elevation ≥2,800m</span>
+              <span class="layer-chip">Temperature 2–10°C</span>
+              <span class="layer-chip">Climate Match Score</span>
+              <span class="layer-chip green">Equatorial influence</span>
+              <span class="layer-chip green">Global suitability</span>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Module 03 -->
+      <div class="module-card">
+        <div class="module-card-header">
+          <span class="module-num">03</span>
+          <span class="module-title">Species &mdash; Biodiversity &amp; Occurrence</span>
+        </div>
+        <div class="module-body">
+          <div class="module-media">
+            <video autoplay muted loop playsinline preload="auto" poster="assets/P12/Screenshot 2026-05-12 110110.png">
+              <source src="assets/P12/Screen Recording 2026-05-12 110455.mp4" type="video/mp4">
+            </video>
+          </div>
+          <div class="module-desc">
+            <p class="body-p">A hexagonal grid shaded by species richness reveals biodiversity hotspots across Colombia's páramos — darker cells indicate greater species concentration. A temporal slider animates GBIF occurrence records from Pre-1980 through to the present, showing how documentation has grown over decades.</p>
+            <p class="body-p">Individual species are filterable by group (Flora / Fauna) and IUCN threat status (CR, EN, VU). Clicking any species entry opens a detail card with a field photograph, taxonomy, year of first record, and geographic coordinates from the GBIF observation database.</p>
+            <div class="layer-chips">
+              <span class="layer-chip">Hexagonal richness grid</span>
+              <span class="layer-chip">Temporal slider Pre-1980–Now</span>
+              <span class="layer-chip">Species detail cards</span>
+              <span class="layer-chip green">GBIF occurrences</span>
+              <span class="layer-chip green">CR · EN · VU filter</span>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Module 04 -->
+      <div class="module-card">
+        <div class="module-card-header">
+          <span class="module-num">04</span>
+          <span class="module-title">Threats &mdash; Land-Cover Change &amp; Fire Pressure</span>
+        </div>
+        <div class="module-body">
+          <div class="module-media">
+            <img src="assets/P12/Screenshot 2026-05-12 110200.png" alt="Threats — fire frequency by páramo complex and Threats in the News panel">
+          </div>
+          <div class="module-desc">
+            <p class="body-p">Six threat views expose the human pressures reshaping páramo landscapes from 1986 to 2024, powered by MapBiomas Colombia annual land-cover classifications: a land-cover timeline, threat category by year, agriculture expansion by complex, urban proximity risk, total land-cover change, and fire pressure.</p>
+            <p class="body-p">A curated <strong>Threats in the News</strong> panel surfaces recent journalism from AIDA, Yale Environment 360, and The Revelator — linking the spatial data directly to active legal battles over mining concessions inside constitutionally protected páramo zones.</p>
+            <div class="layer-chips">
+              <span class="layer-chip">MapBiomas 1986–2024</span>
+              <span class="layer-chip">Agriculture expansion</span>
+              <span class="layer-chip">Urban proximity risk</span>
+              <span class="layer-chip green">NASA FIRMS fire alerts</span>
+              <span class="layer-chip green">Threats in the News</span>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Module 05 -->
+      <div class="module-card">
+        <div class="module-card-header">
+          <span class="module-num">05</span>
+          <span class="module-title">Urgency &mdash; Conservation Priority Index</span>
+        </div>
+        <div class="module-body">
+          <div class="module-media" style="background:#0d1a12; display:flex; align-items:center; justify-content:center;">
+            <div style="text-align:center; padding:24px;">
+              <div style="font-size: 2.5rem; margin-bottom:12px;">⚠</div>
+              <div style="font-family:'Rubik',sans-serif; font-weight:700; font-size:13px; color:var(--gold); letter-spacing:0.08em; text-transform:uppercase;">45 Urgency Zones</div>
+              <div style="font-size:12px; color:rgba(255,255,255,0.45); margin-top:6px; letter-spacing:0.05em; text-transform:uppercase;">Composite Index</div>
+            </div>
+          </div>
+          <div class="module-desc">
+            <p class="body-p">The Urgency module synthesizes all preceding threat layers — land-cover change, fire pressure, agriculture expansion, and urban proximity — into a single composite conservation urgency index across all 45 urgency zones.</p>
+            <p class="body-p">The index is designed to help researchers, policymakers, and the general public quickly identify which páramo complexes face the greatest combination of pressures and therefore represent the highest priority for immediate conservation intervention.</p>
+            <div class="layer-chips">
+              <span class="layer-chip">Composite urgency index</span>
+              <span class="layer-chip">45 urgency zones</span>
+              <span class="layer-chip green">Multi-threat synthesis</span>
+              <span class="layer-chip green">Priority ranking</span>
+            </div>
+          </div>
+        </div>
+      </div>
+
+    </div>
+
+    <!-- SELECTED SCREENSHOTS -->
+    <h2 class="section-heading">Screenshots</h2>
+    <div class="image-grid-2">
+      <div>
+        <div class="image-slot">
+          <img src="assets/P12/Screenshot 2026-05-12 105944.png" alt="Landing page — cinematic frailejón hero with ENTER THE MAP button">
+        </div>
+        <p class="image-caption">Landing page — cinematic frailejón (Espeletia) hero image with entry button.</p>
+      </div>
+      <div>
+        <div class="image-slot">
+          <img src="assets/P12/Screenshot 2026-05-12 110127.png" alt="Species card — Espeletia killipii Cuatrec. taxonomy and photograph">
+        </div>
+        <p class="image-caption">Species card — <em>Espeletia killipii</em> Cuatrec., Asteraceae, first recorded before 1980.</p>
+      </div>
+    </div>
+    <div class="image-grid-2">
+      <div>
+        <div class="image-slot">
+          <img src="assets/P12/Screenshot 2026-05-12 110058.png" alt="Build a Páramo — global suitability composite layer">
+        </div>
+        <p class="image-caption">Build a Páramo — global climate suitability composite showing the Colombian Andes as the world's primary páramo belt.</p>
+      </div>
+      <div>
+        <div class="image-slot">
+          <img src="assets/P12/Screenshot 2026-05-12 110200.png" alt="Threats — fire frequency map and Threats in the News panel">
+        </div>
+        <p class="image-caption">Threats — fire frequency by páramo complex with the Threats in the News journalism sidebar.</p>
+      </div>
+    </div>
+
+    <!-- DATA SOURCES -->
+    <h2 class="section-heading">Data Sources</h2>
+    <table class="data-table">
+      <thead>
+        <tr><th>Source</th><th>Data Used</th><th>Module</th></tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td><strong>GBIF</strong></td>
+          <td>Species occurrence records, taxonomy, observation dates</td>
+          <td>Species</td>
+        </tr>
+        <tr>
+          <td><strong>iNaturalist</strong></td>
+          <td>Citizen-science field observations for endemic páramo species</td>
+          <td>Species</td>
+        </tr>
+        <tr>
+          <td><strong>Instituto Humboldt (IAvH)</strong></td>
+          <td>Official páramo complex boundaries, elevation ranges, ecological metadata</td>
+          <td>Páramos · Urgency</td>
+        </tr>
+        <tr>
+          <td><strong>MapBiomas Colombia</strong></td>
+          <td>Annual land-cover classification rasters 1986–2024</td>
+          <td>Threats</td>
+        </tr>
+        <tr>
+          <td><strong>NASA FIRMS</strong></td>
+          <td>Active fire detection alerts by páramo complex</td>
+          <td>Threats · Urgency</td>
+        </tr>
+        <tr>
+          <td><strong>ArcGIS Pro layers</strong></td>
+          <td>Elevation, climate, and environmental reference layers prepared for web export</td>
+          <td>Build a Páramo</td>
+        </tr>
+      </tbody>
+    </table>
+
+    <!-- DESIGN DECISIONS -->
+    <h2 class="section-heading">Design Decisions</h2>
+    <div class="design-cards">
+      <div class="design-card">
+        <div class="icon">🏔</div>
+        <strong>Narrative sequence</strong>
+        <p>The six modules follow a deliberate arc — geography → formation conditions → biodiversity → threats → urgency — guiding viewers from wonder to concern rather than presenting data without context.</p>
+      </div>
+      <div class="design-card">
+        <div class="icon">🎨</div>
+        <strong>Dark terrain basemap</strong>
+        <p>A custom dark terrain basemap anchors the atlas visually, allowing golden páramo polygons, teal biodiversity hexagons, and red fire alerts to read clearly against the mountainous Andean backdrop.</p>
+      </div>
+      <div class="design-card">
+        <div class="icon">🌐</div>
+        <strong>Global comparison in Build a Páramo</strong>
+        <p>Showing climate suitability at the global scale — not just Colombia — makes the argument for páramo uniqueness spatially rather than textually. Viewers discover for themselves that no other region matches.</p>
+      </div>
+      <div class="design-card">
+        <div class="icon">📰</div>
+        <strong>Journalism integration in Threats</strong>
+        <p>Linking spatial data to active legal battles and published journalism grounds the map in real-world consequence, transforming it from a visualization into an advocacy and policy communication tool.</p>
+      </div>
+    </div>
+
+    <!-- TECHNICAL CHALLENGES -->
+    <h2 class="section-heading">Technical Challenges</h2>
+    <ul class="challenge-list">
+      <li>
+        <span class="ch-num">01</span>
+        <span><strong>Desktop GIS to web cartography:</strong> Many layers that worked well in ArcGIS Pro required significant adaptation for online display. Raster layers needed to be clipped, resampled, or simplified; transparencies adjusted; and in some cases data converted from raster to vector polygon format to work within web-friendly Leaflet.js rendering.</span>
+      </li>
+      <li>
+        <span class="ch-num">02</span>
+        <span><strong>Multi-format dataset integration:</strong> GBIF occurrence records, IAvH boundary shapefiles, MapBiomas annual land-cover rasters, and NASA FIRMS fire data each arrived in different spatial resolutions, coordinate systems, and symbology conventions — requiring a custom preprocessing pipeline to align them into a coherent, consistent web experience.</span>
+      </li>
+      <li>
+        <span class="ch-num">03</span>
+        <span><strong>Performance at national scale:</strong> Displaying 37 páramo polygons alongside hexagonal species grids, annual land-cover timelines, fire alert markers, and an interactive elevation cross-section required careful layer ordering, geometry simplification, and progressive loading strategies to maintain responsiveness across the full extent of Colombia.</span>
+      </li>
+    </ul>
+
+    <div class="callout">
+      <p>This project argues that conservation attention should extend beyond individual endangered species to whole ecosystems whose uniqueness and fragility make them irreplaceable. The páramo is not marginal landscape — it is a concentrated, biologically and hydrologically critical system whose loss would be felt by nearly half of Colombia's population.</p>
+    </div>
+
+  </main>
+</div>
+
+<footer>
+  <span>Juan Sebastian Cortes &mdash; Portfolio 2026</span>
+  <a href="index.html">&larr; Back to all projects</a>
+</footer>
+
+<script src="lightbox.js"></script>
+</body>
+</html>

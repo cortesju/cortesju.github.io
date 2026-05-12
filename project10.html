@@ -1,0 +1,540 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Fatal Police Encounters — Point Pattern Analysis NYC — Juan Sebastian Cortes</title>
+  <link href="https://fonts.googleapis.com/css2?family=Rubik:wght@400;500;700;900&display=swap" rel="stylesheet"/>
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    :root {
+      --white:      #f5f4f2;
+      --text:       #1a1a1a;
+      --muted:      #72726a;
+      --border:     #cac8c2;
+      --warm-gray:  #e6e4e0;
+      --ink:        #1c1c1c;
+      --red:        #8b1a1a;
+      --red-mid:    #b83030;
+      --red-light:  #d4735a;
+      --charcoal:   #3a3a3a;
+      --steel:      #4a5568;
+      --dark:       #0f0f0f;
+      --body-font:  "Neue Haas Grotesk","Haas Grot Text","Helvetica Neue",Arial,sans-serif;
+      --head-font:  'Rubik', sans-serif;
+    }
+
+    body { font-family: var(--body-font); background: var(--white); color: var(--text); font-size: 14.5px; line-height: 1.65; }
+    a { text-decoration: none; color: inherit; }
+
+    /* ── NAV ── */
+    nav { display: flex; align-items: center; justify-content: space-between; padding: 18px 40px; border-bottom: 0.8px solid #000; position: sticky; top: 0; background: var(--white); z-index: 200; }
+    .nav-name { font-family: var(--head-font); font-weight: 700; font-size: 13px; letter-spacing: 0.06em; text-transform: uppercase; line-height: 1.3; }
+    .nav-right { display: flex; gap: 32px; font-family: var(--head-font); font-weight: 700; font-size: 12px; letter-spacing: 0.08em; text-transform: uppercase; }
+    .nav-right a { color: var(--muted); } .nav-right a:hover { color: var(--text); }
+
+    /* ── META BAR ── */
+    .project-meta-bar { display: flex; align-items: center; justify-content: space-between; padding: 10.4px 40px; border-bottom: 0.8px solid #000; }
+    .project-title-bar { font-family: var(--head-font); font-weight: 700; font-size: 13px; letter-spacing: 0.06em; text-transform: uppercase; color: rgba(0,0,0,0.75); }
+    .project-nav-links { display: flex; gap: 16px; font-family: var(--body-font); font-size: 13px; color: rgba(0,0,0,0.7); }
+    .project-nav-links a { color: rgba(0,0,0,0.7); } .project-nav-links a:hover { color: #000; }
+
+    /* ── HERO ── */
+    .hero { position: relative; width: 100%; height: 500px; overflow: hidden; background: var(--dark); }
+    .hero img { width: 100%; height: 100%; object-fit: cover; object-position: center 40%; opacity: 0.75; }
+    .hero-overlay { position: absolute; inset: 0; background: linear-gradient(to top, rgba(15,10,10,0.97) 0%, rgba(15,10,10,0.3) 60%, transparent 100%); pointer-events: none; }
+    .hero-content { position: absolute; bottom: 40px; left: 40px; right: 40px; display: flex; align-items: flex-end; justify-content: space-between; gap: 24px; }
+    .hero-eyebrow { font-family: var(--head-font); font-weight: 700; font-size: 11px; letter-spacing: 0.16em; text-transform: uppercase; color: var(--red-light); margin-bottom: 12px; }
+    .hero-title { font-family: var(--head-font); font-weight: 900; font-size: clamp(28px, 4vw, 52px); color: white; line-height: 1.05; margin-bottom: 10px; }
+    .hero-sub { font-family: var(--head-font); font-size: 11px; color: rgba(255,255,255,0.45); letter-spacing: 0.06em; max-width: 520px; line-height: 1.6; text-transform: uppercase; }
+
+    /* ── LAYOUT ── */
+    .project-body { display: grid; grid-template-columns: 220px 1fr; max-width: 1200px; margin: 0 auto; padding: 60px 40px; }
+    .sidebar { padding-right: 48px; border-right: 0.8px solid #000; }
+    .sidebar-block { margin-bottom: 36px; }
+    .sidebar-label { font-family: var(--head-font); font-size: 10px; letter-spacing: 0.12em; text-transform: uppercase; color: var(--muted); margin-bottom: 6px; }
+    .sidebar-value { font-size: 13.5px; font-weight: 500; line-height: 1.6; }
+    .tag-list { display: flex; flex-wrap: wrap; gap: 6px; margin-top: 4px; }
+    .tag { font-family: var(--head-font); font-weight: 700; font-size: 10px; letter-spacing: 0.06em; text-transform: uppercase; padding: 3px 8px; border: 0.8px solid var(--border); color: var(--muted); }
+    .tag.red  { border-color: var(--red-mid); color: var(--red); }
+    .tag.dark { border-color: var(--charcoal); color: var(--charcoal); }
+
+    .main-content { padding-left: 56px; }
+    h2.section-heading { font-family: var(--head-font); font-weight: 700; font-size: 11px; letter-spacing: 0.14em; text-transform: uppercase; color: var(--muted); margin-bottom: 16px; margin-top: 52px; padding-bottom: 10px; border-bottom: 0.8px solid #000; }
+    h2.section-heading:first-child { margin-top: 0; }
+    p { font-size: 14px; line-height: 1.75; color: #333; margin-bottom: 18px; }
+
+    /* ── STATS ── */
+    .stats-bar { display: grid; grid-template-columns: repeat(4,1fr); gap: 1px; background: var(--border); border: 0.8px solid #000; margin: 36px 0; }
+    .stat-item { background: var(--white); padding: 24px 16px; text-align: center; }
+    .stat-number { font-family: var(--head-font); font-weight: 900; font-size: 22px; color: var(--ink); display: block; line-height: 1; margin-bottom: 7px; }
+    .stat-number.red   { color: var(--red); }
+    .stat-number.steel { color: var(--steel); }
+    .stat-label { font-size: 10px; letter-spacing: 0.08em; text-transform: uppercase; color: var(--muted); line-height: 1.4; }
+
+    /* ── DATA TABLE ── */
+    .data-table { width: 100%; border-collapse: collapse; margin: 20px 0; font-size: 13px; }
+    .data-table th { font-family: var(--head-font); font-weight: 700; font-size: 10px; letter-spacing: 0.1em; text-transform: uppercase; color: var(--muted); background: var(--warm-gray); padding: 10px 14px; text-align: left; border: 0.8px solid var(--border); }
+    .data-table td { padding: 10px 14px; border: 0.8px solid var(--border); color: #444; vertical-align: top; line-height: 1.55; }
+    .data-table tr:hover td { background: #eeecec; }
+
+    /* ── FORMULA ── */
+    .formula-block { background: #f0ecec; border: 0.8px solid #c8b4b4; border-left: 3px solid var(--red-mid); padding: 18px 24px; margin: 20px 0; }
+    .formula-label { font-family: var(--head-font); font-weight: 700; font-size: 10px; letter-spacing: 0.1em; text-transform: uppercase; color: var(--red); margin-bottom: 8px; }
+    .formula-eq { font-family: 'Georgia', 'Times New Roman', serif; font-style: italic; font-size: 15px; color: var(--ink); padding: 6px 0; letter-spacing: 0.02em; }
+    .formula-note { font-size: 12.5px; color: #555; margin-top: 10px; line-height: 1.6; }
+
+    /* ── CALLOUT ── */
+    .callout { border-left: 3px solid var(--red-mid); padding: 16px 20px; background: #f5eeee; margin: 28px 0; }
+    .callout p { font-size: 14px; color: #444; margin: 0; font-style: italic; }
+    .callout.neutral { border-left-color: var(--charcoal); background: #eeecec; }
+    .callout.steel   { border-left-color: var(--steel);   background: #eceef2; }
+
+    /* ── KDE BANDWIDTH TABLE ── */
+    .bandwidth-table { width: 100%; border-collapse: collapse; margin: 20px 0 28px; font-size: 12.5px; }
+    .bandwidth-table th { font-family: var(--head-font); font-weight: 700; font-size: 10px; letter-spacing: 0.08em; text-transform: uppercase; background: var(--ink); color: white; padding: 9px 12px; text-align: center; border: 0.8px solid var(--ink); }
+    .bandwidth-table th.row-label { background: var(--warm-gray); color: var(--muted); border-color: var(--border); text-align: left; }
+    .bandwidth-table td { padding: 9px 12px; border: 0.8px solid var(--border); text-align: center; color: #444; font-family: var(--head-font); font-weight: 500; font-size: 12px; }
+    .bandwidth-table td.row-label { text-align: left; background: var(--warm-gray); font-weight: 700; font-size: 11px; letter-spacing: 0.06em; text-transform: uppercase; color: var(--muted); }
+    .bandwidth-table td.selected { background: #f5eeee; color: var(--red); font-weight: 700; }
+
+    /* ── WORKFLOW STEPS ── */
+    .workflow-steps { list-style: none; margin: 24px 0; }
+    .workflow-steps li { display: flex; gap: 20px; margin-bottom: 20px; padding-bottom: 20px; border-bottom: 0.8px solid var(--border); }
+    .workflow-steps li:last-child { border-bottom: none; }
+    .wf-num { font-family: var(--head-font); font-weight: 700; font-size: 11px; color: var(--red-mid); min-width: 24px; padding-top: 2px; }
+    .wf-body strong { display: block; font-size: 13.5px; font-weight: 600; margin-bottom: 4px; }
+    .wf-body p { font-size: 13px; color: #555; margin: 0; }
+
+    /* ── K RESULTS ── */
+    .k-results { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 1px; background: var(--border); border: 0.8px solid #000; margin: 24px 0; }
+    .k-item { background: var(--white); padding: 20px 16px; }
+    .k-borough { font-family: var(--head-font); font-weight: 700; font-size: 12px; letter-spacing: 0.06em; text-transform: uppercase; margin-bottom: 8px; color: var(--ink); }
+    .k-result { font-size: 12px; color: #555; line-height: 1.6; }
+    .k-badge { display: inline-block; font-family: var(--head-font); font-weight: 700; font-size: 9px; letter-spacing: 0.08em; text-transform: uppercase; padding: 2px 7px; margin-bottom: 6px; }
+    .k-badge.clustered { background: var(--red); color: white; }
+    .k-badge.moderate  { background: #c07850; color: white; }
+    .k-badge.unstable  { background: var(--warm-gray); color: var(--muted); border: 0.8px solid var(--border); }
+
+    /* ── IMAGES ── */
+    .image-grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin: 28px 0; }
+    .image-grid-3 { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 12px; margin: 28px 0; }
+    .image-slot { background: var(--warm-gray); display: flex; align-items: center; justify-content: center; overflow: hidden; }
+    .image-slot.ar-43  { aspect-ratio: 4/3; }
+    .image-slot.ar-32  { aspect-ratio: 3/2; }
+    .image-slot.ar-169 { aspect-ratio: 16/9; }
+    .image-slot img { width: 100%; height: 100%; object-fit: cover; display: block; }
+    .image-full { width: 100%; margin: 28px 0; overflow: hidden; border: 0.8px solid #000; }
+    .image-full img { width: 100%; display: block; }
+    .image-caption { font-family: var(--head-font); font-size: 10px; color: var(--muted); margin-top: 6px; line-height: 1.5; }
+
+    /* ── LIMITATION LIST ── */
+    .limitation-list { list-style: none; margin: 16px 0; }
+    .limitation-list li { display: flex; gap: 14px; padding: 12px 0; border-bottom: 0.8px solid var(--border); font-size: 13.5px; color: #444; line-height: 1.65; }
+    .limitation-list li:last-child { border-bottom: none; }
+    .lim-icon { font-size: 14px; flex-shrink: 0; padding-top: 2px; }
+
+    footer { border-top: 0.8px solid #000; padding: 28px 40px; display: flex; justify-content: space-between; align-items: center; font-family: var(--head-font); font-size: 11px; color: var(--muted); letter-spacing: 0.06em; text-transform: uppercase; margin-top: 80px; }
+    footer a { color: var(--muted); } footer a:hover { color: var(--text); }
+
+    @media (max-width: 768px) {
+      .project-body { grid-template-columns: 1fr; padding: 36px 20px; }
+      .sidebar { border-right: none; border-bottom: 0.8px solid #000; padding-right: 0; padding-bottom: 32px; margin-bottom: 32px; }
+      .main-content { padding-left: 0; }
+      .stats-bar, .k-results { grid-template-columns: repeat(2,1fr); }
+      .image-grid-2, .image-grid-3 { grid-template-columns: 1fr; }
+      nav, .project-meta-bar { padding: 14px 20px; }
+      .hero-content { flex-direction: column; align-items: flex-start; }
+    }
+  </style>
+</head>
+<body>
+
+<nav>
+  <div class="nav-name">Juan Sebastian<br>Cortes</div>
+  <div class="nav-right">
+    <a href="index.html">Portfolio</a>
+    <a href="#">About</a>
+    <a href="#">Contact</a>
+  </div>
+</nav>
+
+<div class="project-meta-bar">
+  <div class="project-title-bar">Fatal Police Encounters NYC — Point Pattern Analysis</div>
+  <div class="project-nav-links">
+    <a href="project5.html">← Prev</a>
+    <a href="index.html">All Projects</a>
+    <a href="project6.html">Next →</a>
+  </div>
+</div>
+
+<!-- HERO -->
+<div class="hero">
+  <img src="assets/P10/KDE6000.jpg" alt="Kernel Density Estimation of fatal police encounters in New York City — 6,000 ft bandwidth">
+  <div class="hero-overlay"></div>
+  <div class="hero-content">
+    <div>
+      <div class="hero-eyebrow">KDE · Ripley's K · Inhomogeneity Adjustment · MAUP Sensitivity · ArcGIS Pro</div>
+      <div class="hero-title">Fatal Police Encounters<br>in New York City</div>
+      <div class="hero-sub">Point pattern analysis of spatial clustering using Kernel Density Estimation, Ripley's K function, population-normalized inhomogeneity adjustment, and fishnet MAUP sensitivity testing across five boroughs</div>
+    </div>
+  </div>
+</div>
+
+<div class="project-body">
+
+  <!-- SIDEBAR -->
+  <aside class="sidebar">
+    <div class="sidebar-block">
+      <div class="sidebar-label">Course</div>
+      <div class="sidebar-value" style="font-size:13px;line-height:1.8;">
+        SSCI 583<br>Spatial Analysis<br>&amp; Modeling<br>
+        <span style="font-family:var(--head-font);font-size:11px;color:var(--muted);">USC Spatial Sciences<br>Institute</span>
+      </div>
+    </div>
+    <div class="sidebar-block">
+      <div class="sidebar-label">Study Area</div>
+      <div class="sidebar-value" style="font-size:13px;line-height:1.7;">
+        New York City<br>Five Boroughs<br>
+        <span style="font-family:var(--head-font);font-size:11px;color:var(--muted);">Manhattan · Bronx<br>Brooklyn · Queens<br>Staten Island</span>
+      </div>
+    </div>
+    <div class="sidebar-block">
+      <div class="sidebar-label">Dataset</div>
+      <div class="sidebar-value" style="font-size:13px;line-height:1.8;">
+        Fatal Encounters<br>
+        <span style="font-family:var(--head-font);font-size:11px;color:var(--muted);">Finch et al. (2019)<br>2000–present<br>Geocoded incidents</span>
+      </div>
+    </div>
+    <div class="sidebar-block">
+      <div class="sidebar-label">Methods</div>
+      <div class="tag-list">
+        <span class="tag red">Kernel Density (KDE)</span>
+        <span class="tag red">Ripley's K</span>
+        <span class="tag red">Inhomogeneity Adj.</span>
+        <span class="tag dark">MAUP Sensitivity</span>
+        <span class="tag dark">Fishnet Grid</span>
+        <span class="tag dark">Excess Analysis</span>
+      </div>
+    </div>
+    <div class="sidebar-block">
+      <div class="sidebar-label">KDE Bandwidths</div>
+      <div class="sidebar-value" style="font-size:13px;line-height:1.8;">
+        3,000 ft · 6,000 ft · 10,000 ft<br>
+        <span style="font-family:var(--head-font);font-size:11px;color:var(--muted);">Final: 6,000 ft selected</span>
+      </div>
+    </div>
+    <div class="sidebar-block">
+      <div class="sidebar-label">Fishnet Grids</div>
+      <div class="sidebar-value" style="font-size:13px;line-height:1.8;">
+        2,000 ft · 4,000 ft cells<br>
+        <span style="font-family:var(--head-font);font-size:11px;color:var(--muted);">Area-weighted population<br>allocation per cell</span>
+      </div>
+    </div>
+    <div class="sidebar-block">
+      <div class="sidebar-label">Tools</div>
+      <div class="tag-list">
+        <span class="tag">ArcGIS Pro</span>
+        <span class="tag">Spatial Analyst</span>
+        <span class="tag">Network Analyst</span>
+        <span class="tag">NYC Open Data</span>
+      </div>
+    </div>
+    <div class="sidebar-block">
+      <div class="sidebar-label">Projection</div>
+      <div class="sidebar-value" style="font-size:12px;line-height:1.7;color:var(--muted);">
+        NAD 1983 (2011)<br>State Plane NY<br>Long Island · US Feet
+      </div>
+    </div>
+  </aside>
+
+  <!-- MAIN CONTENT -->
+  <main class="main-content">
+
+    <h2 class="section-heading">Overview</h2>
+    <p>
+      This project analyzes the spatial pattern of fatal police encounters in New York City using point pattern methodologies, producing a counter-map that reframes risk in urban space. Rather than mapping crime risk, the project visualizes and evaluates the spatial concentration of fatal police violence using the Fatal Encounters dataset — determining whether incidents are randomly distributed or statistically clustered across NYC's five boroughs.
+    </p>
+    <p>
+      Three major analytical components structure the study: (1) first-order intensity analysis using Kernel Density Estimation at multiple bandwidths, (2) second-order spatial dependence testing using Ripley's K function applied globally and by borough grouping, and (3) inhomogeneity adjustment to separate population concentration from true spatial clustering of incidents. A MAUP sensitivity test using a regular fishnet grid validates the robustness of findings across alternative spatial aggregation schemes.
+    </p>
+
+    <div class="stats-bar">
+      <div class="stat-item">
+        <span class="stat-number">5</span>
+        <span class="stat-label">NYC boroughs<br>analyzed</span>
+      </div>
+      <div class="stat-item">
+        <span class="stat-number red">3</span>
+        <span class="stat-label">KDE bandwidths<br>tested</span>
+      </div>
+      <div class="stat-item">
+        <span class="stat-number steel">10k</span>
+        <span class="stat-label">Population<br>normalization rate</span>
+      </div>
+      <div class="stat-item">
+        <span class="stat-number">✓</span>
+        <span class="stat-label">Significant clustering<br>confirmed citywide</span>
+      </div>
+    </div>
+
+    <!-- STUDY AREA -->
+    <h2 class="section-heading">Study Area &amp; Population Context</h2>
+    <p>The study area encompasses all five NYC boroughs — Manhattan, Bronx, Brooklyn, Queens, and Staten Island. All layers were projected into NAD 1983 (2011) State Plane New York Long Island (US Feet) to minimize distortion in distance-based analyses. A population choropleth using 2020 census tracts reveals strong spatial inhomogeneity: Manhattan and portions of Brooklyn and Queens show particularly high population density, making raw incident counts a misleading measure of risk without population normalization.</p>
+
+    <div class="image-grid-2">
+      <div>
+        <div class="image-slot ar-43">
+          <img src="assets/P10/Study Area.jpg" alt="New York City study area — five boroughs">
+        </div>
+        <p class="image-caption">Study area — NYC five borough boundary. Analytical extent for all point pattern methods. Projection: NAD 1983 (2011) State Plane NY Long Island.</p>
+      </div>
+      <div>
+        <div class="image-slot ar-43">
+          <img src="assets/P10/NYC Population Tracks.jpg" alt="NYC population density by 2020 census tracts">
+        </div>
+        <p class="image-caption">NYC population — 2020 census tracts choropleth. Strong spatial inhomogeneity is evident, particularly in Manhattan. Source: NYC Open Data.</p>
+      </div>
+    </div>
+
+    <!-- DATA -->
+    <h2 class="section-heading">Data Sources</h2>
+    <table class="data-table">
+      <thead>
+        <tr>
+          <th>Dataset</th>
+          <th>Description</th>
+          <th>Format</th>
+          <th>Source</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td><strong>FatalEncounters_NYC</strong></td>
+          <td>Fatal police encounters from 2000–present, clipped to NYC boundary</td>
+          <td>Vector point</td>
+          <td>Fatal Encounters (Finch et al., 2019)</td>
+        </tr>
+        <tr>
+          <td><strong>NYC_Borough_Boundaries</strong></td>
+          <td>Borough-level administrative polygons</td>
+          <td>Vector polygon</td>
+          <td>NYC Open Data</td>
+        </tr>
+        <tr>
+          <td><strong>NYC_Boundary</strong></td>
+          <td>Dissolved NYC boundary polygon</td>
+          <td>Vector polygon</td>
+          <td>Derived from boroughs</td>
+        </tr>
+        <tr>
+          <td><strong>NYC_Census_Tracts_2020</strong></td>
+          <td>Census tracts with 2020 population counts</td>
+          <td>Vector polygon</td>
+          <td>NYC Open Data</td>
+        </tr>
+      </tbody>
+    </table>
+
+    <!-- METHODS -->
+    <h2 class="section-heading">Methods — Four-Component Analytical Framework</h2>
+    <p>Data preparation began with duplicate point removal using the Near tool to ensure a 1:1 relationship between location and event — a prerequisite for Ripley's K, which assumes independent events at distinct coordinates. The dissolved NYC boundary was used as the study area extent, with analyses run globally and by contiguous borough groupings to assess water barrier effects.</p>
+
+    <ul class="workflow-steps">
+      <li>
+        <span class="wf-num">01</span>
+        <div class="wf-body">
+          <strong>Kernel Density Estimation — First-Order Intensity</strong>
+          <p>KDE visualizes the continuous spatial intensity of fatal encounters. Three bandwidths — 3,000 ft, 6,000 ft, and 10,000 ft — were tested. The 6,000 ft surface was selected as the final visualization: it balanced local cluster detail with regional interpretability, avoiding fragmentation at 3,000 ft and over-smoothing at 10,000 ft.</p>
+        </div>
+      </li>
+      <li>
+        <span class="wf-num">02</span>
+        <div class="wf-body">
+          <strong>Ripley's K Function — Second-Order Spatial Dependence</strong>
+          <p>Multi-Distance Spatial Cluster Analysis tested whether clustering exceeded complete spatial randomness across 12 distance bands spanning neighborhood to borough scales. Edge correction (simulate outer boundary values) was applied. Analysis was run globally for NYC and separately for three contiguous borough groupings: Manhattan &amp; Bronx, Brooklyn &amp; Queens, and Staten Island.</p>
+        </div>
+      </li>
+      <li>
+        <span class="wf-num">03</span>
+        <div class="wf-body">
+          <strong>Inhomogeneity Adjustment — Population-Normalized Rates</strong>
+          <p>Incident counts were spatially joined to census tracts and normalized to FE_per10k (incidents per 10,000 residents). An expected value per tract was calculated proportional to population share, and an excess measure derived (Excess_FE = Observed − Expected) to identify tracts with disproportionately high incident counts beyond demographic expectation.</p>
+        </div>
+      </li>
+      <li>
+        <span class="wf-num">04</span>
+        <div class="wf-body">
+          <strong>MAUP Sensitivity Test — Fishnet Grid</strong>
+          <p>A uniform fishnet grid at 2,000 ft and 4,000 ft cell sizes was generated and clipped to the NYC boundary. Encounter points were spatially joined per cell; population was area-weighted from census tract intersections. Incident rates per 10,000 residents were computed per cell and compared against the tract-based inhomogeneity results to test boundary dependency.</p>
+        </div>
+      </li>
+    </ul>
+
+    <!-- KDE SECTION -->
+    <h2 class="section-heading">Kernel Density Estimation — Bandwidth Comparison</h2>
+    <p>All three bandwidth surfaces consistently identify Upper Manhattan, the Bronx, and central Brooklyn as primary hotspot zones. Bandwidth choice controls the trade-off between local precision and regional legibility.</p>
+
+    <table class="bandwidth-table">
+      <thead>
+        <tr>
+          <th class="row-label">Bandwidth</th>
+          <th>3,000 ft</th>
+          <th>6,000 ft</th>
+          <th>10,000 ft</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td class="row-label">Result</td>
+          <td>Fragmented local clusters — fine-grained but hard to interpret regionally</td>
+          <td class="selected">Coherent regional clusters — balances detail and readability ✓ Selected</td>
+          <td>Over-smoothed — merges distinct clusters into broad, undifferentiated zones</td>
+        </tr>
+      </tbody>
+    </table>
+
+    <div class="image-grid-3">
+      <div>
+        <div class="image-slot ar-43">
+          <img src="assets/P10/KDE3000.jpg" alt="KDE 3,000 ft bandwidth — fatal police encounters NYC">
+        </div>
+        <p class="image-caption">KDE — 3,000 ft bandwidth. Localized clusters visible but fragmented. Reveals micro-hotspots at the cost of regional coherence.</p>
+      </div>
+      <div>
+        <div class="image-slot ar-43">
+          <img src="assets/P10/KDE6000.jpg" alt="KDE 6,000 ft bandwidth — selected final surface">
+        </div>
+        <p class="image-caption">KDE — 6,000 ft bandwidth (selected). Coherent regional clusters in Upper Manhattan, South Bronx, and central Brooklyn. Best balance of local and regional interpretability.</p>
+      </div>
+      <div>
+        <div class="image-slot ar-43">
+          <img src="assets/P10/KDE10000.jpg" alt="KDE 10,000 ft bandwidth — over-smoothed">
+        </div>
+        <p class="image-caption">KDE — 10,000 ft bandwidth. Over-smoothed — merges distinct clusters into undifferentiated mass. Water barriers become a significant artifact at this scale.</p>
+      </div>
+    </div>
+
+    <div class="callout">
+      <p>The stability of primary hotspot locations across all three bandwidths — particularly Upper Manhattan, the South Bronx, and central Brooklyn — indicates that the spatial intensity pattern is not an artifact of any single smoothing parameter choice.</p>
+    </div>
+
+    <!-- RIPLEY'S K -->
+    <h2 class="section-heading">Ripley's K Function — Clustering Results</h2>
+    <p>The global K function shows the observed K curve consistently above the expected K and above the upper confidence envelope across nearly all distance bands — indicating statistically significant clustering citywide. Borough grouping analyses reveal that this clustering is not uniform: it varies in magnitude by geographic context, partly shaped by water separation between boroughs.</p>
+
+    <div class="k-results">
+      <div class="k-item">
+        <div class="k-borough">NYC — Global</div>
+        <span class="k-badge clustered">Strongly Clustered</span>
+        <div class="k-result">Observed K exceeds Expected K and upper confidence envelope across nearly all distance bands. Statistically significant clustering at both neighborhood and citywide scales.</div>
+      </div>
+      <div class="k-item">
+        <div class="k-borough">Manhattan &amp; Bronx</div>
+        <span class="k-badge clustered">Strongly Clustered</span>
+        <div class="k-result">Strongest and most persistent deviations above the confidence envelope. Water separation from other boroughs does not suppress clustering — it may amplify it by containing incident density within a smaller analysis window.</div>
+      </div>
+      <div class="k-item">
+        <div class="k-borough">Brooklyn &amp; Queens</div>
+        <span class="k-badge moderate">Clustered — Moderate</span>
+        <div class="k-result">Statistically significant clustering confirmed, though intensity is comparatively more diffuse than the Manhattan &amp; Bronx grouping. Pattern consistent across distance bands.</div>
+      </div>
+      <div class="k-item" style="grid-column: 1 / -1; border-top: 0.8px solid var(--border);">
+        <div class="k-borough">Staten Island</div>
+        <span class="k-badge unstable">Variable — Small Sample</span>
+        <div class="k-result">Greater variability in K results due to the smaller number of recorded events. Pattern does not approximate complete spatial randomness but results should be interpreted cautiously. Ripley's K is sensitive to sample size at small n.</div>
+      </div>
+    </div>
+
+    <!-- INHOMOGENEITY -->
+    <h2 class="section-heading">Inhomogeneity Adjustment — Population-Normalized Risk</h2>
+    <p>Standard point pattern analysis assumes spatial homogeneity — that the underlying population at risk is evenly distributed. In NYC, this assumption is clearly unrealistic. Population density varies dramatically across census tracts, meaning raw incident counts mechanically reflect where people live, not necessarily where risk is elevated. The inhomogeneity adjustment separates population concentration from true spatial concentration of police violence.</p>
+
+    <div class="formula-block">
+      <div class="formula-label">Rate Map — Incidents per 10,000 Residents</div>
+      <div class="formula-eq">FE_per10k = (Join_Count / POP2020) × 10,000</div>
+      <div class="formula-note">Normalizes raw incident counts by local tract population. Reveals where encounter rates are elevated <em>relative to local population size</em> — not simply where more people live.</div>
+    </div>
+
+    <div class="image-full">
+      <img src="assets/P10/FEper10k.jpg" alt="Fatal police encounters per 10,000 residents — inhomogeneity adjustment rate map, NYC">
+    </div>
+    <p class="image-caption">Incidents per 10,000 residents — population-normalized rate map. High-rate tracts span Manhattan, the Bronx, and parts of Brooklyn and Staten Island, including areas outside the densest population cores. Source: Author's analysis.</p>
+
+    <div class="formula-block">
+      <div class="formula-label">Expected vs. Excess</div>
+      <div class="formula-eq">Expected_FE = (Tract Population / Total NYC Population) × Total Incidents</div>
+      <div class="formula-eq" style="margin-top:8px;">Excess_FE = Observed Incidents − Expected_FE</div>
+      <div class="formula-note">The Expected map shows where incidents would occur if distributed strictly proportional to population share. Excess identifies tracts where observed counts exceed this baseline — neighborhoods experiencing disproportionate concentration beyond what demographics alone predict.</div>
+    </div>
+
+    <div class="image-grid-2">
+      <div>
+        <div class="image-slot ar-43">
+          <img src="assets/P10/Inhomogeneity Adjustment Expected.jpg" alt="Inhomogeneity Adjustment — Expected incidents map NYC">
+        </div>
+        <p class="image-caption">Expected incidents — where fatal encounters would occur if distributed strictly proportional to population share. High expected values concentrate in densely populated Manhattan and portions of Brooklyn and Queens. This map primarily reflects demographic structure.</p>
+      </div>
+      <div>
+        <div class="image-slot ar-43">
+          <img src="assets/P10/Inhomogeneity Adjustment ExcessInhomogeneity Adjustment Excess.jpg" alt="Inhomogeneity Adjustment — Excess incidents map NYC">
+        </div>
+        <p class="image-caption">Excess incidents — observed minus expected. Red tracts exceed their population-proportional baseline. Persistent excess concentrations appear in Upper Manhattan, segments of the Bronx, central Brooklyn, and parts of Staten Island — clustering not explained by population density alone.</p>
+      </div>
+    </div>
+
+    <div class="callout">
+      <p>The excess map provides the clearest evidence of spatial disproportionality. Clustering observed in the Ripley's K analysis is not solely a reflection of population density — it persists after controlling for demographic concentration in specific neighborhoods across the Bronx, Upper Manhattan, and central Brooklyn.</p>
+    </div>
+
+    <!-- MAUP -->
+    <h2 class="section-heading">MAUP Sensitivity Analysis — Fishnet Grid</h2>
+    <p>Because census tracts vary substantially in size and shape across NYC, patterns in tract-level rates may partly reflect administrative boundaries rather than underlying spatial processes. A sensitivity test using a regular fishnet grid at two resolutions evaluates whether the identified hotspots are boundary-dependent artifacts or robust spatial signals.</p>
+
+    <div class="image-grid-2">
+      <div>
+        <div class="image-slot ar-43">
+          <img src="assets/P10/Fishnet4000.jpg" alt="MAUP fishnet 4,000 ft — encounter counts per cell">
+        </div>
+        <p class="image-caption">Fishnet 4,000 ft — encounter count per grid cell. Pattern is smoother and more generalized than the 2,000 ft grid, but primary high-rate areas persist in Upper Manhattan, South Bronx, and central Brooklyn. Source: Author's analysis.</p>
+      </div>
+      <div>
+        <div class="image-slot ar-43">
+          <img src="assets/P10/Fishnet2000.jpg" alt="MAUP fishnet 2,000 ft — cases per 10,000 people">
+        </div>
+        <p class="image-caption">Fishnet 2,000 ft — encounters per 10,000 residents (area-weighted population allocation). Localized high-rate clusters visible in Upper Manhattan, South Bronx, central Brooklyn, and parts of Staten Island. Source: Author's analysis.</p>
+      </div>
+    </div>
+
+    <div class="callout steel">
+      <p>Core hotspot regions persist across both fishnet resolutions and align with the tract-based inhomogeneity results — confirming that the identified concentration patterns are not artifacts of census tract boundary configuration. Results are interpreted as robust at the neighborhood-to-community scale.</p>
+    </div>
+
+    <!-- DISCUSSION -->
+    <h2 class="section-heading">Discussion</h2>
+    <p>All four analytical components converge: fatal police encounters in NYC are not randomly distributed. The global Ripley's K function confirms statistically significant clustering across both neighborhood and citywide distance scales. Borough subgroup analyses show that this clustering is not driven by a single borough — it is distributed unevenly, with Manhattan and the Bronx showing the strongest concentration and Brooklyn and Queens showing moderate but significant patterns.</p>
+    <p>The inhomogeneity adjustment is critical in this context. Without population normalization, high incident counts in dense Manhattan tracts would mechanically reflect exposure rather than elevated risk. The excess analysis demonstrates that clustering persists after controlling for demographic structure — certain areas exhibit disproportionately high encounter counts even relative to their population share. This strengthens the inference that spatial concentration cannot be attributed solely to background population density.</p>
+    <p>Policy implications should be approached cautiously. Spatial concentration does not imply causal explanation. However, identifying statistically significant concentration areas may support targeted inquiry into structural conditions, policing practices, and community-level characteristics. Spatial evidence functions as a diagnostic tool rather than a definitive explanatory model — the 2SFCA produces a measure of potential spatial concentration, not a complete account of the social processes producing it.</p>
+
+    <!-- LIMITATIONS -->
+    <h2 class="section-heading">Limitations</h2>
+    <ul class="limitation-list">
+      <li><span class="lim-icon">⚠️</span><span><strong>Crowd-sourced data quality.</strong> The Fatal Encounters dataset may contain underreporting, geocoding inaccuracies, or classification inconsistencies. As a crowd-sourced compilation, it represents the most robust publicly available dataset for this topic — but is not officially comprehensive.</span></li>
+      <li><span class="lim-icon">⚠️</span><span><strong>Euclidean distance in Ripley's K.</strong> The K function relies on Euclidean distance, which does not account for physical barriers such as waterways. NYC's inter-borough water separation influences clustering results for borough groupings — particularly for Staten Island, which is isolated by the Upper Bay.</span></li>
+      <li><span class="lim-icon">⚠️</span><span><strong>Population as the only exposure variable.</strong> Census population is used as the proxy for the at-risk population but does not incorporate policing intensity, patrol patterns, socioeconomic disadvantage, or built environment variables that may influence spatial concentration.</span></li>
+      <li><span class="lim-icon">⚠️</span><span><strong>KDE water barrier artifact.</strong> Kernel Density Estimation spreads intensity continuously across space regardless of physical barriers. Waterways between boroughs are not respected by the smoothing kernel, which may slightly inflate density estimates near coastlines.</span></li>
+      <li><span class="lim-icon">⚠️</span><span><strong>Standard 2SFCA binary threshold.</strong> The standard Ripley's K framework assumes homogeneity under CSR. The inhomogeneous K function (Baddeley et al., 2000) would provide a more formally correct second-order test in the presence of spatial heterogeneity — a recommended extension for future analysis.</span></li>
+    </ul>
+
+  </main>
+</div>
+
+<footer>
+  <span>Juan Sebastian Cortes — Portfolio</span>
+  <a href="index.html">← Back to all projects</a>
+</footer>
+
+<script src="lightbox.js"></script>
+
+</body>
+</html>

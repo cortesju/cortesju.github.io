@@ -1,0 +1,467 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Colombia Amphibian Explorer — Juan Sebastian Cortes</title>
+  <link href="https://fonts.googleapis.com/css2?family=Rubik:wght@400;500;700&display=swap" rel="stylesheet"/>
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --white:         #faf9f7;
+      --text:          #1a1a1a;
+      --muted:         #888;
+      --border:        #d5cfc8;
+      --warm-gray:     #e8e4df;
+      --dark:          #0d1a12;
+      --forest:        #1a3a24;
+      --teal:          #2a7a5a;
+      --green-accent:  #3dba7e;
+      --glass-teal:    #4ecdc4;
+      --cr:  #c0392b;
+      --en:  #d35400;
+      --vu:  #c9a227;
+      --nt:  #2980b9;
+      --lc:  #27ae60;
+      --dd:  #7f8c8d;
+      --body-font: "Neue Haas Grotesk", "Haas Grot Text", "Helvetica Neue", Arial, sans-serif;
+      --head-font: 'Rubik', sans-serif;
+    }
+
+    body { font-family: var(--body-font); background: var(--white); color: var(--text); font-size: 14.5px; line-height: 1.5; }
+    a { text-decoration: none; color: inherit; }
+
+    /* ── NAV ── */
+    nav { display: flex; align-items: center; justify-content: space-between; padding: 18px 40px; border-bottom: 0.8px solid #000; position: sticky; top: 0; background: var(--white); z-index: 100; }
+    .nav-name { font-family: var(--head-font); font-weight: 700; font-size: 13px; letter-spacing: 0.06em; text-transform: uppercase; line-height: 1.3; }
+    .nav-right { display: flex; gap: 32px; font-family: var(--head-font); font-weight: 700; font-size: 12px; letter-spacing: 0.08em; text-transform: uppercase; }
+    .nav-right a { color: var(--muted); } .nav-right a:hover { color: var(--text); }
+
+    /* ── META BAR ── */
+    .project-meta-bar { display: flex; align-items: center; justify-content: space-between; padding: 10.4px 40px; border-bottom: 0.8px solid #000; }
+    .project-title-bar { font-family: var(--head-font); font-weight: 700; font-size: 13px; letter-spacing: 0.06em; text-transform: uppercase; color: rgba(0,0,0,0.75); }
+    .project-nav-links { display: flex; gap: 16px; font-family: var(--body-font); font-size: 13px; color: rgba(0,0,0,0.7); }
+    .project-nav-links a { color: rgba(0,0,0,0.7); } .project-nav-links a:hover { color: #000; }
+
+    /* ── HERO ── */
+    .hero { position: relative; width: 100%; height: 480px; overflow: hidden; background: var(--dark); }
+    .hero img, .hero video { width: 100%; height: 100%; object-fit: cover; opacity: 0.85; }
+    .hero-overlay { position: absolute; inset: 0; background: linear-gradient(to top, rgba(13,26,18,0.88) 0%, transparent 55%); pointer-events: none; }
+    .hero-content { position: absolute; bottom: 36px; left: 40px; right: 40px; display: flex; align-items: flex-end; justify-content: space-between; gap: 24px; }
+    .hero-title h1 { font-family: var(--head-font); font-weight: 700; font-size: 11px; letter-spacing: 0.14em; text-transform: uppercase; color: var(--glass-teal); margin-bottom: 8px; }
+    .hero-title p { font-size: 11px; color: rgba(255,255,255,0.50); font-family: var(--body-font); letter-spacing: 0.04em; margin: 0; line-height: 1.6; }
+    .hero-live-btn { display: inline-flex; align-items: center; gap: 8px; background: var(--green-accent); color: white; font-family: var(--head-font); font-weight: 700; font-size: 11px; letter-spacing: 0.10em; text-transform: uppercase; padding: 12px 20px; white-space: nowrap; flex-shrink: 0; transition: background 0.2s; }
+    .hero-live-btn:hover { background: var(--glass-teal); color: var(--dark); }
+    .live-dot { width: 7px; height: 7px; border-radius: 50%; background: white; animation: pulse 2s infinite; flex-shrink: 0; }
+    @keyframes pulse { 0%,100%{opacity:1} 50%{opacity:0.3} }
+
+    /* ── LAYOUT ── */
+    .project-body { display: grid; grid-template-columns: 220px 1fr; max-width: 1200px; margin: 0 auto; padding: 60px 40px; }
+
+    /* ── SIDEBAR ── */
+    .sidebar { padding-right: 48px; border-right: 0.8px solid var(--border); }
+    .sidebar-block { margin-bottom: 36px; }
+    .sidebar-label { font-family: var(--head-font); font-weight: 700; font-size: 10px; letter-spacing: 0.12em; text-transform: uppercase; color: var(--muted); margin-bottom: 6px; }
+    .sidebar-value { font-size: 14px; font-weight: 500; line-height: 1.6; color: rgba(0,0,0,0.75); font-family: var(--body-font); }
+    .sidebar-value a { color: var(--teal); font-size: 13px; } .sidebar-value a:hover { text-decoration: underline; }
+    .tag-list { display: flex; flex-wrap: wrap; gap: 6px; margin-top: 4px; }
+    .tag { font-family: var(--head-font); font-weight: 500; font-size: 10px; letter-spacing: 0.06em; text-transform: uppercase; padding: 3px 8px; border: 0.8px solid var(--border); color: var(--muted); }
+    .tag.green { border-color: var(--teal); color: var(--teal); }
+
+    /* ── MAIN ── */
+    .main-content { padding-left: 56px; }
+    h2.section-heading { font-family: var(--head-font); font-weight: 700; font-size: 11px; letter-spacing: 0.14em; text-transform: uppercase; color: var(--muted); margin-bottom: 16px; margin-top: 52px; padding-bottom: 10px; border-bottom: 0.8px solid var(--border); }
+    h2.section-heading:first-child { margin-top: 0; }
+    p { font-size: 14.5px; line-height: 1.75; color: rgba(0,0,0,0.75); margin-bottom: 18px; font-family: var(--body-font); }
+
+    /* ── STATS ── */
+    .stats-bar { display: grid; grid-template-columns: repeat(4,1fr); gap: 1px; background: var(--border); border: 0.8px solid var(--border); margin: 36px 0; }
+    .stat-item { background: var(--white); padding: 24px 16px; text-align: center; }
+    .stat-number { font-family: var(--head-font); font-weight: 700; font-size: 26px; color: var(--teal); display: block; line-height: 1; margin-bottom: 7px; }
+    .stat-label { font-family: var(--body-font); font-size: 10px; letter-spacing: 0.08em; text-transform: uppercase; color: var(--muted); line-height: 1.4; }
+
+    /* ── LIVE MAP EMBED ── */
+    .map-embed-full { width: 100%; height: 520px; border: 0.8px solid var(--border); margin: 28px 0; overflow: hidden; position: relative; }
+    .map-embed-full iframe { width: 100%; height: 100%; border: none; display: block; }
+    .map-embed-label { position: absolute; top: 12px; left: 12px; background: rgba(13,26,18,0.85); color: var(--green-accent); font-family: var(--head-font); font-weight: 700; font-size: 10px; letter-spacing: 0.10em; text-transform: uppercase; padding: 5px 12px; z-index: 10; pointer-events: none; }
+
+    /* ── IUCN STRIP ── */
+    .iucn-strip { display: flex; gap: 8px; margin: 20px 0; flex-wrap: wrap; }
+    .iucn-badge { display: flex; align-items: center; gap: 8px; border: 0.8px solid var(--border); padding: 10px 14px; flex: 1; min-width: 90px; }
+    .iucn-dot { width: 10px; height: 10px; border-radius: 50%; flex-shrink: 0; }
+    .iucn-code { font-family: var(--head-font); font-weight: 700; font-size: 12px; }
+    .iucn-name { font-family: var(--body-font); font-size: 10px; color: var(--muted); line-height: 1.3; }
+    .iucn-count { font-family: var(--head-font); font-weight: 700; font-size: 20px; margin-left: auto; }
+
+    /* ── SPECIES TABLE ── */
+    .species-table { width: 100%; border-collapse: collapse; margin: 24px 0; font-size: 13px; }
+    .species-table th { font-family: var(--head-font); font-weight: 700; font-size: 10px; letter-spacing: 0.10em; text-transform: uppercase; color: var(--muted); text-align: left; padding: 10px 12px; border-bottom: 1.5px solid var(--border); background: var(--warm-gray); }
+    .species-table td { padding: 9px 12px; border-bottom: 0.8px solid var(--border); vertical-align: middle; font-family: var(--body-font); color: rgba(0,0,0,0.75); }
+    .species-table tr:last-child td { border-bottom: none; }
+    .species-table tr:hover td { background: #f5f2ee; }
+    .sp-name { font-weight: 500; font-size: 13px; }
+    .sp-sci { font-style: italic; font-size: 11px; color: var(--muted); }
+    .sp-badge { display: inline-block; font-family: var(--head-font); font-weight: 700; font-size: 10px; padding: 2px 7px; }
+    .sp-cr{background:#fde8e8;color:var(--cr)} .sp-en{background:#fef0e6;color:var(--en)} .sp-vu{background:#fef9e2;color:var(--vu)}
+    .sp-nt{background:#e8f4fb;color:var(--nt)} .sp-lc{background:#eafaf1;color:var(--lc)} .sp-dd{background:#f4f6f7;color:var(--dd)}
+    .sp-obs { font-family: var(--head-font); font-size: 12px; }
+    .obs-wrap { display: flex; align-items: center; gap: 6px; }
+    .sp-obs-bar { width: 60px; height: 4px; background: var(--warm-gray); border-radius: 2px; overflow: hidden; flex-shrink: 0; }
+    .sp-obs-fill { height: 100%; background: var(--teal); border-radius: 2px; }
+    .sp-years { font-family: var(--head-font); font-size: 11px; color: var(--muted); }
+
+    /* ── MAP VIEW CARDS ── */
+    .map-views { display: grid; grid-template-columns: 1fr; gap: 20px; margin: 28px 0; }
+    .map-view-card { border: 0.8px solid var(--border); overflow: hidden; }
+    .map-view-header { background: var(--dark); color: white; padding: 14px 20px; display: flex; align-items: center; gap: 14px; }
+    .map-view-num { font-family: var(--head-font); font-weight: 700; font-size: 10px; color: var(--green-accent); letter-spacing: 0.10em; }
+    .map-view-title { font-family: var(--head-font); font-weight: 700; font-size: 12px; letter-spacing: 0.06em; text-transform: uppercase; }
+    .map-view-body { display: grid; grid-template-columns: 1fr 1fr; }
+    .map-view-media { aspect-ratio: 16/10; background: var(--dark); overflow: hidden; position: relative; }
+    .map-view-media img,
+    .map-view-media video { width: 100%; height: 100%; object-fit: cover; display: block; }
+    .map-view-desc { padding: 24px; background: #f7f5f2; border-left: 0.8px solid var(--border); }
+    .map-view-desc p { font-size: 13.5px; color: #444; margin-bottom: 10px; } .map-view-desc p:last-child { margin-bottom: 0; }
+    .layer-chips { display: flex; flex-wrap: wrap; gap: 6px; margin-top: 14px; }
+    .layer-chip { font-family: var(--head-font); font-weight: 500; font-size: 10px; padding: 3px 9px; background: rgba(42,122,90,0.10); color: var(--teal); border: 0.8px solid rgba(42,122,90,0.25); }
+
+    /* ── IMAGE GRID ── */
+    .image-grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin: 28px 0; }
+    .image-slot { aspect-ratio: 16/10; background: var(--dark); overflow: hidden; }
+    .image-slot img { width: 100%; height: 100%; object-fit: cover; display: block; }
+    .image-caption { font-family: var(--body-font); font-size: 10.4px; color: rgba(0,0,0,0.55); margin-top: 6px; line-height: 1.4; }
+
+    /* ── DESIGN CARDS ── */
+    .design-cards { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin: 24px 0; }
+    .design-card { border: 0.8px solid var(--border); padding: 20px; }
+    .design-card .icon { font-size: 20px; margin-bottom: 10px; }
+    .design-card strong { display: block; font-family: var(--head-font); font-weight: 700; font-size: 11px; letter-spacing: 0.07em; text-transform: uppercase; margin-bottom: 8px; }
+    .design-card p { font-size: 13px; color: rgba(0,0,0,0.6); margin: 0; line-height: 1.65; }
+
+    /* ── CHALLENGES ── */
+    .challenge-list { list-style: none; margin: 16px 0; }
+    .challenge-list li { display: flex; gap: 16px; padding: 14px 0; border-bottom: 0.8px solid var(--border); font-size: 14px; color: rgba(0,0,0,0.65); line-height: 1.65; font-family: var(--body-font); }
+    .challenge-list li:last-child { border-bottom: none; }
+    .ch-num { font-family: var(--head-font); font-weight: 700; font-size: 10px; color: var(--green-accent); min-width: 20px; padding-top: 3px; }
+
+    /* ── CALLOUT ── */
+    .callout { border-left: 3px solid var(--green-accent); padding: 16px 20px; background: #f0faf5; margin: 28px 0; }
+    .callout p { font-size: 14px; color: #444; margin: 0; font-style: italic; }
+
+    /* ── FOOTER ── */
+    footer { border-top: 0.8px solid var(--border); padding: 28px 40px; display: flex; justify-content: space-between; align-items: center; font-family: var(--head-font); font-weight: 700; font-size: 11px; color: var(--muted); letter-spacing: 0.06em; text-transform: uppercase; margin-top: 80px; }
+    footer a { color: var(--muted); } footer a:hover { color: var(--text); }
+
+    @media (max-width: 768px) {
+      .project-body { grid-template-columns: 1fr; padding: 36px 20px; }
+      .sidebar { border-right: none; border-bottom: 0.8px solid var(--border); padding-right: 0; padding-bottom: 32px; margin-bottom: 32px; }
+      .main-content { padding-left: 0; }
+      .stats-bar { grid-template-columns: repeat(2,1fr); }
+      .map-view-body, .image-grid-2, .design-cards { grid-template-columns: 1fr; }
+      nav, .project-meta-bar { padding: 14px 20px; }
+      .hero-content { flex-direction: column; align-items: flex-start; }
+    }
+  </style>
+</head>
+<body>
+
+<!-- NAV -->
+<nav>
+  <div class="nav-name">Juan Sebastian<br>Cortes</div>
+  <div class="nav-right">
+    <a href="index.html">Portfolio</a>
+    <a href="#">About</a>
+    <a href="#">Contact</a>
+  </div>
+</nav>
+
+<!-- META BAR -->
+<div class="project-meta-bar">
+  <div class="project-title-bar">Colombia Amphibian Explorer</div>
+  <div class="project-nav-links">
+    <a href="project2.html">&larr; Prev</a>
+    <a href="index.html">All Projects</a>
+    <a href="#">Next &rarr;</a>
+  </div>
+</div>
+
+<!-- HERO -->
+<div class="hero">
+  <video autoplay muted loop playsinline poster="assets/P3/CoverIm.png">
+    <source src="assets/P3/Cover.mp4" type="video/mp4">
+  </video>
+  <div class="hero-overlay"></div>
+  <div class="hero-content">
+    <div class="hero-title">
+      <h1>Interactive Web Map &middot; ArcGIS JS API 4.29 &middot; GitHub Pages</h1>
+      <p>iNaturalist &middot; IUCN Red List 2024 &middot; IGAC Land Cover &middot; K&ouml;ppen-Geiger &middot; Colombia Protected Areas</p>
+    </div>
+    <a class="hero-live-btn" href="https://cortesju.github.io/amphibian-explorer/" target="_blank" rel="noopener">
+      <span class="live-dot"></span>View Live Map
+    </a>
+  </div>
+</div>
+
+<!-- BODY -->
+<div class="project-body">
+
+  <!-- SIDEBAR -->
+  <aside class="sidebar">
+    <div class="sidebar-block">
+      <div class="sidebar-label">Course</div>
+      <div class="sidebar-value">SSCI 589 &mdash; Cartography &amp; Visualization<br>USC Spatial Sciences Institute</div>
+    </div>
+    <div class="sidebar-block">
+      <div class="sidebar-label">Year</div>
+      <div class="sidebar-value">2026</div>
+    </div>
+    <div class="sidebar-block">
+      <div class="sidebar-label">Role</div>
+      <div class="sidebar-value">Solo &mdash; Web map dev,<br>data pipeline, design,<br>cartography</div>
+    </div>
+    <div class="sidebar-block">
+      <div class="sidebar-label">Tools</div>
+      <div class="tag-list">
+        <span class="tag green">ArcGIS JS API 4.29</span>
+        <span class="tag green">GitHub Pages</span>
+        <span class="tag">iNaturalist</span>
+        <span class="tag">IUCN Red List</span>
+        <span class="tag">IGAC</span>
+        <span class="tag">HTML / CSS / JS</span>
+      </div>
+    </div>
+    <div class="sidebar-block">
+      <div class="sidebar-label">Data Sources</div>
+      <div class="sidebar-value" style="font-size:13px;line-height:1.8;">
+        iNaturalist (VGI)<br>
+        IUCN Red List 2024<br>
+        IGAC Land Cover<br>
+        K&ouml;ppen-Geiger Zones<br>
+        Colombia Protected Areas<br>
+        Annual Precipitation
+      </div>
+    </div>
+    <div class="sidebar-block">
+      <div class="sidebar-label">Live Project</div>
+      <div class="sidebar-value">
+        <a href="https://cortesju.github.io/amphibian-explorer/" target="_blank" rel="noopener">&rarr; Open Web Map</a>
+      </div>
+    </div>
+  </aside>
+
+  <!-- MAIN CONTENT -->
+  <main class="main-content">
+
+    <h2 class="section-heading">Overview</h2>
+    <p>The Colombia Amphibian Explorer is a custom interactive web map visualizing the spatial and temporal distribution of 24 endemic and threatened amphibian species across Colombia, using observation data exported from iNaturalist. Built with the ArcGIS JavaScript API (v4.29) and published via GitHub Pages, it combines citizen-science occurrence records with authoritative reference layers &mdash; IUCN Red List status, IGAC land cover, K&ouml;ppen-Geiger climate zones, annual precipitation, and Colombia&rsquo;s protected areas network.</p>
+    <p>The project has a dual purpose: raising awareness of Colombia&rsquo;s uniquely vulnerable amphibian fauna, and making visible the geographic biases inherent in citizen science. By layering iNaturalist records over habitat context, the map lets users explore not just where amphibians have been recorded &mdash; but where they likely occur yet remain undocumented.</p>
+
+    <div class="callout">
+      <p>The glassfrog became both subject and metaphor: just as a glassfrog&rsquo;s body reveals its interior through transparency, the map&rsquo;s layers can be toggled to reveal ecological context beneath the occurrence data &mdash; deep greens, teal accents, and translucent overlays all inspired by Colombia&rsquo;s glassfrog species.</p>
+    </div>
+
+    <!-- STATS -->
+    <div class="stats-bar">
+      <div class="stat-item"><span class="stat-number">24</span><span class="stat-label">Endemic &amp; threatened<br>species mapped</span></div>
+      <div class="stat-item"><span class="stat-number">5,886</span><span class="stat-label">Total iNaturalist<br>observations</span></div>
+      <div class="stat-item"><span class="stat-number">3</span><span class="stat-label">Interactive<br>map views</span></div>
+      <div class="stat-item"><span class="stat-number">1969</span><span class="stat-label">Earliest observation<br>in dataset</span></div>
+    </div>
+
+    <!-- LIVE EMBED -->
+    <h2 class="section-heading">Live Interactive Map</h2>
+    <p>Embedded below &mdash; use the species sidebar to filter by IUCN status, click any species to load its photo, play its audio call, and zoom to its distribution. Toggle between the three map views in the layers panel.</p>
+    <div class="map-embed-full">
+      <div class="map-embed-label">&#9679; Live &mdash; cortesju.github.io/amphibian-explorer</div>
+      <iframe src="https://cortesju.github.io/amphibian-explorer/" title="Colombia Amphibian Explorer" allowfullscreen loading="lazy"></iframe>
+    </div>
+
+    <!-- IUCN -->
+    <h2 class="section-heading">Species by IUCN Conservation Status</h2>
+    <p>Of the 24 species mapped, 5 are Critically Endangered &mdash; including <em>Oophaga lehmanni</em>, <em>Atelopus lozanoi</em>, <em>Atelopus laetissimus</em>, <em>Oophaga solanensis</em>, and <em>Oophaga anchicayensis</em>. Six are Endangered and three are Vulnerable.</p>
+    <div class="iucn-strip">
+      <div class="iucn-badge"><div class="iucn-dot" style="background:var(--cr)"></div><div><div class="iucn-code" style="color:var(--cr)">CR</div><div class="iucn-name">Critically<br>Endangered</div></div><div class="iucn-count" style="color:var(--cr)">5</div></div>
+      <div class="iucn-badge"><div class="iucn-dot" style="background:var(--en)"></div><div><div class="iucn-code" style="color:var(--en)">EN</div><div class="iucn-name">Endangered</div></div><div class="iucn-count" style="color:var(--en)">6</div></div>
+      <div class="iucn-badge"><div class="iucn-dot" style="background:var(--vu)"></div><div><div class="iucn-code" style="color:var(--vu)">VU</div><div class="iucn-name">Vulnerable</div></div><div class="iucn-count" style="color:var(--vu)">3</div></div>
+      <div class="iucn-badge"><div class="iucn-dot" style="background:var(--lc)"></div><div><div class="iucn-code" style="color:var(--lc)">LC</div><div class="iucn-name">Least Concern</div></div><div class="iucn-count" style="color:var(--lc)">9</div></div>
+      <div class="iucn-badge"><div class="iucn-dot" style="background:var(--dd)"></div><div><div class="iucn-code" style="color:var(--dd)">DD</div><div class="iucn-name">Data Deficient</div></div><div class="iucn-count" style="color:var(--dd)">1</div></div>
+    </div>
+
+    <!-- SPECIES TABLE -->
+    <h2 class="section-heading">All 24 Species &mdash; Complete Dataset</h2>
+    <table class="species-table">
+      <thead><tr><th>Common Name</th><th>Scientific Name</th><th>Status</th><th>Observations</th><th>Research Grade</th><th>Years</th><th></th></tr></thead>
+      <tbody>
+        <tr><td><div class="sp-name">Emerald Glass Frog</div></td><td class="sp-sci">Espadarana prosoblepon</td><td><span class="sp-badge sp-lc">LC</span></td><td><div class="obs-wrap"><span class="sp-obs">2,140</span><div class="sp-obs-bar"><div class="sp-obs-fill" style="width:100%"></div></div></div></td><td class="sp-obs">1,746</td><td class="sp-years">1982–2026</td><td>🔊</td></tr>
+        <tr><td><div class="sp-name">Spotted Foam-nest Frog</div></td><td class="sp-sci">Leptodactylus insularum</td><td><span class="sp-badge sp-lc">LC</span></td><td><div class="obs-wrap"><span class="sp-obs">922</span><div class="sp-obs-bar"><div class="sp-obs-fill" style="width:43%"></div></div></div></td><td class="sp-obs">649</td><td class="sp-years">2000–2026</td><td>🔊</td></tr>
+        <tr><td><div class="sp-name">Boettger's Colombian Tree Frog</div></td><td class="sp-sci">Dendropsophus columbianus</td><td><span class="sp-badge sp-lc">LC</span></td><td><div class="obs-wrap"><span class="sp-obs">688</span><div class="sp-obs-bar"><div class="sp-obs-fill" style="width:32%"></div></div></div></td><td class="sp-obs">533</td><td class="sp-years">2008–2026</td><td>🔊</td></tr>
+        <tr><td><div class="sp-name">Fleischmann's Glass Frog</div></td><td class="sp-sci">Hyalinobatrachium fleischmanni</td><td><span class="sp-badge sp-lc">LC</span></td><td><div class="obs-wrap"><span class="sp-obs">516</span><div class="sp-obs-bar"><div class="sp-obs-fill" style="width:24%"></div></div></div></td><td class="sp-obs">244</td><td class="sp-years">1969–2026</td><td>🔊</td></tr>
+        <tr><td><div class="sp-name">Granular Glass Frog</div></td><td class="sp-sci">Cochranella granulosa</td><td><span class="sp-badge sp-lc">LC</span></td><td><div class="obs-wrap"><span class="sp-obs">395</span><div class="sp-obs-bar"><div class="sp-obs-fill" style="width:18%"></div></div></div></td><td class="sp-obs">—</td><td class="sp-years">—</td><td>🔊</td></tr>
+        <tr><td><div class="sp-name">Colombian Robber Frog</div></td><td class="sp-sci">Pristimantis erythropleura</td><td><span class="sp-badge sp-en">EN</span></td><td><div class="obs-wrap"><span class="sp-obs">234</span><div class="sp-obs-bar"><div class="sp-obs-fill" style="width:11%"></div></div></div></td><td class="sp-obs">—</td><td class="sp-years">—</td><td>🔊</td></tr>
+        <tr><td><div class="sp-name">Cauca Poison Frog</div></td><td class="sp-sci">Andinobates bombetes</td><td><span class="sp-badge sp-en">EN</span></td><td><div class="obs-wrap"><span class="sp-obs">216</span><div class="sp-obs-bar"><div class="sp-obs-fill" style="width:10%"></div></div></div></td><td class="sp-obs">209</td><td class="sp-years">2008–2026</td><td>🔊</td></tr>
+        <tr><td><div class="sp-name">Palmer's Robber Frog</div></td><td class="sp-sci">Pristimantis palmeri</td><td><span class="sp-badge sp-vu">VU</span></td><td><div class="obs-wrap"><span class="sp-obs">216</span><div class="sp-obs-bar"><div class="sp-obs-fill" style="width:10%"></div></div></div></td><td class="sp-obs">129</td><td class="sp-years">2011–2026</td><td></td></tr>
+        <tr><td><div class="sp-name">Palm Rocket Frog</div></td><td class="sp-sci">Rheobates palmatus</td><td><span class="sp-badge sp-lc">LC</span></td><td><div class="obs-wrap"><span class="sp-obs">129</span><div class="sp-obs-bar"><div class="sp-obs-fill" style="width:6%"></div></div></div></td><td class="sp-obs">—</td><td class="sp-years">—</td><td>🔊</td></tr>
+        <tr><td><div class="sp-name">San Lorenzo Stubfoot Toad</div></td><td class="sp-sci">Atelopus laetissimus</td><td><span class="sp-badge sp-cr">CR</span></td><td><div class="obs-wrap"><span class="sp-obs">90</span><div class="sp-obs-bar"><div class="sp-obs-fill" style="width:4%"></div></div></div></td><td class="sp-obs">85</td><td class="sp-years">2008–2025</td><td>🔊</td></tr>
+        <tr><td><div class="sp-name">Savage's Cochran Frog</div></td><td class="sp-sci">Centrolene savagei</td><td><span class="sp-badge sp-en">EN</span></td><td><div class="obs-wrap"><span class="sp-obs">76</span><div class="sp-obs-bar"><div class="sp-obs-fill" style="width:4%"></div></div></div></td><td class="sp-obs">66</td><td class="sp-years">2007–2026</td><td>🔊</td></tr>
+        <tr><td><div class="sp-name">Rulyrana susatamai</div></td><td class="sp-sci">Rulyrana susatamai</td><td><span class="sp-badge sp-lc">LC</span></td><td><div class="obs-wrap"><span class="sp-obs">68</span><div class="sp-obs-bar"><div class="sp-obs-fill" style="width:3%"></div></div></div></td><td class="sp-obs">—</td><td class="sp-years">—</td><td></td></tr>
+        <tr><td><div class="sp-name">Common Rocket Frog</div></td><td class="sp-sci">Colostethus inguinalis</td><td><span class="sp-badge sp-lc">LC</span></td><td><div class="obs-wrap"><span class="sp-obs">56</span><div class="sp-obs-bar"><div class="sp-obs-fill" style="width:3%"></div></div></div></td><td class="sp-obs">—</td><td class="sp-years">—</td><td>🔊</td></tr>
+        <tr><td><div class="sp-name">Red-banded Poison Frog</div></td><td class="sp-sci">Oophaga lehmanni</td><td><span class="sp-badge sp-cr">CR</span></td><td><div class="obs-wrap"><span class="sp-obs">42</span><div class="sp-obs-bar"><div class="sp-obs-fill" style="width:2%"></div></div></div></td><td class="sp-obs">36</td><td class="sp-years">2010–2026</td><td></td></tr>
+        <tr><td><div class="sp-name">Ramos' Mushroomtongue Salamander</div></td><td class="sp-sci">Bolitoglossa ramosi</td><td><span class="sp-badge sp-en">EN</span></td><td><div class="obs-wrap"><span class="sp-obs">39</span><div class="sp-obs-bar"><div class="sp-obs-fill" style="width:2%"></div></div></div></td><td class="sp-obs">25</td><td class="sp-years">2008–2026</td><td></td></tr>
+        <tr><td><div class="sp-name">Yarmal Mushroom-tongue Salamander</div></td><td class="sp-sci">Bolitoglossa vallecula</td><td><span class="sp-badge sp-vu">VU</span></td><td><div class="obs-wrap"><span class="sp-obs">37</span><div class="sp-obs-bar"><div class="sp-obs-fill" style="width:2%"></div></div></div></td><td class="sp-obs">26</td><td class="sp-years">2017–2026</td><td></td></tr>
+        <tr><td><div class="sp-name">Mutable Rainfrog</div></td><td class="sp-sci">Pristimantis mutabilis</td><td><span class="sp-badge sp-vu">VU</span></td><td><div class="obs-wrap"><span class="sp-obs">11</span><div class="sp-obs-bar"><div class="sp-obs-fill" style="width:1%"></div></div></div></td><td class="sp-obs">10</td><td class="sp-years">2012–2023</td><td></td></tr>
+        <tr><td><div class="sp-name">Tatayo's Glass Frog</div></td><td class="sp-sci">Hyalinobatrachium tatayoi</td><td><span class="sp-badge sp-en">EN</span></td><td><span class="sp-obs">3</span></td><td class="sp-obs">3</td><td class="sp-years">2012–2017</td><td>🔊</td></tr>
+        <tr><td><div class="sp-name">Harlequin Treefrog</div></td><td class="sp-sci">Dendropsophus ebraccatus</td><td><span class="sp-badge sp-lc">LC</span></td><td><span class="sp-obs">2</span></td><td class="sp-obs">2</td><td class="sp-years">2023–2024</td><td>🔊</td></tr>
+        <tr><td><div class="sp-name">Lynch's Stubfoot Toad</div></td><td class="sp-sci">Atelopus lozanoi</td><td><span class="sp-badge sp-cr">CR</span></td><td><span class="sp-obs">2</span></td><td class="sp-obs">2</td><td class="sp-years">2022–2025</td><td></td></tr>
+        <tr><td><div class="sp-name">Choc&oacute; Poison Dart Frog</div></td><td class="sp-sci">Oophaga solanensis</td><td><span class="sp-badge sp-cr">CR</span></td><td><span class="sp-obs">1</span></td><td class="sp-obs">1</td><td class="sp-years">2023</td><td>🔊</td></tr>
+        <tr><td><div class="sp-name">Oophaga anchicayensis</div></td><td class="sp-sci">Oophaga anchicayensis</td><td><span class="sp-badge sp-cr">CR</span></td><td><span class="sp-obs">1</span></td><td class="sp-obs">1</td><td class="sp-years">2025</td><td></td></tr>
+        <tr><td><div class="sp-name">Northern Glassfrog</div></td><td class="sp-sci">Hyalinobatrachium viridissimum</td><td><span class="sp-badge sp-lc">LC</span></td><td><span class="sp-obs">1</span></td><td class="sp-obs">1</td><td class="sp-years">2010</td><td>🔊</td></tr>
+        <tr><td><div class="sp-name">Savage's Worm Salamander</div></td><td class="sp-sci">Oedipina savagei</td><td><span class="sp-badge sp-dd">DD</span></td><td><span class="sp-obs">1</span></td><td class="sp-obs">1</td><td class="sp-years">2024</td><td></td></tr>
+      </tbody>
+    </table>
+
+    <!-- THREE MAP VIEWS -->
+    <h2 class="section-heading">Three Map Views</h2>
+    <div class="map-views">
+
+      <!-- View 01 -->
+      <div class="map-view-card">
+        <div class="map-view-header">
+          <span class="map-view-num">01</span>
+          <span class="map-view-title">Species Records &amp; Observation Density</span>
+        </div>
+        <div class="map-view-body">
+          <div class="map-view-media">
+            <video autoplay muted loop playsinline preload="auto" poster="assets/P3/Screenshot 2026-05-11 200518.png">
+              <source src="assets/P3/Screen Recording 2026-05-11 200727.mp4" type="video/mp4">
+            </video>
+          </div>
+          <div class="map-view-desc">
+            <p>Georeferenced iNaturalist points for all 24 species, enriched with species photos, audio call recordings, and timestamps. Click any dot for a full-detail popup with photo and link to iNaturalist.</p>
+            <p>Hexagonal density cells summarize observation clustering across Colombia. Protected areas, annual precipitation, and K&ouml;ppen-Geiger climate zone layers provide habitat context. A time slider filters by week of year, revealing seasonal clustering during Colombia&rsquo;s two rainy seasons.</p>
+            <div class="layer-chips">
+              <span class="layer-chip">iNaturalist points</span>
+              <span class="layer-chip">Hex density</span>
+              <span class="layer-chip">Protected areas</span>
+              <span class="layer-chip">Annual precipitation</span>
+              <span class="layer-chip">Climate zones</span>
+              <span class="layer-chip">Time slider</span>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- View 02 -->
+      <div class="map-view-card">
+        <div class="map-view-header">
+          <span class="map-view-num">02</span>
+          <span class="map-view-title">Distribution &amp; Conservation</span>
+        </div>
+        <div class="map-view-body">
+          <div class="map-view-media">
+            <video autoplay muted loop playsinline preload="auto" poster="assets/P3/Screenshot 2026-05-11 200536.png">
+              <source src="assets/P3/Screen Recording 2026-05-11 200857.mp4" type="video/mp4">
+            </video>
+          </div>
+          <div class="map-view-desc">
+            <p>Colombia subdivided into hexagonal cells, each displaying a pie chart of species richness. Areas of high biodiversity stand out against sparse cells at a glance.</p>
+            <p>An ecosystem layer beneath the hexagons identifies which ecosystems &mdash; Andean cloud forest, Choc&oacute; lowlands, Amazon basin &mdash; harbor the greatest species concentrations, highlighting regions where conservation efforts would have the greatest impact.</p>
+            <div class="layer-chips">
+              <span class="layer-chip">Species-count hexagons</span>
+              <span class="layer-chip">Pie charts</span>
+              <span class="layer-chip">Ecosystem polygons</span>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- View 03 -->
+      <div class="map-view-card">
+        <div class="map-view-header">
+          <span class="map-view-num">03</span>
+          <span class="map-view-title">Natural Habitat vs. Citizen Science Bias</span>
+        </div>
+        <div class="map-view-body">
+          <div class="map-view-media">
+            <video autoplay muted loop playsinline preload="auto" poster="assets/P3/Screenshot 2026-05-11 200559.png">
+              <source src="assets/P3/Screen Recording 2026-05-11 201014.mp4" type="video/mp4">
+            </video>
+          </div>
+          <div class="map-view-desc">
+            <p>Integrates Colombia&rsquo;s IGAC land cover classification (Corine Land Cover hierarchy, delivered as vector tiles) against iNaturalist observation density to expose collection bias.</p>
+            <p>The contrast is stark: observations cluster near Bogot&aacute;, Medell&iacute;n, and accessible areas, while the Amazon basin, Pacific coast, and Orinoquía appear nearly empty &mdash; not because amphibians are absent, but because citizen scientists rarely reach these areas. The gaps are the finding.</p>
+            <div class="layer-chips">
+              <span class="layer-chip">IGAC land cover (vector tiles)</span>
+              <span class="layer-chip">Observation density</span>
+              <span class="layer-chip">Gap analysis</span>
+            </div>
+          </div>
+        </div>
+      </div>
+
+    </div>
+
+    <!-- DETAIL SCREENSHOTS -->
+    <div class="image-grid-2">
+      <div>
+        <div class="image-slot">
+          <img src="assets/P3/Screenshot 2026-05-11 200630.png" alt="Species sidebar detail — photo, audio, observation count">
+        </div>
+        <p class="image-caption">Species sidebar &mdash; IUCN badge, photo, audio call, iNaturalist count, research-grade count, year range, and link to iNaturalist record.</p>
+      </div>
+      <div>
+        <div class="image-slot">
+          <img src="assets/P3/Screenshot 2026-05-11 200928.png" alt="Time slider filtering by week of year">
+        </div>
+        <p class="image-caption">Time slider filtering by week &mdash; seasonal observation patterns across Colombia&rsquo;s two rainy seasons become visible in point distribution.</p>
+      </div>
+    </div>
+
+    <!-- DESIGN DECISIONS -->
+    <h2 class="section-heading">Design Decisions</h2>
+    <div class="design-cards">
+      <div class="design-card">
+        <div class="icon">🌑</div>
+        <strong>Dark terrain basemap</strong>
+        <p>Evokes the dense, layered character of Colombia&rsquo;s ecosystems. Observation points and data layers read clearly against the dark background &mdash; essential when displaying hundreds of overlapping features at national scale.</p>
+      </div>
+      <div class="design-card">
+        <div class="icon">🐸</div>
+        <strong>Glassfrog color palette</strong>
+        <p>Deep greens, teal accents, and translucent overlays directly inspired by Colombia&rsquo;s glassfrog species. Toggling layers reveals ecological context beneath, just as a glassfrog&rsquo;s transparency reveals its interior.</p>
+      </div>
+      <div class="design-card">
+        <div class="icon">🎛️</div>
+        <strong>Species-first navigation</strong>
+        <p>Sidebar interaction modeled after the Audubon Bird Migration Explorer &mdash; filter by IUCN status, sort by observation count or threat level, search by name. Clicking a species loads its photo, plays its audio call, and zooms the map to its distribution.</p>
+      </div>
+      <div class="design-card">
+        <div class="icon">🔊</div>
+        <strong>Audio call integration</strong>
+        <p>Audio recordings embedded for 17 of 24 species. Hearing a call alongside the spatial data creates presence a static map cannot &mdash; making the urgency of what&rsquo;s at risk more immediate.</p>
+      </div>
+    </div>
+
+    <!-- TECHNICAL CHALLENGES -->
+    <h2 class="section-heading">Technical Challenges</h2>
+    <ul class="challenge-list">
+      <li><span class="ch-num">01</span><span><strong>Data pipeline:</strong> iNaturalist CSV exports required cleaning, validation, and enrichment &mdash; matching each species to IUCN Red List status, consolidating scientific and common names, and associating photo and audio URLs. Observations with uncertain identification quality grades were evaluated individually.</span></li>
+      <li><span class="ch-num">02</span><span><strong>Rendering performance:</strong> Displaying hundreds of points alongside hex-bin layers, ecosystem polygons, land cover tiles, and protected area boundaries required careful layer ordering and opacity management. IGAC Corine Land Cover was converted to vector tiles, trading some attribute richness for significantly improved rendering speed.</span></li>
+      <li><span class="ch-num">03</span><span><strong>Custom app architecture:</strong> Building a fully custom web application rather than ArcGIS Online Experience Builder introduced complexity in synchronizing the time slider, species filter, layer panel, and map view as a coherent interactive system &mdash; all coordinated with vanilla JavaScript and the ArcGIS JS API 4.29.</span></li>
+    </ul>
+
+    <div class="callout">
+      <p>Citizen science data, while invaluable, must be critically interpreted and complemented by targeted field campaigns to meaningfully guide conservation decisions. This map makes that argument spatially &mdash; the empty regions of the Amazon and Pacific coast speak as loudly as the dense clusters around Bogot&aacute; and Medell&iacute;n.</p>
+    </div>
+
+  </main>
+</div>
+
+<footer>
+  <span>Juan Sebastian Cortes &mdash; Portfolio 2025</span>
+  <a href="index.html">&larr; Back to all projects</a>
+</footer>
+
+<script src="lightbox.js"></script>
+</body>
+</html>

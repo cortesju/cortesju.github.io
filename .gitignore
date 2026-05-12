@@ -1,0 +1,11 @@
+# OS files
+.DS_Store
+Thumbs.db
+desktop.ini
+
+# Editor folders
+.vscode/
+.idea/
+
+# Oversized video (>100 MB — exceeds GitHub limit)
+assets/P1/colorcorr1.mp4

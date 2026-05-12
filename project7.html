@@ -1,0 +1,681 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Catalina Island Coastal Erosion — Juan Sebastian Cortes</title>
+  <link href="https://fonts.googleapis.com/css2?family=Rubik:wght@400;500;700;900&display=swap" rel="stylesheet"/>
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    :root {
+      --white:       #f8f9fa;
+      --text:        #1a1a1a;
+      --muted:       #7a8a96;
+      --border:      #d0d8e0;
+      --warm-gray:   #e4eaef;
+      --ocean:       #0b4f75;
+      --ocean-mid:   #1a7fa8;
+      --ocean-light: #4ab4d4;
+      --seafoam:     #7ecec4;
+      --erosion-red: #d94f3a;
+      --gain-blue:   #2a7dd4;
+      --dark:        #0a1520;
+      --body-font:   "Neue Haas Grotesk","Haas Grot Text","Helvetica Neue",Arial,sans-serif;
+      --head-font:   'Rubik', sans-serif;
+    }
+
+    body { font-family: var(--body-font); background: var(--white); color: var(--text); font-size: 14.5px; line-height: 1.65; }
+    a { text-decoration: none; color: inherit; }
+
+    /* ── NAV ── */
+    nav { display: flex; align-items: center; justify-content: space-between; padding: 18px 40px; border-bottom: 0.8px solid #000; position: sticky; top: 0; background: var(--white); z-index: 200; }
+    .nav-name { font-family: var(--head-font); font-weight: 700; font-size: 13px; letter-spacing: 0.06em; text-transform: uppercase; line-height: 1.3; }
+    .nav-right { display: flex; gap: 32px; font-family: var(--head-font); font-weight: 700; font-size: 12px; letter-spacing: 0.08em; text-transform: uppercase; }
+    .nav-right a { color: var(--muted); } .nav-right a:hover { color: var(--text); }
+
+    /* ── META BAR ── */
+    .project-meta-bar { display: flex; align-items: center; justify-content: space-between; padding: 10.4px 40px; border-bottom: 0.8px solid #000; }
+    .project-title-bar { font-family: var(--head-font); font-weight: 700; font-size: 13px; letter-spacing: 0.06em; text-transform: uppercase; color: rgba(0,0,0,0.75); }
+    .project-nav-links { display: flex; gap: 16px; font-family: var(--body-font); font-size: 13px; color: rgba(0,0,0,0.7); }
+    .project-nav-links a { color: rgba(0,0,0,0.7); } .project-nav-links a:hover { color: #000; }
+
+    /* ── HERO ── */
+    .hero { position: relative; width: 100%; height: 500px; overflow: hidden; background: var(--dark); }
+    .hero img { width: 100%; height: 100%; object-fit: cover; opacity: 0.75; }
+    .hero-overlay { position: absolute; inset: 0; background: linear-gradient(to top, rgba(10,21,32,0.96) 0%, rgba(10,21,32,0.2) 60%, transparent 100%); pointer-events: none; }
+    .hero-content { position: absolute; bottom: 40px; left: 40px; right: 40px; display: flex; align-items: flex-end; justify-content: space-between; gap: 24px; }
+    .hero-eyebrow { font-family: var(--head-font); font-weight: 700; font-size: 11px; letter-spacing: 0.16em; text-transform: uppercase; color: var(--seafoam); margin-bottom: 12px; }
+    .hero-title { font-family: var(--head-font); font-weight: 900; font-size: clamp(30px, 4.5vw, 56px); color: white; line-height: 1.05; margin-bottom: 10px; }
+    .hero-sub { font-family: var(--head-font); font-size: 11px; color: rgba(255,255,255,0.45); letter-spacing: 0.06em; max-width: 480px; line-height: 1.6; text-transform: uppercase; }
+    .hero-btn { display: inline-flex; align-items: center; gap: 8px; background: rgba(126,206,196,0.15); border: 1px solid rgba(126,206,196,0.4); color: var(--seafoam); font-family: var(--head-font); font-weight: 700; font-size: 11px; letter-spacing: 0.1em; text-transform: uppercase; padding: 12px 20px; white-space: nowrap; flex-shrink: 0; transition: all 0.2s; }
+    .hero-btn:hover { background: rgba(126,206,196,0.3); color: white; }
+    .live-dot { width: 6px; height: 6px; border-radius: 50%; background: var(--seafoam); animation: pulse 2s infinite; flex-shrink: 0; }
+    @keyframes pulse { 0%,100%{opacity:1} 50%{opacity:0.3} }
+
+    /* ── LAYOUT ── */
+    .project-body { display: grid; grid-template-columns: 220px 1fr; max-width: 1200px; margin: 0 auto; padding: 60px 40px; }
+    .sidebar { padding-right: 48px; border-right: 0.8px solid #000; }
+    .sidebar-block { margin-bottom: 36px; }
+    .sidebar-label { font-family: var(--head-font); font-size: 10px; letter-spacing: 0.12em; text-transform: uppercase; color: var(--muted); margin-bottom: 6px; }
+    .sidebar-value { font-size: 13.5px; font-weight: 500; line-height: 1.6; }
+    .sidebar-value a { color: var(--ocean-mid); font-family: var(--head-font); font-size: 12px; font-weight: 700; }
+    .sidebar-value a:hover { text-decoration: underline; }
+    .tag-list { display: flex; flex-wrap: wrap; gap: 6px; margin-top: 4px; }
+    .tag { font-family: var(--head-font); font-weight: 700; font-size: 10px; letter-spacing: 0.06em; text-transform: uppercase; padding: 3px 8px; border: 0.8px solid var(--border); color: var(--muted); }
+    .tag.teal { border-color: var(--seafoam); color: #2a8a80; }
+
+    .main-content { padding-left: 56px; }
+    h2.section-heading { font-family: var(--head-font); font-weight: 700; font-size: 11px; letter-spacing: 0.14em; text-transform: uppercase; color: var(--muted); margin-bottom: 16px; margin-top: 52px; padding-bottom: 10px; border-bottom: 0.8px solid #000; }
+    h2.section-heading:first-child { margin-top: 0; }
+    p { font-size: 14px; line-height: 1.75; color: #333; margin-bottom: 18px; }
+
+    /* ── STATS ── */
+    .stats-bar { display: grid; grid-template-columns: repeat(4,1fr); gap: 1px; background: var(--border); border: 0.8px solid #000; margin: 36px 0; }
+    .stat-item { background: var(--white); padding: 24px 16px; text-align: center; }
+    .stat-number { font-family: var(--head-font); font-weight: 900; font-size: 24px; color: var(--ocean); display: block; line-height: 1; margin-bottom: 7px; }
+    .stat-number.teal { color: #2a8a80; }
+    .stat-label { font-size: 10px; letter-spacing: 0.08em; text-transform: uppercase; color: var(--muted); line-height: 1.4; }
+
+    /* ── STORYMAP PREVIEW CARD ── */
+    .storymap-card { display: block; position: relative; width: 100%; height: 300px; overflow: hidden; margin: 28px 0; border: 0.8px solid #000; cursor: pointer; }
+    .storymap-card-bg { position: absolute; inset: 0; }
+    .storymap-card-bg img { width: 100%; height: 100%; object-fit: cover; transition: transform 0.4s ease; }
+    .storymap-card:hover .storymap-card-bg img { transform: scale(1.03); }
+    .storymap-card-overlay { position: absolute; inset: 0; background: linear-gradient(to top, rgba(10,21,32,0.97) 0%, rgba(10,21,32,0.5) 50%, rgba(10,21,32,0.15) 100%); }
+    .storymap-card-content { position: absolute; bottom: 0; left: 0; right: 0; padding: 28px 32px; }
+    .storymap-card-label { display: flex; align-items: center; gap: 8px; font-family: var(--head-font); font-weight: 700; font-size: 10px; letter-spacing: 0.14em; text-transform: uppercase; color: var(--seafoam); margin-bottom: 10px; }
+    .storymap-card-title { font-family: var(--head-font); font-weight: 900; font-size: 20px; color: white; line-height: 1.2; margin-bottom: 6px; }
+    .storymap-card-sub { font-family: var(--head-font); font-size: 11px; color: rgba(255,255,255,0.45); letter-spacing: 0.06em; text-transform: uppercase; margin-bottom: 16px; }
+    .storymap-card-btn { display: inline-block; background: rgba(126,206,196,0.15); border: 1px solid rgba(126,206,196,0.4); color: var(--seafoam); font-family: var(--head-font); font-weight: 700; font-size: 11px; letter-spacing: 0.1em; text-transform: uppercase; padding: 8px 18px; transition: all 0.2s; }
+    .storymap-card:hover .storymap-card-btn { background: rgba(126,206,196,0.3); color: white; }
+
+    /* ── RESOLUTION COMPARISON ── */
+    .res-compare { display: grid; grid-template-columns: 1fr 1fr; gap: 1px; background: var(--border); border: 0.8px solid #000; margin: 24px 0; }
+    .res-cell { background: var(--white); padding: 22px 20px; text-align: center; }
+    .res-number { font-family: var(--head-font); font-weight: 900; font-size: 30px; display: block; line-height: 1; margin-bottom: 6px; }
+    .res-number.drone { color: var(--seafoam); }
+    .res-number.lidar { color: var(--ocean); }
+    .res-label { font-family: var(--head-font); font-weight: 700; font-size: 10px; letter-spacing: 0.08em; text-transform: uppercase; color: var(--muted); }
+    .res-source { font-size: 13px; color: #555; margin-top: 6px; line-height: 1.5; }
+
+    /* ── CALLOUT ── */
+    .callout { border-left: 3px solid var(--ocean-mid); padding: 16px 20px; background: #f0f7fc; margin: 28px 0; }
+    .callout p { font-size: 14px; color: #444; margin: 0; font-style: italic; }
+
+    /* ── WORKFLOW STEPS ── */
+    .workflow-steps { list-style: none; margin: 24px 0; }
+    .workflow-steps li { display: flex; gap: 20px; margin-bottom: 20px; padding-bottom: 20px; border-bottom: 0.8px solid var(--border); }
+    .workflow-steps li:last-child { border-bottom: none; }
+    .wf-num { font-family: var(--head-font); font-weight: 700; font-size: 11px; color: var(--ocean-mid); min-width: 24px; padding-top: 2px; }
+    .wf-body strong { display: block; font-size: 13.5px; font-weight: 600; margin-bottom: 4px; }
+    .wf-body p { font-size: 13px; color: #555; margin: 0; }
+
+    /* ── IMAGE COMPARISON SLIDERS ── */
+    .slider-block { margin-bottom: 44px; }
+    .slider-header { display: flex; align-items: baseline; justify-content: space-between; margin-bottom: 10px; }
+    .slider-title { font-family: var(--head-font); font-weight: 700; font-size: 14px; color: var(--text); }
+    .slider-hint { font-family: var(--head-font); font-weight: 700; font-size: 10px; letter-spacing: 0.08em; text-transform: uppercase; color: var(--muted); }
+    .slider-hint::before { content: '← '; }
+    .slider-hint::after  { content: ' →'; }
+
+    .img-compare { position: relative; width: 100%; aspect-ratio: 16/9; overflow: hidden; cursor: col-resize; border: 0.8px solid #000; user-select: none; background: var(--dark); }
+    .img-compare .after  { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; pointer-events: none; }
+    .img-compare .before { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; pointer-events: none; clip-path: inset(0 50% 0 0); }
+    .img-compare .divider { position: absolute; top: 0; bottom: 0; left: 50%; width: 2px; background: white; transform: translateX(-50%); pointer-events: none; box-shadow: 0 0 8px rgba(0,0,0,0.5); z-index: 10; }
+    .img-compare .handle { position: absolute; top: 50%; left: 50%; transform: translate(-50%,-50%); width: 44px; height: 44px; background: white; border-radius: 50%; display: flex; align-items: center; justify-content: center; box-shadow: 0 2px 12px rgba(0,0,0,0.4); pointer-events: none; z-index: 11; gap: 2px; }
+    .handle-arrow { font-size: 12px; color: var(--ocean); line-height: 1; }
+    .img-compare .label-left, .img-compare .label-right { position: absolute; bottom: 12px; font-family: var(--head-font); font-weight: 700; font-size: 10px; letter-spacing: 0.1em; text-transform: uppercase; color: white; background: rgba(0,0,0,0.65); padding: 4px 10px; z-index: 12; pointer-events: none; }
+    .img-compare .label-left  { left: 12px; }
+    .img-compare .label-right { right: 12px; }
+    .slider-caption { font-family: var(--head-font); font-size: 10px; color: var(--muted); margin-top: 8px; line-height: 1.5; padding: 0 2px; }
+
+    /* ── REGULAR IMAGES ── */
+    .image-grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin: 28px 0; }
+    .image-grid-3 { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 12px; margin: 28px 0; }
+    .image-grid-4 { display: grid; grid-template-columns: 1fr 1fr 1fr 1fr; gap: 10px; margin: 28px 0; }
+    .image-slot { background: var(--warm-gray); display: flex; align-items: center; justify-content: center; overflow: hidden; }
+    .image-slot.ar-43  { aspect-ratio: 4/3; }
+    .image-slot.ar-169 { aspect-ratio: 16/9; }
+    .image-slot.ar-32  { aspect-ratio: 3/2; }
+    .image-slot.dark { background: var(--dark); }
+    .image-slot img { width: 100%; height: 100%; object-fit: cover; display: block; }
+    .image-full { width: 100%; margin: 28px 0; overflow: hidden; }
+    .image-full img { width: 100%; display: block; }
+    .image-caption { font-family: var(--head-font); font-size: 10px; color: var(--muted); margin-top: 6px; line-height: 1.5; }
+
+    /* ── EROSION LEGEND ── */
+    .erosion-legend { display: flex; gap: 24px; margin: 20px 0; padding: 16px 20px; background: #f0f4f8; border: 0.8px solid var(--border); }
+    .legend-item { display: flex; align-items: center; gap: 10px; }
+    .legend-dot { width: 14px; height: 14px; border-radius: 2px; flex-shrink: 0; }
+    .legend-text { font-size: 13px; color: #444; }
+    .legend-text strong { display: block; font-size: 11px; font-family: var(--head-font); font-weight: 700; margin-bottom: 1px; }
+
+    /* ── LIMITATIONS ── */
+    .limitation-list { list-style: none; margin: 16px 0; }
+    .limitation-list li { display: flex; gap: 14px; padding: 12px 0; border-bottom: 0.8px solid var(--border); font-size: 13.5px; color: #444; line-height: 1.65; }
+    .limitation-list li:last-child { border-bottom: none; }
+    .lim-icon { font-size: 14px; flex-shrink: 0; padding-top: 2px; }
+
+    footer { border-top: 0.8px solid #000; padding: 28px 40px; display: flex; justify-content: space-between; align-items: center; font-family: var(--head-font); font-size: 11px; color: var(--muted); letter-spacing: 0.06em; text-transform: uppercase; margin-top: 80px; }
+    footer a { color: var(--muted); } footer a:hover { color: var(--text); }
+
+    @media (max-width: 768px) {
+      .project-body { grid-template-columns: 1fr; padding: 36px 20px; }
+      .sidebar { border-right: none; border-bottom: 0.8px solid #000; padding-right: 0; padding-bottom: 32px; margin-bottom: 32px; }
+      .main-content { padding-left: 0; }
+      .stats-bar, .res-compare { grid-template-columns: repeat(2,1fr); }
+      .image-grid-2, .image-grid-3, .image-grid-4 { grid-template-columns: 1fr; }
+      nav, .project-meta-bar { padding: 14px 20px; }
+      .hero-content { flex-direction: column; align-items: flex-start; }
+      .img-compare { aspect-ratio: 4/3; }
+    }
+  </style>
+</head>
+<body>
+
+<nav>
+  <div class="nav-name">Juan Sebastian<br>Cortes</div>
+  <div class="nav-right">
+    <a href="index.html">Portfolio</a>
+    <a href="#">About</a>
+    <a href="#">Contact</a>
+  </div>
+</nav>
+
+<div class="project-meta-bar">
+  <div class="project-title-bar">Catalina Island — Coastal Erosion</div>
+  <div class="project-nav-links">
+    <a href="project6.html">← Prev</a>
+    <a href="index.html">All Projects</a>
+    <a href="#">Next →</a>
+  </div>
+</div>
+
+<!-- HERO -->
+<div class="hero">
+  <img src="assets/P7/DJI_20240627133820_0154_D.JPG" alt="Fishermans Cove — Catalina Island aerial">
+  <div class="hero-overlay"></div>
+  <div class="hero-content">
+    <div>
+      <div class="hero-eyebrow">Drone · LiDAR · DEM Differencing · Remote Sensing · Coastal Geomorphology</div>
+      <div class="hero-title">Catalina Island<br>Coastal Erosion</div>
+      <div class="hero-sub">Tracking shoreline change at Fishermans Cove using drone photogrammetry and USGS LiDAR — 2015 to 2025</div>
+    </div>
+    <a class="hero-btn" href="https://storymaps.arcgis.com/stories/1e05e8cccd844e6bbbd5737098eb26cd" target="_blank">
+      <span class="live-dot"></span>View StoryMap
+    </a>
+  </div>
+</div>
+
+<div class="project-body">
+
+  <!-- SIDEBAR -->
+  <aside class="sidebar">
+    <div class="sidebar-block">
+      <div class="sidebar-label">Date</div>
+      <div class="sidebar-value">March 16, 2025</div>
+    </div>
+    <div class="sidebar-block">
+      <div class="sidebar-label">Team</div>
+      <div class="sidebar-value" style="font-size:13px;line-height:1.8;">
+        Juan Sebastian Cortes<br>
+        Riya Khanapure<br>
+        Olivia Owyang
+      </div>
+    </div>
+    <div class="sidebar-block">
+      <div class="sidebar-label">Location</div>
+      <div class="sidebar-value" style="font-size:13px;line-height:1.7;">
+        Fishermans Cove<br>
+        USC Wrigley Institute<br>
+        Catalina Island, CA
+      </div>
+    </div>
+    <div class="sidebar-block">
+      <div class="sidebar-label">Methods</div>
+      <div class="tag-list">
+        <span class="tag teal">Drone Photogrammetry</span>
+        <span class="tag teal">LiDAR Point Cloud</span>
+        <span class="tag teal">DEM Differencing</span>
+        <span class="tag">Drone2Map</span>
+        <span class="tag">ArcGIS Pro</span>
+        <span class="tag">Hillshade</span>
+        <span class="tag">Minus Tool</span>
+      </div>
+    </div>
+    <div class="sidebar-block">
+      <div class="sidebar-label">Data Sources</div>
+      <div class="sidebar-value" style="font-size:13px;line-height:1.8;">
+        USGS LiDAR (2015)<br>
+        DJI Mavic 3M (2024)<br>
+        DJI Mavic 3M (2025)
+      </div>
+    </div>
+    <div class="sidebar-block">
+      <div class="sidebar-label">Time Span</div>
+      <div class="sidebar-value">2015 → 2025<br><span style="font-family:var(--head-font);font-size:11px;color:var(--muted);">10 years of<br>coastal change</span></div>
+    </div>
+    <div class="sidebar-block">
+      <div class="sidebar-label">StoryMap</div>
+      <div class="sidebar-value"><a href="https://storymaps.arcgis.com/stories/1e05e8cccd844e6bbbd5737098eb26cd" target="_blank">→ Open StoryMap</a></div>
+    </div>
+  </aside>
+
+  <!-- MAIN -->
+  <main class="main-content">
+
+    <h2 class="section-heading">Overview</h2>
+    <p>
+      Catalina Island's coastlines are continuously shaped by natural forces — waves, sediment transport, and seasonal storm activity. Coastal erosion at the USC Marine Reserve poses risks to both marine habitats and the infrastructure of the Wrigley Institute. This project compares past and present coastal topography to detect where significant erosion has occurred at Fishermans Cove between 2015 and 2025.
+    </p>
+    <p>
+      Using USGS LiDAR point cloud data from 2015 and drone-derived Digital Elevation Models from 2024 and 2025 flights with a DJI Mavic 3M, we created spatially aligned DEMs and applied raster differencing to map elevation gain and loss — identifying the most erosion-prone zones along the eastern and western portions of the cove.
+    </p>
+
+    <div class="stats-bar">
+      <div class="stat-item"><span class="stat-number">10 yr</span><span class="stat-label">Coastal change<br>tracked</span></div>
+      <div class="stat-item"><span class="stat-number teal">0.014ft</span><span class="stat-label">Drone DEM<br>resolution</span></div>
+      <div class="stat-item"><span class="stat-number">1 ft</span><span class="stat-label">LiDAR DEM<br>resolution</span></div>
+      <div class="stat-item"><span class="stat-number">3</span><span class="stat-label">DEMs compared<br>2015 · 2024 · 2025</span></div>
+    </div>
+
+    <!-- STORYMAP CARD -->
+    <h2 class="section-heading">ArcGIS StoryMap</h2>
+    <a href="https://storymaps.arcgis.com/stories/1e05e8cccd844e6bbbd5737098eb26cd" target="_blank" class="storymap-card">
+      <div class="storymap-card-bg">
+        <img src="assets/P7/DJI_20240627134041_0204_D.JPG" alt="Catalina Island coastline">
+      </div>
+      <div class="storymap-card-overlay"></div>
+      <div class="storymap-card-content">
+        <div class="storymap-card-label"><span class="live-dot"></span> ArcGIS StoryMap — Public</div>
+        <div class="storymap-card-title">Catalina Island Coastal Erosion</div>
+        <div class="storymap-card-sub">Fishermans Cove · Drone + LiDAR · DEM Differencing · 2015–2025</div>
+        <div class="storymap-card-btn">Open StoryMap &rarr;</div>
+      </div>
+    </a>
+
+    <!-- RESOLUTION -->
+    <h2 class="section-heading">Resolution — Drone vs. LiDAR</h2>
+    <p>One of the core technical challenges was the enormous resolution difference between the two data sources. Drone imagery captured at centimeter-level detail had to be aggregated to match the foot-level resolution of the historical LiDAR data before any meaningful comparison could be made.</p>
+    <div class="res-compare">
+      <div class="res-cell">
+        <span class="res-number drone">0.014 ft</span>
+        <div class="res-label">Drone DEM · per pixel</div>
+        <div class="res-source">DJI Mavic 3M · 2024 &amp; 2025<br>Processed in Drone2Map</div>
+      </div>
+      <div class="res-cell">
+        <span class="res-number lidar">1 ft</span>
+        <div class="res-label">LiDAR DEM · per pixel</div>
+        <div class="res-source">USGS LiDAR Point Cloud · 2015<br>Processed in ArcGIS Pro</div>
+      </div>
+    </div>
+    <div class="callout">
+      <p>The drone data is approximately 71× more detailed than LiDAR by linear resolution. Aligning these datasets required aggregating drone imagery to 1ft cells — preserving enough detail for meaningful subtraction while enabling direct comparison across data sources and time periods.</p>
+    </div>
+
+    <!-- WORKFLOW -->
+    <h2 class="section-heading">Data Processing Workflow</h2>
+    <ul class="workflow-steps">
+      <li>
+        <span class="wf-num">01</span>
+        <div class="wf-body">
+          <strong>Historical LiDAR processing</strong>
+          <p>USGS LiDAR point cloud data uploaded to ArcGIS Pro. Digital Elevation Model created at 1ft × 1ft resolution. Hillshade tool applied to generate a shaded relief raster highlighting elevation changes across Fishermans Cove.</p>
+        </div>
+      </li>
+      <li>
+        <span class="wf-num">02</span>
+        <div class="wf-body">
+          <strong>Drone flight and photogrammetry (2024 & 2025)</strong>
+          <p>Drone flights conducted with DJI Mavic 3M over the eastern and western portions of Fishermans Cove. Imagery processed in Drone2Map to generate point clouds and DEMs at 0.014ft resolution.</p>
+        </div>
+      </li>
+      <li>
+        <span class="wf-num">03</span>
+        <div class="wf-body">
+          <strong>Resolution alignment & interpolation</strong>
+          <p>Drone DEM aggregated to 1ft cells to match LiDAR resolution. LiDAR data interpolated to achieve consistent 1ft × 1ft coverage across point cloud gaps. Both datasets reprojected to a common coordinate system.</p>
+        </div>
+      </li>
+      <li>
+        <span class="wf-num">04</span>
+        <div class="wf-body">
+          <strong>DEM differencing — Minus tool</strong>
+          <p>ArcGIS Pro's Minus tool subtracted the 2015 LiDAR DEM from both the 2024 and 2025 drone DEMs. Positive values indicate elevation gain; negative values indicate erosion / surface lowering.</p>
+        </div>
+      </li>
+    </ul>
+
+    <!-- ArcGIS PROCESSING SCREENSHOTS -->
+    <h2 class="section-heading">Processing Steps — ArcGIS Pro</h2>
+    <div class="image-grid-3">
+      <div>
+        <div class="image-slot ar-43">
+          <img src="assets/P7/Screenshot 2025-03-14 171236.png" alt="LiDAR point cloud in ArcGIS Pro">
+        </div>
+        <p class="image-caption">LiDAR point cloud loaded in ArcGIS Pro — raw USGS data before DEM creation.</p>
+      </div>
+      <div>
+        <div class="image-slot ar-43">
+          <img src="assets/P7/Screenshot 2025-03-14 172440.png" alt="LiDAR DEM creation">
+        </div>
+        <p class="image-caption">LiDAR DEM generated at 1ft resolution from the point cloud.</p>
+      </div>
+      <div>
+        <div class="image-slot ar-43">
+          <img src="assets/P7/Screenshot 2025-03-14 175414.png" alt="Hillshade DEM">
+        </div>
+        <p class="image-caption">Hillshade rendering applied to the LiDAR DEM — reveals terrain texture and elevation gradients.</p>
+      </div>
+      <div>
+        <div class="image-slot ar-43">
+          <img src="assets/P7/Screenshot 2025-03-14 175433.png" alt="Drone DEM in ArcGIS Pro">
+        </div>
+        <p class="image-caption">Drone-derived DEM from Drone2Map loaded into ArcGIS Pro for alignment.</p>
+      </div>
+      <div>
+        <div class="image-slot ar-43">
+          <img src="assets/P7/Screenshot 2025-03-15 113548.png" alt="Resolution resampling">
+        </div>
+        <p class="image-caption">Drone DEM aggregated to 1ft cells to match LiDAR resolution before differencing.</p>
+      </div>
+      <div>
+        <div class="image-slot ar-43">
+          <img src="assets/P7/Screenshot 2025-03-15 114635.png" alt="LiDAR interpolation">
+        </div>
+        <p class="image-caption">LiDAR interpolation applied to fill gaps in the point cloud coverage.</p>
+      </div>
+    </div>
+
+    <div class="image-grid-3">
+      <div>
+        <div class="image-slot ar-43">
+          <img src="assets/P7/Screenshot 2025-03-15 114731.png" alt="DEM alignment check">
+        </div>
+        <p class="image-caption">DEM alignment verification — confirming both datasets share the same coordinate system and extent.</p>
+      </div>
+      <div>
+        <div class="image-slot ar-43">
+          <img src="assets/P7/Screenshot 2025-03-15 154822.png" alt="Minus tool output">
+        </div>
+        <p class="image-caption">Minus tool applied — subtracting LiDAR 2015 from drone 2024 DEM to produce the difference raster.</p>
+      </div>
+      <div>
+        <div class="image-slot ar-43">
+          <img src="assets/P7/Screenshot 2025-03-15 160701.png" alt="DEM difference raster result">
+        </div>
+        <p class="image-caption">DEM difference raster — initial result showing areas of elevation change across Fishermans Cove.</p>
+      </div>
+    </div>
+
+    <!-- COMPARISON SLIDERS -->
+    <h2 class="section-heading">Image Comparisons — Drag to Compare</h2>
+    <p>Drag the handle left or right to reveal and compare each dataset pair. Five comparisons show resolution differences, temporal change, and the effect of interpolation.</p>
+
+    <!-- SLIDER 1 -->
+    <div class="slider-block">
+      <div class="slider-header">
+        <div class="slider-title">1 — Drone DEM vs. LiDAR DEM (Resolution)</div>
+        <div class="slider-hint">drag</div>
+      </div>
+      <div class="img-compare" id="slider-1">
+        <img class="after"  src="assets/P7/Compare 1.1.png" alt="LiDAR DEM 2015">
+        <img class="before" src="assets/P7/Compare 1.png"   alt="Drone DEM 2024">
+        <div class="divider" id="div-1"></div>
+        <div class="handle" id="handle-1"><span class="handle-arrow">◀</span><span class="handle-arrow">▶</span></div>
+        <div class="label-left">Drone DEM · 0.014ft</div>
+        <div class="label-right">LiDAR DEM · 1ft</div>
+      </div>
+      <div class="slider-caption">Resolution comparison — the drone DEM captures centimeter-level surface detail invisible in the USGS LiDAR. Before differencing, drone data was aggregated to 1ft cells to enable direct comparison.</div>
+    </div>
+
+    <!-- SLIDER 2 -->
+    <div class="slider-block">
+      <div class="slider-header">
+        <div class="slider-title">2 — LiDAR Hillshade (2015) vs. Drone Imagery (2024)</div>
+        <div class="slider-hint">drag</div>
+      </div>
+      <div class="img-compare" id="slider-2">
+        <img class="after"  src="assets/P7/Compare 2.2.png" alt="LiDAR 2015">
+        <img class="before" src="assets/P7/Compare 2.png"   alt="Drone 2024">
+        <div class="divider" id="div-2"></div>
+        <div class="handle" id="handle-2"><span class="handle-arrow">◀</span><span class="handle-arrow">▶</span></div>
+        <div class="label-left">2024 Drone</div>
+        <div class="label-right">LiDAR 2015</div>
+      </div>
+      <div class="slider-caption">Nine-year change — comparing the 2015 USGS LiDAR hillshade against 2024 drone imagery reveals visible changes to the coastline profile, sediment distribution, and vegetated areas.</div>
+    </div>
+
+    <!-- SLIDER 3 -->
+    <div class="slider-block">
+      <div class="slider-header">
+        <div class="slider-title">3 — LiDAR: Without vs. With Interpolation</div>
+        <div class="slider-hint">drag</div>
+      </div>
+      <div class="img-compare" id="slider-3">
+        <img class="after"  src="assets/P7/Compare 3.3.png" alt="LiDAR interpolated">
+        <img class="before" src="assets/P7/Compare 3.png"   alt="LiDAR raw">
+        <div class="divider" id="div-3"></div>
+        <div class="handle" id="handle-3"><span class="handle-arrow">◀</span><span class="handle-arrow">▶</span></div>
+        <div class="label-left">Raw LiDAR</div>
+        <div class="label-right">Interpolated</div>
+      </div>
+      <div class="slider-caption">Interpolation effect — LiDAR point clouds contain gaps at water surfaces and steep angles. Interpolation fills these to create a continuous DEM surface required for reliable differencing calculations.</div>
+    </div>
+
+    <!-- SLIDER 4 -->
+    <div class="slider-block">
+      <div class="slider-header">
+        <div class="slider-title">4 — 2024 Drone vs. 2025 Drone</div>
+        <div class="slider-hint">drag</div>
+      </div>
+      <div class="img-compare" id="slider-4">
+        <img class="after"  src="assets/P7/Compare 4.4.png" alt="Drone 2025">
+        <img class="before" src="assets/P7/Comapre 4.png"   alt="Drone 2024">
+        <div class="divider" id="div-4"></div>
+        <div class="handle" id="handle-4"><span class="handle-arrow">◀</span><span class="handle-arrow">▶</span></div>
+        <div class="label-left">2024</div>
+        <div class="label-right">2025</div>
+      </div>
+      <div class="slider-caption">Year-over-year change — the 2024 and 2025 flights used the same DJI Mavic 3M and flight parameters, enabling direct single-year comparison without instrument bias.</div>
+    </div>
+
+    <!-- SLIDER 5 -->
+    <div class="slider-block">
+      <div class="slider-header">
+        <div class="slider-title">5 — DEM Difference Results (2015 → 2024 vs. 2015 → 2025)</div>
+        <div class="slider-hint">drag</div>
+      </div>
+      <div class="img-compare" id="slider-5">
+        <img class="after"  src="assets/P7/Comapre 5.5.png" alt="DEM difference 2025">
+        <img class="before" src="assets/P7/Compare 5.png"   alt="DEM difference 2024">
+        <div class="divider" id="div-5"></div>
+        <div class="handle" id="handle-5"><span class="handle-arrow">◀</span><span class="handle-arrow">▶</span></div>
+        <div class="label-left">2024 Difference</div>
+        <div class="label-right">2025 Difference</div>
+      </div>
+      <div class="slider-caption">DEM difference maps compared — contrasting the 2015→2024 and 2015→2025 difference rasters reveals how erosion and deposition patterns shifted between the two drone surveys.</div>
+    </div>
+
+    <!-- DEM DIFFERENCE RESULTS -->
+    <h2 class="section-heading">DEM Difference Results — Erosion &amp; Gain</h2>
+    <div class="erosion-legend">
+      <div class="legend-item">
+        <div class="legend-dot" style="background:var(--erosion-red)"></div>
+        <div class="legend-text"><strong>Red — Elevation Gain</strong>Sediment deposition or vegetation accumulation since 2015</div>
+      </div>
+      <div class="legend-item">
+        <div class="legend-dot" style="background:var(--gain-blue)"></div>
+        <div class="legend-text"><strong>Blue — Elevation Loss</strong>Coastal erosion, sediment removal, or surface lowering since 2015</div>
+      </div>
+    </div>
+
+    <div class="image-grid-3">
+      <div>
+        <div class="image-slot ar-43">
+          <img src="assets/P7/Screenshot 2025-03-15 162044.png" alt="DEM difference map">
+        </div>
+        <p class="image-caption">DEM difference raster — elevation change across the full Fishermans Cove study area.</p>
+      </div>
+      <div>
+        <div class="image-slot ar-43">
+          <img src="assets/P7/Screenshot 2025-03-15 223847.png" alt="Erosion zones detail">
+        </div>
+        <p class="image-caption">Erosion zone detail — highest-loss areas concentrated along the eastern cliff faces and sediment transport corridors.</p>
+      </div>
+      <div>
+        <div class="image-slot ar-43">
+          <img src="assets/P7/Screenshot 2025-03-15 232105.png" alt="Gain and loss classified">
+        </div>
+        <p class="image-caption">Gain and loss classified — symbology applied to distinguish net erosion from deposition zones.</p>
+      </div>
+    </div>
+
+    <div class="image-grid-2">
+      <div>
+        <div class="image-slot ar-169">
+          <img src="assets/P7/Screenshot 2025-03-15 232127.png" alt="Final difference map east">
+        </div>
+        <p class="image-caption">Eastern cove difference map — areas of net elevation loss correlate with wave-facing cliff exposures.</p>
+      </div>
+      <div>
+        <div class="image-slot ar-169">
+          <img src="assets/P7/Screenshot 2025-03-15 233605.png" alt="Final difference map west">
+        </div>
+        <p class="image-caption">Western cove difference map — sediment accumulation near the Wrigley Institute dock offset by erosion on exposed headlands.</p>
+      </div>
+    </div>
+
+    <!-- DRONE PHOTOS -->
+    <h2 class="section-heading">Field Documentation — Drone Photography (2024)</h2>
+    <p>Imagery captured during the 2024 DJI Mavic 3M survey flights over Fishermans Cove, providing visual context for the elevation changes detected in the DEM analysis.</p>
+
+    <div class="image-grid-3">
+      <div>
+        <div class="image-slot ar-43">
+          <img src="assets/P7/DJI_20240627133509_0086_D.JPG" alt="Fishermans Cove aerial">
+        </div>
+        <p class="image-caption">Fishermans Cove from altitude — full cove extent and Wrigley Institute dock visible.</p>
+      </div>
+      <div>
+        <div class="image-slot ar-43">
+          <img src="assets/P7/DJI_20240627133515_0088_D.JPG" alt="Coastal detail">
+        </div>
+        <p class="image-caption">Coastal boundary — land-water interface showing wave-cut platform and rocky shoreline.</p>
+      </div>
+      <div>
+        <div class="image-slot ar-43">
+          <img src="assets/P7/DJI_20240627133523_0091_D.JPG" alt="Cliff face">
+        </div>
+        <p class="image-caption">Eastern cliff face — actively eroding surface consistent with high-loss zones in the DEM difference maps.</p>
+      </div>
+      <div>
+        <div class="image-slot ar-43">
+          <img src="assets/P7/DJI_20240627133606_0106_D.JPG" alt="Sediment patterns">
+        </div>
+        <p class="image-caption">Sediment transport patterns — sand and gravel deposits visible at the base of erosion zones.</p>
+      </div>
+      <div>
+        <div class="image-slot ar-43">
+          <img src="assets/P7/DJI_20240627133903_0169_D.JPG" alt="Western cove">
+        </div>
+        <p class="image-caption">Western cove — proximity to the USC Wrigley Institute infrastructure makes erosion monitoring critical.</p>
+      </div>
+      <div>
+        <div class="image-slot ar-43">
+          <img src="assets/P7/DJI_20240627133928_0178_D.JPG" alt="High-res surface capture">
+        </div>
+        <p class="image-caption">High-resolution surface texture — individual rocks and sand features captured at 0.014ft by the Mavic 3M.</p>
+      </div>
+    </div>
+
+    <div class="image-grid-4">
+      <div>
+        <div class="image-slot ar-43">
+          <img src="assets/P7/DJI_20240627133934_0180_D.JPG" alt="Drone survey">
+        </div>
+        <p class="image-caption">Survey flight — automated grid pattern over the eastern portion of the cove.</p>
+      </div>
+      <div>
+        <div class="image-slot ar-43">
+          <img src="assets/P7/DJI_20240627134041_0204_D.JPG" alt="Coastline oblique">
+        </div>
+        <p class="image-caption">Oblique view — coastline profile showing vertical cliff relief and beach width.</p>
+      </div>
+      <div>
+        <div class="image-slot ar-43">
+          <img src="assets/P7/DJI_20240627134112_0213_D.JPG" alt="Cove overview">
+        </div>
+        <p class="image-caption">Full cove overview from the final waypoint of the 2024 survey mission.</p>
+      </div>
+      <div>
+        <div class="image-slot ar-43">
+          <img src="assets/P7/Screenshot 2025-03-15 154822.png" alt="Drone2Map processing">
+        </div>
+        <p class="image-caption">Drone2Map processing — photogrammetric point cloud generated from overlapping drone imagery.</p>
+      </div>
+    </div>
+
+    <!-- LIMITATIONS -->
+    <h2 class="section-heading">Limitations</h2>
+    <ul class="limitation-list">
+      <li><span class="lim-icon">⚠️</span><span><strong>Vegetation inclusion in DEMs.</strong> Drone2Map may have included vegetation canopy in the elevation model rather than bare ground — causing apparent "elevation gain" in vegetated areas that reflects plant growth rather than actual land surface change.</span></li>
+      <li><span class="lim-icon">⚠️</span><span><strong>Interpolation errors.</strong> Interpolation to bring the LiDAR DEM to 1ft × 1ft resolution introduced slight smoothing errors, particularly at steep surfaces and water-land transitions where LiDAR returns were sparse.</span></li>
+      <li><span class="lim-icon">⚠️</span><span><strong>Instrument accuracy differences.</strong> Converting 2D imagery to 3D models introduces uncertainty that differs fundamentally from active LiDAR sensing. Cross-instrument comparison amplifies these uncertainties at fine-scale features.</span></li>
+      <li><span class="lim-icon">⚠️</span><span><strong>Resolution mismatch artifacts.</strong> Despite aggregation, the fundamental difference in data collection methods can produce systematic offsets that appear as false erosion or deposition patterns in the difference rasters.</span></li>
+    </ul>
+
+    <!-- NEXT STEPS -->
+    <h2 class="section-heading">Next Steps</h2>
+    <p>This project establishes a baseline workflow for ongoing coastal monitoring at the USC Wrigley Institute. Future directions include integrating additional environmental variables — wave energy data, seasonal wind patterns, soil type — to understand which factors most strongly predict where erosion concentrates along the cove. Repeating drone flights annually would build a time-series dataset enabling statistical trend analysis rather than point-in-time comparison.</p>
+
+  </main>
+</div>
+
+<footer>
+  <span>Juan Sebastian Cortes — Portfolio</span>
+  <a href="index.html">← Back to all projects</a>
+</footer>
+
+<script src="lightbox.js"></script>
+
+<script>
+  function initSlider(containerId) {
+    const container = document.getElementById(containerId);
+    if (!container) return;
+    const before  = container.querySelector('.before');
+    const divider = container.querySelector('.divider');
+    const handle  = container.querySelector('.handle');
+    let isDragging = false;
+
+    function setPosition(x) {
+      const rect = container.getBoundingClientRect();
+      let pct = Math.max(0.02, Math.min(0.98, (x - rect.left) / rect.width));
+      const pStr = (pct * 100).toFixed(2) + '%';
+      divider.style.left = pStr;
+      handle.style.left  = pStr;
+      if (before) before.style.clipPath = `inset(0 ${(100 - pct * 100).toFixed(2)}% 0 0)`;
+    }
+
+    container.addEventListener('mousedown',  e => { isDragging = true;  setPosition(e.clientX); e.preventDefault(); });
+    window.addEventListener('mousemove',     e => { if (isDragging) setPosition(e.clientX); });
+    window.addEventListener('mouseup',       ()=> { isDragging = false; });
+    container.addEventListener('touchstart', e => { isDragging = true;  setPosition(e.touches[0].clientX); }, { passive: false });
+    window.addEventListener('touchmove',     e => { if (isDragging) setPosition(e.touches[0].clientX); }, { passive: true });
+    window.addEventListener('touchend',      ()=> { isDragging = false; });
+
+    container.setAttribute('tabindex', '0');
+    container.addEventListener('keydown', e => {
+      const rect = container.getBoundingClientRect();
+      const cur  = parseFloat(divider.style.left || '50') / 100;
+      if (e.key === 'ArrowLeft')  setPosition(rect.left + (cur - 0.05) * rect.width);
+      if (e.key === 'ArrowRight') setPosition(rect.left + (cur + 0.05) * rect.width);
+    });
+  }
+
+  document.addEventListener('DOMContentLoaded', () => {
+    ['slider-1','slider-2','slider-3','slider-4','slider-5'].forEach(initSlider);
+  });
+</script>
+</body>
+</html>

@@ -1,0 +1,247 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Juan Sebastian Cortes</title>
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+
+  <!-- ── Salmon Glow Overlay ─────────────────────────────────────── -->
+  <div class="salmon-glow" aria-hidden="true"></div>
+
+  <!-- ── Left Sidebar ───────────────────────────────────────────── -->
+  <aside class="sidebar" aria-label="Site navigation">
+    <button class="hamburger-btn" id="hamburgerBtn" aria-label="Open menu" aria-expanded="false" aria-controls="drawer">
+      <span class="hamburger-icon" aria-hidden="true">
+        <span></span>
+        <span></span>
+        <span></span>
+      </span>
+    </button>
+  </aside>
+
+  <!-- ── Drawer Overlay (click-away) ────────────────────────────── -->
+  <div class="drawer-overlay" id="drawerOverlay" aria-hidden="true"></div>
+
+  <!-- ── Slide-Out Drawer ───────────────────────────────────────── -->
+  <nav class="drawer" id="drawer" aria-label="Main menu" aria-hidden="true">
+
+    <button class="drawer-close-btn" id="drawerCloseBtn" aria-label="Close menu">&#x2715;</button>
+
+    <a href="index.html" class="drawer-wordmark" tabindex="-1">
+      <span class="wm-line">PORTFOLIO&nbsp;&nbsp;</span>
+      <span class="wm-line">&nbsp;&nbsp;&nbsp;&nbsp;MENU</span>
+    </a>
+
+    <div class="drawer-nav">
+
+      <div class="drawer-nav-group">
+        <a href="index.html">ALL PROJECTS &rarr;</a>
+        <a href="about.html">ABOUT &rarr;</a>
+      </div>
+
+      <div class="drawer-nav-group">
+        <a href="https://www.linkedin.com/in/juan-cortes-7421b6398/" target="_blank" rel="noopener">LinkedIn</a>
+        <a href="contact.html">CONTACT</a>
+      </div>
+
+  </nav>
+
+  <!-- ── Main Content ────────────────────────────────────────────── -->
+  <div class="main-content">
+
+    <!-- Header -->
+    <header class="site-header">
+
+      <a href="index.html" class="wordmark" aria-label="Civic Data Design Lab home">
+        <span class="wm-line">JUAN&nbsp;&nbsp;SEBASTIAN</span>
+        <span class="wm-line">CORTES&nbsp;&nbsp;&nbsp;&nbsp;</span>
+      </a>
+
+      <!-- Portfolio -->
+      <div class="portfolio-logo">
+        PORTFOLIO
+      </div>
+
+      
+    </header>
+
+    <!-- Project Grid -->
+    <main>
+      <div class="project-grid">
+
+        <!-- Card 1 -->
+        <a href="project12.html" class="thumbnail">
+          <div class="thumb_image">
+            <video autoplay muted loop playsinline preload="auto" poster="assets/P12/Screenshot 2026-05-12 105944.png">
+              <source src="assets/P12/Cover.mp4" type="video/mp4">
+            </video>
+          </div>
+          <div class="title"><span>Vanishing Clouds — Colombia's Páramo Crisis</span></div>
+          <span class="tags">Interactive web atlas mapping the accelerating decline of Colombia's páramo ecosystems through biodiversity occurrence records, land-cover change (1986–2024), fire detection, and a conservation urgency index — built with Leaflet.js, GBIF, NASA FIRMS, and MapBiomas.</span>
+          <span class="read-more">Explore &rarr;</span>
+        </a>
+
+        <!-- Card 2 -->
+        <a href="project.html" class="thumbnail">
+          <div class="thumb_image">
+            <video autoplay muted loop playsinline preload="auto" poster="assets/P1/CoverAshesImage.png">
+                <source src="assets/P1/NewCover.mp4" type="video/mp4">
+                </video>
+            </div>
+          <div class="title"><span>Post-Fire Water Infrastructure Assessment</span></div>
+          <span class="tags">GIS-based inventory and mapping of over 1,000 water meters to assess post-fire damage and support FEMA funding documentation.</span>
+          <span class="read-more">Read More &rarr;</span>
+        </a>
+
+        <!-- Card 3 -->
+        <a href="project2.html" class="thumbnail">
+          <div class="thumb_image">
+            <video autoplay muted loop playsinline preload="auto" poster="assets/P2/Burn Map.jpg" style="transform: scale(1.88) translateX(6%); transform-origin: center center;">
+              <source src="assets/P2/over.mp4" type="video/mp4">
+            </video>
+          </div>
+          <div class="title"><span>Marshall Fire ABM — Wildfire Spread Simulation</span></div>
+          <span class="tags">Agent-based model of the 2021 Marshall Fire using NetLogo and real GIS data to simulate wildfire spread, fuel flammability, and firefighter suppression across Boulder County, CO.</span>
+          <span class="read-more">Read More &rarr;</span>
+        </a>
+
+        <!-- Card 4 -->
+        <a href="project3.html" class="thumbnail">
+          <div class="thumb_image">
+            <video autoplay muted loop playsinline preload="auto" poster="assets/P3/CoverIm.png">
+              <source src="assets/P3/Newcover.mp4" type="video/mp4">
+            </video>
+          </div>
+          <div class="title"><span>Colombia Amphibian Explorer</span></div>
+          <span class="tags">Interactive web map cataloguing 24 amphibian species across Colombia, integrating GBIF occurrence data, IUCN conservation status, and temporal filtering to visualize biodiversity distribution.</span>
+          <span class="read-more">Read More &rarr;</span>
+        </a>
+
+        <!-- Card 5 -->
+        <a href="project4.html" class="thumbnail">
+          <div class="thumb_image">
+            <img src="assets/P4/Cover.png" alt="Seattle Water Main Risk Tool">
+          </div>
+          <div class="title"><span>Seattle Water Main Risk Modeling Tool</span></div>
+          <span class="tags">Automated Python script tool for ArcGIS Pro generating a composite failure risk index (RISK_IDX) for every water main segment in Seattle using pipe age, material, diameter, pressure class, and relining history.</span>
+          <span class="read-more">Read More &rarr;</span>
+        </a>
+
+        <!-- Card 6 -->
+        <a href="project11.html" class="thumbnail">
+          <div class="thumb_image">
+            <img src="assets/P11/Cover.jpg" alt="Bogotá Flood Hazard Risk Analysis">
+          </div>
+          <div class="title"><span>Bogotá Flood Hazard Risk Analysis</span></div>
+          <span class="tags">Block-level flood hazard classification for Bogotá using GeoPandas and a custom ArcGIS Pro Python toolbox — combining overflow and levee-failure hazard polygons with a 100m hydrology buffer to assign four risk categories across all urban blocks.</span>
+          <span class="read-more">Read More &rarr;</span>
+        </a>
+
+        <!-- Card 7 -->
+        <a href="project9.html" class="thumbnail">
+          <div class="thumb_image">
+            <img src="assets/P9/Ai index.jpg" alt="Childcare Accessibility in San Francisco">
+          </div>
+          <div class="title"><span>Childcare Accessibility in San Francisco</span></div>
+          <span class="tags">Two-Step Floating Catchment Area (2SFCA) analysis mapping childcare access inequality across 997 census blocks using a 10-minute driving catchment, ArcGIS Pro Closest Facility solver, and supply-demand ratio scoring for children ages 0–5.</span>
+          <span class="read-more">Read More &rarr;</span>
+        </a>
+
+        <!-- Card 8 -->
+        <a href="project5.html" class="thumbnail">
+          <div class="thumb_image">
+            <img src="assets/P5/Cover.png" alt="DTLA Adaptive Reuse">
+          </div>
+          <div class="title"><span>DTLA Adaptive Reuse — Research + Tool</span></div>
+          <span class="tags">Award-winning APCG conference research and ArcGIS Pro Python toolbox scoring parcel-level building reuse readiness in Downtown LA using transit, bicycle, and open-street proximity buffers.</span>
+          <span class="read-more">Read More &rarr;</span>
+        </a>
+
+        <!-- Card 9 -->
+        <a href="project10.html" class="thumbnail">
+          <div class="thumb_image">
+            <img src="assets/P10/Cover.jpg" alt="Fatal Police Encounters NYC — Point Pattern Analysis">
+          </div>
+          <div class="title"><span>Fatal Police Encounters in New York City</span></div>
+          <span class="tags">Point pattern analysis of fatal police encounters across NYC's five boroughs using Kernel Density Estimation, Ripley's K function, population-normalized inhomogeneity adjustment, and MAUP fishnet sensitivity testing in ArcGIS Pro.</span>
+          <span class="read-more">Read More &rarr;</span>
+        </a>
+
+        <!-- Card 10 -->
+        <a href="project6.html" class="thumbnail">
+          <div class="thumb_image">
+            <img src="assets/P6/los-angeles-landscape-city.jpg" alt="Geography of Noise — Los Angeles">
+          </div>
+          <div class="title"><span>Understanding the Geography of Noise</span></div>
+          <span class="tags">Spatial econometrics study of 311 noise complaint data across 2,498 Los Angeles census tracts, using Moran's I, LISA cluster detection, and OLS/SLM/SEM regression to map environmental noise inequality.</span>
+          <span class="read-more">Read More &rarr;</span>
+        </a>
+
+        <!-- Card 11 -->
+        <a href="project7.html" class="thumbnail">
+          <div class="thumb_image">
+            <img src="assets/P7/DJI_20240627133820_0154_D.JPG" alt="Catalina Island Coastal Erosion">
+          </div>
+          <div class="title"><span>Catalina Island Coastal Erosion</span></div>
+          <span class="tags">Drone photogrammetry and USGS LiDAR DEM differencing to track 10 years of shoreline change at Fishermans Cove, USC Wrigley Institute — published as an ArcGIS StoryMap.</span>
+          <span class="read-more">Read More &rarr;</span>
+        </a>
+
+        <!-- Card 12 -->
+        <a href="project8.html" class="thumbnail">
+          <div class="thumb_image">
+            <img src="assets/P8/Cover.png" alt="Browns Canyon Terrain Analysis">
+          </div>
+          <div class="title"><span>Browns Canyon Terrain &amp; Watershed Analysis</span></div>
+          <span class="tags">Multi-scale terrain and hydrologic modeling of Browns Canyon Wash using 1m, 10m, and 30m USGS DEMs — comparing hillshade, slope, aspect, and watershed delineation outputs across three spatial resolutions in ArcGIS Pro.</span>
+          <span class="read-more">Read More &rarr;</span>
+        </a>
+
+      </div>
+    </main>
+
+  </div><!-- /.main-content -->
+
+  <!-- ── JavaScript ──────────────────────────────────────────────── -->
+  <script>
+    (function () {
+      const hamburgerBtn  = document.getElementById('hamburgerBtn');
+      const drawerCloseBtn = document.getElementById('drawerCloseBtn');
+      const drawer        = document.getElementById('drawer');
+      const overlay       = document.getElementById('drawerOverlay');
+
+      function openDrawer() {
+        drawer.classList.add('is-open');
+        overlay.classList.add('is-open');
+        drawer.setAttribute('aria-hidden', 'false');
+        overlay.setAttribute('aria-hidden', 'false');
+        hamburgerBtn.setAttribute('aria-expanded', 'true');
+        drawerCloseBtn.focus();
+      }
+
+      function closeDrawer() {
+        drawer.classList.remove('is-open');
+        overlay.classList.remove('is-open');
+        drawer.setAttribute('aria-hidden', 'true');
+        overlay.setAttribute('aria-hidden', 'true');
+        hamburgerBtn.setAttribute('aria-expanded', 'false');
+        hamburgerBtn.focus();
+      }
+
+      hamburgerBtn.addEventListener('click', openDrawer);
+      drawerCloseBtn.addEventListener('click', closeDrawer);
+      overlay.addEventListener('click', closeDrawer);
+
+      document.addEventListener('keydown', function (e) {
+        if (e.key === 'Escape' && drawer.classList.contains('is-open')) {
+          closeDrawer();
+        }
+      });
+    })();
+  </script>
+ <script src="script.js"></script>
+</body>
+</html>

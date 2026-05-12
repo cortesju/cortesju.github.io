@@ -1,0 +1,875 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Bogotá Flood Hazard Risk Analysis — Juan Sebastian Cortes</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Rubik:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="styles.css">
+  <style>
+    :root {
+      --flood:   #1a4d6b;
+      --hazard:  #8b1a1a;
+      --buffer:  #8b5a1a;
+      --dark:    #0d1a21;
+      --accent:  #2a7aad;
+      --border:  #e4edf2;
+      --text:    #1c1c1c;
+    }
+
+    /* ── Hero ─────────────────────────────────────── */
+    .hero-wrap {
+      position: relative;
+      width: 100%;
+      height: 500px;
+      overflow: hidden;
+      background: var(--dark);
+    }
+    .hero-img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      object-position: center 35%;
+      display: block;
+    }
+    .hero-overlay {
+      position: absolute;
+      inset: 0;
+      background: linear-gradient(to bottom, rgba(13,26,33,0.2) 0%, rgba(13,26,33,0.75) 100%);
+    }
+    .hero-title {
+      position: absolute;
+      bottom: 36px;
+      left: 40px;
+      right: 40px;
+      color: #fff;
+      font-family: 'Rubik', sans-serif;
+      font-size: 2rem;
+      font-weight: 700;
+      line-height: 1.2;
+      letter-spacing: -0.02em;
+      text-shadow: 0 2px 14px rgba(0,0,0,0.6);
+    }
+
+    /* ── Meta Bar ─────────────────────────────────── */
+    .meta-bar {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 10px 40px;
+      background: var(--dark);
+      color: rgba(255,255,255,0.5);
+      font-size: 11px;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      gap: 16px;
+      flex-wrap: wrap;
+    }
+    .meta-nav { display: flex; gap: 20px; }
+    .meta-nav a {
+      color: rgba(255,255,255,0.5);
+      text-decoration: none;
+      transition: color .18s;
+    }
+    .meta-nav a:hover { color: #fff; }
+    .meta-tags { display: flex; gap: 8px; flex-wrap: wrap; }
+    .meta-tag {
+      background: rgba(255,255,255,0.1);
+      padding: 3px 10px;
+      border-radius: 20px;
+      font-size: 10px;
+      letter-spacing: 0.06em;
+    }
+
+    /* ── Project Layout ───────────────────────────── */
+    .project-layout {
+      display: grid;
+      grid-template-columns: 220px 1fr;
+      gap: 0;
+      max-width: 1100px;
+      margin: 0 auto;
+      padding: 48px 40px 80px;
+    }
+
+    /* ── Sidebar ──────────────────────────────────── */
+    .sidebar-meta {
+      padding-right: 40px;
+      padding-top: 4px;
+      position: sticky;
+      top: 24px;
+      align-self: start;
+    }
+    .sidebar-meta dl { margin: 0 0 28px; }
+    .sidebar-meta dt {
+      font-size: 9.5px;
+      font-weight: 600;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      color: #888;
+      margin-bottom: 3px;
+      margin-top: 14px;
+    }
+    .sidebar-meta dt:first-child { margin-top: 0; }
+    .sidebar-meta dd {
+      font-size: 12.5px;
+      color: var(--text);
+      margin: 0;
+      line-height: 1.6;
+    }
+    .tag-row { display: flex; flex-wrap: wrap; gap: 5px; margin-top: 6px; }
+    .tag {
+      background: #e8eef2;
+      color: #444;
+      font-size: 10px;
+      font-weight: 500;
+      letter-spacing: 0.05em;
+      padding: 3px 9px;
+      border-radius: 20px;
+    }
+    .tag.flood  { background: var(--flood);  color: #fff; }
+    .tag.hazard { background: var(--hazard); color: #fff; }
+    .tag.buffer { background: var(--buffer); color: #fff; }
+
+    /* ── Main Content ─────────────────────────────── */
+    .project-body { min-width: 0; }
+
+    .section {
+      font-size: 11px;
+      font-weight: 600;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      color: #888;
+      border-bottom: 1px solid #dde5ea;
+      padding-bottom: 6px;
+      margin: 40px 0 20px;
+    }
+    .section:first-child { margin-top: 0; }
+
+    .overview-text {
+      font-size: 15px;
+      line-height: 1.78;
+      color: #2c2c2c;
+      margin: 0 0 14px;
+    }
+
+    /* ── Stats Bar ────────────────────────────────── */
+    .stats-bar {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      border: 1px solid var(--border);
+      border-radius: 6px;
+      overflow: hidden;
+      margin: 28px 0;
+    }
+    .stat {
+      padding: 18px 16px;
+      border-right: 1px solid var(--border);
+      text-align: center;
+    }
+    .stat:last-child { border-right: none; }
+    .stat-num {
+      font-family: 'Rubik', sans-serif;
+      font-size: 1.65rem;
+      font-weight: 700;
+      color: var(--flood);
+      line-height: 1;
+      display: block;
+    }
+    .stat-label {
+      font-size: 10px;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      color: #777;
+      margin-top: 5px;
+      display: block;
+    }
+
+    /* ── Risk Classification Grid ─────────────────── */
+    .risk-grid {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 10px;
+      margin: 20px 0;
+    }
+    .risk-card {
+      border-radius: 7px;
+      padding: 16px 14px;
+      text-align: center;
+    }
+    .risk-swatch {
+      width: 30px; height: 30px;
+      border-radius: 50%;
+      margin: 0 auto 9px;
+    }
+    .risk-card h4 {
+      font-family: 'Rubik', sans-serif;
+      font-size: 10.5px;
+      font-weight: 700;
+      letter-spacing: 0.06em;
+      text-transform: uppercase;
+      margin: 0 0 6px;
+      color: #1c1c1c;
+    }
+    .risk-card p {
+      font-size: 11.5px;
+      color: #555;
+      margin: 0;
+      line-height: 1.5;
+    }
+    .rc-hb { background: #fce8e8; }
+    .rc-hb .risk-swatch { background: #8b1a1a; }
+    .rc-oh { background: #fdeee8; }
+    .rc-oh .risk-swatch { background: #c0392b; }
+    .rc-ob { background: #fef5e4; }
+    .rc-ob .risk-swatch { background: #b8851a; }
+    .rc-no { background: #f2f2f2; }
+    .rc-no .risk-swatch { background: #aaaaaa; }
+
+    /* ── Dual Environment Cards ───────────────────── */
+    .dual-env {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 14px;
+      margin: 20px 0;
+    }
+    .env-card {
+      border-radius: 8px;
+      padding: 20px 22px;
+      border: 1px solid var(--border);
+    }
+    .env-card.jupyter { border-top: 3px solid #e86f00; }
+    .env-card.arcgis  { border-top: 3px solid var(--flood); }
+    .env-card h3 {
+      font-family: 'Rubik', sans-serif;
+      font-size: 11.5px;
+      font-weight: 700;
+      letter-spacing: 0.07em;
+      text-transform: uppercase;
+      margin: 0 0 12px;
+    }
+    .env-card.jupyter h3 { color: #e86f00; }
+    .env-card.arcgis  h3 { color: var(--flood); }
+    .env-card ul {
+      margin: 0;
+      padding-left: 16px;
+      font-size: 13px;
+      line-height: 1.72;
+      color: #3a3a3a;
+    }
+
+    /* ── Workflow Steps ───────────────────────────── */
+    .workflow-steps {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 12px;
+      margin: 20px 0;
+      counter-reset: step;
+    }
+    .step {
+      counter-increment: step;
+      background: #f0f4f7;
+      border-radius: 8px;
+      padding: 16px;
+    }
+    .step::before {
+      content: counter(step);
+      display: block;
+      font-family: 'Rubik', sans-serif;
+      font-size: 1.1rem;
+      font-weight: 700;
+      color: var(--flood);
+      margin-bottom: 6px;
+    }
+    .step h4 {
+      font-family: 'Rubik', sans-serif;
+      font-size: 11px;
+      font-weight: 700;
+      letter-spacing: 0.06em;
+      text-transform: uppercase;
+      margin: 0 0 6px;
+      color: #1c1c1c;
+    }
+    .step p { font-size: 12px; color: #555; margin: 0; line-height: 1.55; }
+
+    /* ── Tool Card ────────────────────────────────── */
+    .tool-card {
+      background: var(--dark);
+      border-radius: 8px;
+      padding: 22px 26px;
+      color: rgba(255,255,255,0.88);
+      margin: 20px 0;
+    }
+    .tool-card h3 {
+      font-family: 'Rubik', sans-serif;
+      font-size: 12px;
+      font-weight: 700;
+      letter-spacing: 0.07em;
+      text-transform: uppercase;
+      color: #7ecef4;
+      margin: 0 0 12px;
+    }
+    .tool-card p {
+      font-size: 13px;
+      line-height: 1.7;
+      margin: 0 0 14px;
+      color: rgba(255,255,255,0.72);
+    }
+    .tool-params {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 7px;
+    }
+    .tool-param {
+      background: rgba(255,255,255,0.1);
+      color: rgba(255,255,255,0.82);
+      font-size: 11px;
+      font-family: 'Courier New', monospace;
+      padding: 4px 11px;
+      border-radius: 4px;
+    }
+
+    /* ── Callout ──────────────────────────────────── */
+    .callout {
+      background: #eaf2f8;
+      border-left: 3px solid var(--flood);
+      border-radius: 4px;
+      padding: 14px 18px;
+      font-size: 13.5px;
+      line-height: 1.72;
+      color: #2a2a2a;
+      margin: 20px 0;
+    }
+
+    /* ── Data Table ───────────────────────────────── */
+    .data-table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 13px;
+      margin: 16px 0;
+    }
+    .data-table th {
+      background: var(--dark);
+      color: rgba(255,255,255,0.82);
+      font-family: 'Rubik', sans-serif;
+      font-size: 10px;
+      font-weight: 600;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      padding: 10px 14px;
+      text-align: left;
+    }
+    .data-table td {
+      padding: 9px 14px;
+      border-bottom: 1px solid var(--border);
+      color: #333;
+      line-height: 1.45;
+      vertical-align: top;
+    }
+    .data-table tr:last-child td { border-bottom: none; }
+    .data-table tr:nth-child(even) td { background: #f7fafb; }
+    code {
+      background: #eef0f2;
+      padding: 1px 6px;
+      border-radius: 3px;
+      font-size: 11.5px;
+      font-family: 'Courier New', monospace;
+    }
+
+    /* ── Image Slots ──────────────────────────────── */
+    .image-slot {
+      border-radius: 6px;
+      overflow: hidden;
+      background: #0a0a0a;
+    }
+    .image-slot img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      display: block;
+      transition: transform .3s ease;
+      cursor: zoom-in;
+    }
+    .image-slot img:hover { transform: scale(1.02); }
+    .img-caption {
+      font-size: 11px;
+      color: #888;
+      text-align: center;
+      margin-top: 7px;
+      letter-spacing: 0.04em;
+    }
+    .img-grid-2 {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 12px;
+      margin: 16px 0;
+    }
+    .full-img {
+      border-radius: 6px;
+      overflow: hidden;
+      margin: 16px 0;
+    }
+    .full-img img {
+      width: 100%;
+      display: block;
+      cursor: zoom-in;
+    }
+
+    /* ── Limitation List ──────────────────────────── */
+    .limit-list {
+      padding-left: 18px;
+      margin: 0;
+    }
+    .limit-list li {
+      font-size: 13.5px;
+      line-height: 1.72;
+      color: #3a3a3a;
+      margin-bottom: 10px;
+    }
+    .limit-list li strong { color: var(--hazard); }
+
+    /* ── Footer ───────────────────────────────────── */
+    .project-footer {
+      border-top: 1px solid #dde5ea;
+      padding: 32px 40px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      max-width: 1100px;
+      margin: 0 auto;
+      font-size: 12px;
+      color: #888;
+    }
+    .project-footer a {
+      color: var(--flood);
+      text-decoration: none;
+      font-weight: 500;
+    }
+  </style>
+</head>
+<body>
+
+  <div class="salmon-glow" aria-hidden="true"></div>
+
+  <!-- ── Left Sidebar ─────────────────────────────────────────── -->
+  <aside class="sidebar" aria-label="Site navigation">
+    <button class="hamburger-btn" id="hamburgerBtn" aria-label="Open menu" aria-expanded="false" aria-controls="drawer">
+      <span class="hamburger-icon" aria-hidden="true">
+        <span></span><span></span><span></span>
+      </span>
+    </button>
+  </aside>
+
+  <!-- ── Drawer ───────────────────────────────────────────────── -->
+  <div class="drawer-overlay" id="drawerOverlay" aria-hidden="true"></div>
+  <nav class="drawer" id="drawer" aria-label="Main menu" aria-hidden="true">
+    <button class="drawer-close-btn" id="drawerCloseBtn" aria-label="Close menu">&#x2715;</button>
+    <a href="index.html" class="drawer-wordmark" tabindex="-1">
+      <span class="wm-line">PORTFOLIO&nbsp;&nbsp;</span>
+      <span class="wm-line">&nbsp;&nbsp;&nbsp;&nbsp;MENU</span>
+    </a>
+    <div class="drawer-nav">
+      <div class="drawer-nav-group">
+        <a href="index.html">ALL PROJECTS &rarr;</a>
+        <a href="#">RESEARCH</a>
+      </div>
+      <div class="drawer-nav-group">
+        <a href="#">ABOUT &rarr;</a>
+        <a href="#">GitHub</a>
+        <a href="#">CONTACT</a>
+      </div>
+    </div>
+  </nav>
+
+  <!-- ── Main Content ─────────────────────────────────────────── -->
+  <div class="main-content">
+
+    <header class="site-header">
+      <a href="index.html" class="wordmark" aria-label="Portfolio home">
+        <span class="wm-line">JUAN&nbsp;&nbsp;SEBASTIAN</span>
+        <span class="wm-line">CORTES&nbsp;&nbsp;&nbsp;&nbsp;</span>
+      </a>
+      <div class="portfolio-logo">PORTFOLIO</div>
+    </header>
+
+    <!-- ── Hero ───────────────────────────────────────────────── -->
+    <div class="hero-wrap">
+      <img class="hero-img" src="assets/P11/FinalMap.jpg" alt="Bogotá Flood Hazard Risk Map — ArcGIS Pro cartographic output">
+      <div class="hero-overlay"></div>
+      <div class="hero-title">
+        Flood Hazard Risk Analysis for Urban Blocks<br>Along Bogotá's Hydrology Network
+      </div>
+    </div>
+
+    <!-- ── Meta Bar ───────────────────────────────────────────── -->
+    <div class="meta-bar">
+      <div class="meta-nav">
+        <a href="project4.html">&larr; Seattle Water Main Risk</a>
+        <a href="project9.html">Childcare Accessibility SF &rarr;</a>
+      </div>
+      <div class="meta-tags">
+        <span class="meta-tag">SSCI-586</span>
+        <span class="meta-tag">GIS Programming</span>
+        <span class="meta-tag">Python · GeoPandas</span>
+        <span class="meta-tag">ArcGIS Pro Toolbox</span>
+        <span class="meta-tag">Bogotá · Colombia</span>
+        <span class="meta-tag">Dec 2025</span>
+      </div>
+    </div>
+
+    <!-- ── Project Layout ─────────────────────────────────────── -->
+    <div class="project-layout">
+
+      <!-- Sidebar -->
+      <aside class="sidebar-meta">
+        <dl>
+          <dt>Date</dt>
+          <dd>December 11, 2025</dd>
+
+          <dt>Course</dt>
+          <dd>SSCI-586<br>GIS Programming &amp; Customization</dd>
+
+          <dt>Study Area</dt>
+          <dd>Bogotá, Colombia<br>Distrito Capital</dd>
+
+          <dt>Projection</dt>
+          <dd>EPSG:3116<br>MAGNA-SIRGAS Bogotá</dd>
+
+          <dt>Buffer Distance</dt>
+          <dd>100 meters</dd>
+
+          <dt>Risk Categories</dt>
+          <dd>Hazard &amp; Buffer<br>Only Hazard<br>Only Buffer<br>None</dd>
+
+          <dt>Methods</dt>
+          <div class="tag-row">
+            <span class="tag flood">GeoPandas</span>
+            <span class="tag flood">Spatial Join</span>
+            <span class="tag hazard">RISK_CAT</span>
+            <span class="tag buffer">100m Buffer</span>
+            <span class="tag">Overlay</span>
+            <span class="tag">Matplotlib</span>
+          </div>
+
+          <dt>Tools</dt>
+          <div class="tag-row">
+            <span class="tag">Python</span>
+            <span class="tag">Jupyter</span>
+            <span class="tag">ArcGIS Pro</span>
+            <span class="tag">.pyt Toolbox</span>
+            <span class="tag">ArcPy</span>
+          </div>
+
+          <dt>Data Sources</dt>
+          <dd>IDECA · IDIGER<br>Secretaría Distrital<br>de Planeación</dd>
+        </dl>
+      </aside>
+
+      <!-- Body -->
+      <div class="project-body">
+
+        <!-- Overview -->
+        <p class="section">Overview</p>
+        <p class="overview-text">
+          This project evaluates flood hazard exposure for urban blocks (<em>manzanas</em>) in Bogotá, Colombia. The analysis combines two official hazard datasets — river overflow and levee/dike failure — with Bogotá's hydrology network and a 100-meter proximity buffer to classify each city block into four levels of flood risk.
+        </p>
+        <p class="overview-text">
+          The workflow was completed in two independent environments: a Jupyter Notebook using GeoPandas and Matplotlib, and a custom ArcGIS Pro Python toolbox (<code>FloodingRisk.pyt</code>) that replicates the same geospatial logic. Both environments produced consistent spatial outputs, demonstrating reproducibility across platforms and proficiency in GIS programming, geoprocessing automation, and cartographic design.
+        </p>
+
+        <!-- Stats -->
+        <div class="stats-bar">
+          <div class="stat">
+            <span class="stat-num">4</span>
+            <span class="stat-label">Risk Categories</span>
+          </div>
+          <div class="stat">
+            <span class="stat-num">2</span>
+            <span class="stat-label">Hazard Datasets</span>
+          </div>
+          <div class="stat">
+            <span class="stat-num">100 m</span>
+            <span class="stat-label">Hydrology Buffer</span>
+          </div>
+          <div class="stat">
+            <span class="stat-num">2×</span>
+            <span class="stat-label">Dual Environment</span>
+          </div>
+        </div>
+
+        <!-- Risk Classification -->
+        <p class="section">Risk Classification System</p>
+        <p class="overview-text">Each urban block receives a <code>RISK_CAT</code> attribute based on whether it intersects a flood hazard polygon, falls within the 100m hydrology buffer, both, or neither. This four-tier system prioritizes blocks with compounding exposure.</p>
+        <div class="risk-grid">
+          <div class="risk-card rc-hb">
+            <div class="risk-swatch"></div>
+            <h4>Hazard &amp; Buffer</h4>
+            <p>Block lies within a hazard zone AND within 100m of hydrology — highest combined exposure.</p>
+          </div>
+          <div class="risk-card rc-oh">
+            <div class="risk-swatch"></div>
+            <h4>Only Hazard</h4>
+            <p>Block intersects a flood hazard polygon but lies outside the 100m hydrology buffer.</p>
+          </div>
+          <div class="risk-card rc-ob">
+            <div class="risk-swatch"></div>
+            <h4>Only Buffer</h4>
+            <p>Block falls within 100m of the drainage network but outside official hazard polygons.</p>
+          </div>
+          <div class="risk-card rc-no">
+            <div class="risk-swatch"></div>
+            <h4>None</h4>
+            <p>Block does not intersect any hazard zone or hydrology buffer — lowest flood exposure.</p>
+          </div>
+        </div>
+
+        <!-- Data Sources -->
+        <p class="section">Data Sources</p>
+        <p class="overview-text">All datasets were obtained from official Colombian geospatial data authorities and were downloaded specifically for this analysis.</p>
+        <table class="data-table">
+          <thead>
+            <tr>
+              <th>Dataset</th>
+              <th>Filename</th>
+              <th>Source</th>
+              <th>Role</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>Overflow Flood Hazard</td>
+              <td><code>Amenaza_IN_desbordamiento_20211229.shp</code></td>
+              <td>IDECA / IDIGER</td>
+              <td>Flood hazard zones from river overflow (<em>desbordamiento</em>)</td>
+            </tr>
+            <tr>
+              <td>Levee Failure Hazard</td>
+              <td><code>Amenaza_IN_rompimiento_jarillon_20211229.shp</code></td>
+              <td>IDECA / IDIGER</td>
+              <td>Hazard zones from dike/levee failure (<em>rompimiento de jarillón</em>)</td>
+            </tr>
+            <tr>
+              <td>Hydrology Network</td>
+              <td><code>Drenaje.shp</code></td>
+              <td>IDECA</td>
+              <td>Rivers, creeks, channels &amp; stormwater paths — basis for 100m buffer</td>
+            </tr>
+            <tr>
+              <td>Urban Blocks</td>
+              <td><code>MANZANA.shp</code></td>
+              <td>IDECA / SDP</td>
+              <td>Cadastral block polygons — unit of analysis</td>
+            </tr>
+            <tr>
+              <td>Bogotá Boundary</td>
+              <td><code>bogotapoly.shp</code></td>
+              <td>IDECA</td>
+              <td>Distrito Capital extent — used to clip all layers</td>
+            </tr>
+          </tbody>
+        </table>
+
+        <!-- Dual Environment -->
+        <p class="section">Dual-Environment Implementation</p>
+        <p class="overview-text">The complete spatial workflow was implemented in two independent environments, producing identical <code>RISK_CAT</code> results and validating the analytical approach across platforms.</p>
+        <div class="dual-env">
+          <div class="env-card jupyter">
+            <h3>🐍 Jupyter Notebook — GeoPandas</h3>
+            <ul>
+              <li>Load all datasets and merge two hazard shapefiles</li>
+              <li>Reproject all layers to EPSG:3116 (MAGNA-SIRGAS)</li>
+              <li>Clip hazard, hydrology, and blocks to Bogotá boundary</li>
+              <li>Buffer hydrology lines 100m and dissolve into single polygon</li>
+              <li>Spatial overlay to flag <code>IN_HAZARD</code> and <code>IN_BUFFER</code> per block</li>
+              <li>Assign <code>RISK_CAT</code> via <code>.apply(classify)</code> row function</li>
+              <li>Export two Matplotlib map layouts (context + risk classification)</li>
+            </ul>
+          </div>
+          <div class="env-card arcgis">
+            <h3>🗺 ArcGIS Pro — Python Toolbox (.pyt)</h3>
+            <ul>
+              <li>Custom <code>FloodingRisk.pyt</code> with 7 configurable parameters</li>
+              <li>Projects inputs, merges hazards with <code>HAZ_TYPE</code> field</li>
+              <li>Clips polygons, polylines, and blocks to urban boundary</li>
+              <li>Buffers hydrology network by user-defined distance</li>
+              <li>Flags blocks with <code>IN_HAZARD</code> and <code>IN_BUFFER</code></li>
+              <li>Computes <code>RISK_CAT</code> using identical four-category logic</li>
+              <li>Outputs feature class to geodatabase; packaged as <code>.gpkx</code></li>
+            </ul>
+          </div>
+        </div>
+
+        <!-- Processing Workflow -->
+        <p class="section">Processing Workflow</p>
+        <div class="workflow-steps">
+          <div class="step">
+            <h4>Project &amp; Clip</h4>
+            <p>All inputs reprojected to EPSG:3116 and clipped to the Bogotá Distrito Capital boundary polygon.</p>
+          </div>
+          <div class="step">
+            <h4>Merge Hazards</h4>
+            <p>Overflow and levee-failure polygons merged into a single unified layer with a <code>HAZ_TYPE</code> attribute field.</p>
+          </div>
+          <div class="step">
+            <h4>Buffer Network</h4>
+            <p>100m buffer generated around all hydrology lines, dissolved into one continuous proximity polygon.</p>
+          </div>
+          <div class="step">
+            <h4>Classify Blocks</h4>
+            <p>Each block flagged with <code>IN_HAZARD</code> and <code>IN_BUFFER</code>, then assigned a final <code>RISK_CAT</code> value.</p>
+          </div>
+        </div>
+
+        <!-- ArcGIS Toolbox Card -->
+        <p class="section">ArcGIS Pro Python Toolbox</p>
+        <div class="tool-card">
+          <h3>FloodingRisk.pyt — Tool Parameters</h3>
+          <p>
+            The custom toolbox accepts seven inputs, replicating all GeoPandas processing steps as native ArcPy geoprocessing operations. The tool was validated, documented via ArcGIS Pro's Metadata Editor, and successfully packaged as a geoprocessing package (<code>.gpkx</code>) for distribution.
+          </p>
+          <div class="tool-params">
+            <span class="tool-param">Overflow Hazard Layer</span>
+            <span class="tool-param">Levee Failure Hazard Layer</span>
+            <span class="tool-param">Hydrology (Drenaje)</span>
+            <span class="tool-param">Urban Blocks (MANZANA)</span>
+            <span class="tool-param">Bogotá Boundary</span>
+            <span class="tool-param">Buffer Distance (m)</span>
+            <span class="tool-param">Output Feature Class</span>
+          </div>
+        </div>
+
+        <!-- Jupyter Screenshots -->
+        <p class="section">Jupyter Notebook — Execution Screenshots</p>
+        <div class="img-grid-2">
+          <div>
+            <div class="image-slot" style="height: 230px;">
+              <img src="assets/P11/Screenshot 2025-12-10 231022.png" alt="Unified hazard creation — Jupyter Notebook">
+            </div>
+            <p class="img-caption">Unified hazard layer creation &amp; reprojection to EPSG:3116</p>
+          </div>
+          <div>
+            <div class="image-slot" style="height: 230px;">
+              <img src="assets/P11/Screenshot 2025-12-10 231056.png" alt="Hydrology buffer and RISK_CAT block classification">
+            </div>
+            <p class="img-caption">Hydrology buffer generation &amp; RISK_CAT block classification</p>
+          </div>
+        </div>
+        <div class="img-grid-2">
+          <div>
+            <div class="image-slot" style="height: 230px;">
+              <img src="assets/P11/Screenshot 2025-12-10 231121.png" alt="Spatial overlay — IN_HAZARD and IN_BUFFER flags">
+            </div>
+            <p class="img-caption">Spatial overlay logic — IN_HAZARD and IN_BUFFER flags assigned</p>
+          </div>
+          <div>
+            <div class="image-slot" style="height: 230px;">
+              <img src="assets/P11/Screenshot 2025-12-10 231146.png" alt="RISK_CAT value counts output">
+            </div>
+            <p class="img-caption">RISK_CAT value counts — four categories assigned across all blocks</p>
+          </div>
+        </div>
+
+        <!-- Matplotlib Output Maps -->
+        <p class="section">Matplotlib Output Maps</p>
+        <div class="img-grid-2">
+          <div>
+            <div class="image-slot" style="height: 270px;">
+              <img src="assets/P11/Screenshot 2025-12-10 231239.png" alt="Context map — hazard polygons, hydrology, and urban blocks">
+            </div>
+            <p class="img-caption">Context map — flood hazard polygons, hydrology network &amp; urban blocks</p>
+          </div>
+          <div>
+            <div class="image-slot" style="height: 270px;">
+              <img src="assets/P11/Screenshot 2025-12-10 231318.png" alt="Risk classification map — four shades of orange">
+            </div>
+            <p class="img-caption">Risk classification map — blocks symbolized by RISK_CAT in four shades</p>
+          </div>
+        </div>
+
+        <!-- ArcGIS Pro Screenshot -->
+        <p class="section">ArcGIS Pro — Tool Execution &amp; Layout</p>
+        <div class="full-img">
+          <div class="image-slot">
+            <img src="assets/P11/Screenshot 2025-12-10 234945.png" alt="ArcGIS Pro toolbox execution — Geoprocessing pane and final layout map">
+          </div>
+          <p class="img-caption">FloodRisk toolbox parameters panel (Geoprocessing pane) and completed ArcGIS Pro map layout</p>
+        </div>
+
+        <!-- Final Map -->
+        <p class="section">Final Risk Classification Map</p>
+        <div class="callout">
+          The ArcGIS Pro cartographic output classifies every urban block in Bogotá by flood exposure. Deep red marks blocks with compounding risk — inside a hazard polygon <em>and</em> within 100m of the drainage network. The full map includes a north arrow, dual scalebar (miles &amp; kilometers), and a complete four-category legend.
+        </div>
+        <div class="full-img">
+          <div class="image-slot">
+            <img src="assets/P11/FinalMap.jpg" alt="Flooding Hazard Risk for Blocks Along Bogotá's Hydrology Network — Final ArcGIS Pro Map">
+          </div>
+          <p class="img-caption">Flooding Hazard Risk for Blocks Along Bogotá's Hydrology Network — ArcGIS Pro cartographic output</p>
+        </div>
+
+        <!-- Discussion -->
+        <p class="section">Discussion</p>
+        <p class="overview-text">
+          The analysis reveals that flood hazard in Bogotá is spatially concentrated along the western and southwestern drainage network, particularly near the Bogotá River and its tributaries. Blocks classified as "Hazard &amp; Buffer" represent the highest-priority intervention areas, combining confirmed exposure in official hazard polygons with proximity-based hydrological risk.
+        </p>
+        <p class="overview-text">
+          Reproducing the workflow in both GeoPandas and ArcGIS Pro confirms the reproducibility of the approach across platforms. The Python toolbox format makes the workflow accessible to non-programmers through ArcGIS Pro's Geoprocessing pane, while the Jupyter Notebook provides full analytical transparency. Both maps communicate the same spatial pattern using consistent symbology.
+        </p>
+
+        <!-- Limitations -->
+        <p class="section">Limitations</p>
+        <ul class="limit-list">
+          <li><strong>Dataset vintage:</strong> The IDECA/IDIGER hazard polygons date from December 2021 and may not reflect conditions following recent urban development or updated flood modeling.</li>
+          <li><strong>Fixed buffer distance:</strong> The 100-meter hydrology buffer is a uniform proximity measure and does not account for terrain slope, channel capacity, or variable return-period flood extents.</li>
+          <li><strong>Block-level aggregation:</strong> Risk is assigned at the <em>manzana</em> (city block) level — individual parcels or buildings within a block may face heterogeneous exposure not captured at this resolution.</li>
+          <li><strong>Binary intersection logic:</strong> The <code>IN_HAZARD</code> flag is binary — a block with only marginal edge overlap with a hazard polygon receives the same classification as one fully contained within it.</li>
+          <li><strong>Static snapshot:</strong> The model represents conditions at a single point in time; seasonal variation in drainage capacity, storm recurrence intervals, and climate projections are not incorporated.</li>
+        </ul>
+
+      </div><!-- /.project-body -->
+    </div><!-- /.project-layout -->
+
+    <div class="project-footer">
+      <span>SSCI-586 · GIS Programming &amp; Customization · Fall 2025</span>
+      <a href="index.html">&larr; Back to Portfolio</a>
+    </div>
+
+  </div><!-- /.main-content -->
+
+  <!-- ── JavaScript ──────────────────────────────────────────── -->
+  <script>
+    (function () {
+      const hamburgerBtn   = document.getElementById('hamburgerBtn');
+      const drawerCloseBtn = document.getElementById('drawerCloseBtn');
+      const drawer         = document.getElementById('drawer');
+      const overlay        = document.getElementById('drawerOverlay');
+
+      function openDrawer() {
+        drawer.classList.add('is-open');
+        overlay.classList.add('is-open');
+        drawer.setAttribute('aria-hidden', 'false');
+        overlay.setAttribute('aria-hidden', 'false');
+        hamburgerBtn.setAttribute('aria-expanded', 'true');
+        drawerCloseBtn.focus();
+      }
+      function closeDrawer() {
+        drawer.classList.remove('is-open');
+        overlay.classList.remove('is-open');
+        drawer.setAttribute('aria-hidden', 'true');
+        overlay.setAttribute('aria-hidden', 'true');
+        hamburgerBtn.setAttribute('aria-expanded', 'false');
+        hamburgerBtn.focus();
+      }
+
+      hamburgerBtn.addEventListener('click', openDrawer);
+      drawerCloseBtn.addEventListener('click', closeDrawer);
+      overlay.addEventListener('click', closeDrawer);
+      document.addEventListener('keydown', function (e) {
+        if (e.key === 'Escape' && drawer.classList.contains('is-open')) closeDrawer();
+      });
+    })();
+  </script>
+  <script src="lightbox.js"></script>
+</body>
+</html>

@@ -1,0 +1,696 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>About — Juan Sebastian Cortes</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Rubik:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="styles.css">
+  <style>
+    *, *::before, *::after { box-sizing: border-box; }
+
+    :root {
+      --ink:    #111111;
+      --muted:  #888888;
+      --border: #e0e0e0;
+      --warm:   #f7f5f2;
+      --salmon: #e8735a;
+    }
+
+    body {
+      font-family: "Helvetica Neue", Arial, sans-serif;
+      background: #faf9f7;
+      color: var(--ink);
+      margin: 0;
+    }
+
+    /* ── Intro Split ───────────────────────────────── */
+    .about-intro {
+      display: grid;
+      grid-template-columns: 420px 1fr;
+      min-height: 80vh;
+      border-bottom: 1px solid var(--border);
+    }
+    .about-photo-wrap {
+      position: relative;
+      overflow: hidden;
+      background: #1a1a1a;
+    }
+    .about-photo-wrap img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      object-position: center top;
+      display: block;
+      filter: grayscale(8%);
+    }
+    .about-text-wrap {
+      padding: 72px 64px;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      background: #faf9f7;
+    }
+    .about-eyebrow {
+      font-size: 10px;
+      font-weight: 700;
+      letter-spacing: 0.18em;
+      text-transform: uppercase;
+      color: var(--muted);
+      margin-bottom: 20px;
+    }
+    .about-name {
+      font-family: 'Rubik', sans-serif;
+      font-size: clamp(2.4rem, 4vw, 3.6rem);
+      font-weight: 800;
+      line-height: 1.0;
+      letter-spacing: -0.03em;
+      color: var(--ink);
+      margin: 0 0 14px;
+    }
+    .about-title {
+      font-family: 'Rubik', sans-serif;
+      font-size: 1rem;
+      font-weight: 500;
+      color: var(--muted);
+      margin: 0 0 32px;
+      letter-spacing: 0.01em;
+    }
+    .about-lead {
+      font-size: 15.5px;
+      line-height: 1.8;
+      color: #3a3a3a;
+      max-width: 520px;
+      margin: 0 0 40px;
+    }
+    .about-cta-row {
+      display: flex;
+      gap: 14px;
+      flex-wrap: wrap;
+    }
+    .btn-primary {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      background: var(--ink);
+      color: #fff;
+      font-family: 'Rubik', sans-serif;
+      font-size: 11.5px;
+      font-weight: 700;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      text-decoration: none;
+      padding: 13px 24px;
+      transition: background .2s;
+    }
+    .btn-primary:hover { background: #333; }
+    .btn-outline {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      border: 1.5px solid var(--ink);
+      color: var(--ink);
+      font-family: 'Rubik', sans-serif;
+      font-size: 11.5px;
+      font-weight: 700;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      text-decoration: none;
+      padding: 12px 22px;
+      transition: background .2s, color .2s;
+    }
+    .btn-outline:hover { background: var(--ink); color: #fff; }
+
+    /* ── Quick Strip ───────────────────────────────── */
+    .quick-strip {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      border-bottom: 1px solid var(--border);
+    }
+    .quick-item {
+      padding: 28px 32px;
+      border-right: 1px solid var(--border);
+      display: flex;
+      flex-direction: column;
+      gap: 4px;
+    }
+    .quick-item:last-child { border-right: none; }
+    .quick-label {
+      font-size: 9.5px;
+      font-weight: 700;
+      letter-spacing: 0.14em;
+      text-transform: uppercase;
+      color: var(--muted);
+    }
+    .quick-value {
+      font-family: 'Rubik', sans-serif;
+      font-size: 14px;
+      font-weight: 600;
+      color: var(--ink);
+      line-height: 1.3;
+    }
+
+    /* ── Content Body ──────────────────────────────── */
+    .about-body {
+      max-width: 1100px;
+      margin: 0 auto;
+      padding: 72px 64px;
+    }
+
+    .section-rule {
+      font-size: 10px;
+      font-weight: 700;
+      letter-spacing: 0.16em;
+      text-transform: uppercase;
+      color: var(--muted);
+      border-bottom: 1px solid var(--border);
+      padding-bottom: 10px;
+      margin-bottom: 28px;
+      margin-top: 64px;
+    }
+    .section-rule:first-child { margin-top: 0; }
+
+    .body-p {
+      font-size: 15px;
+      line-height: 1.8;
+      color: #3a3a3a;
+      margin: 0 0 16px;
+      max-width: 720px;
+    }
+
+    /* ── Awards ────────────────────────────────────── */
+    .award-cards {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 12px;
+      margin-top: 4px;
+    }
+    .award-card {
+      border: 1px solid var(--border);
+      padding: 22px 24px;
+      display: flex;
+      gap: 16px;
+      align-items: flex-start;
+    }
+    .award-icon { font-size: 1.6rem; flex-shrink: 0; }
+    .award-title {
+      font-family: 'Rubik', sans-serif;
+      font-size: 13px;
+      font-weight: 700;
+      color: var(--ink);
+      margin-bottom: 4px;
+      line-height: 1.3;
+    }
+    .award-org {
+      font-size: 11.5px;
+      color: var(--muted);
+      letter-spacing: 0.04em;
+    }
+
+    /* ── Education ─────────────────────────────────── */
+    .edu-list { list-style: none; padding: 0; margin: 0; }
+    .edu-item {
+      display: grid;
+      grid-template-columns: 1fr auto;
+      gap: 12px;
+      padding: 20px 0;
+      border-bottom: 1px solid var(--border);
+      align-items: start;
+    }
+    .edu-item:last-child { border-bottom: none; }
+    .edu-school {
+      font-family: 'Rubik', sans-serif;
+      font-size: 14px;
+      font-weight: 700;
+      color: var(--ink);
+      margin-bottom: 3px;
+    }
+    .edu-degree { font-size: 13px; color: #555; }
+    .edu-year {
+      font-size: 11px;
+      font-weight: 600;
+      letter-spacing: 0.08em;
+      color: var(--muted);
+      text-align: right;
+      white-space: nowrap;
+    }
+
+    /* ── Experience Timeline ───────────────────────── */
+    .exp-list { list-style: none; padding: 0; margin: 0; }
+    .exp-item {
+      display: grid;
+      grid-template-columns: 140px 1fr;
+      gap: 24px;
+      padding: 22px 0;
+      border-bottom: 1px solid var(--border);
+    }
+    .exp-item:last-child { border-bottom: none; }
+    .exp-period {
+      font-size: 11px;
+      font-weight: 600;
+      letter-spacing: 0.07em;
+      color: var(--muted);
+      text-transform: uppercase;
+      padding-top: 2px;
+      line-height: 1.5;
+    }
+    .exp-role {
+      font-family: 'Rubik', sans-serif;
+      font-size: 13.5px;
+      font-weight: 700;
+      color: var(--ink);
+      margin-bottom: 2px;
+    }
+    .exp-org {
+      font-size: 12.5px;
+      color: var(--muted);
+      margin-bottom: 8px;
+    }
+    .exp-desc {
+      font-size: 13px;
+      color: #555;
+      line-height: 1.65;
+    }
+
+    /* ── Skills ────────────────────────────────────── */
+    .skills-groups {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 24px;
+    }
+    .skill-group h4 {
+      font-family: 'Rubik', sans-serif;
+      font-size: 10.5px;
+      font-weight: 700;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      color: var(--muted);
+      margin-bottom: 12px;
+    }
+    .skill-tags {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 6px;
+    }
+    .skill-tag {
+      background: #eeebe6;
+      color: #444;
+      font-size: 11px;
+      font-weight: 500;
+      padding: 4px 10px;
+      border-radius: 3px;
+    }
+    .skill-tag.highlight {
+      background: var(--ink);
+      color: #fff;
+    }
+
+    /* ── Hobbies ───────────────────────────────────── */
+    .hobby-grid {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 2px;
+    }
+    .hobby-card {
+      background: var(--warm);
+      padding: 32px 24px;
+      text-align: center;
+      border: 1px solid var(--border);
+    }
+    .hobby-icon { font-size: 2rem; margin-bottom: 12px; }
+    .hobby-name {
+      font-family: 'Rubik', sans-serif;
+      font-size: 12px;
+      font-weight: 700;
+      letter-spacing: 0.06em;
+      text-transform: uppercase;
+      color: var(--ink);
+      margin-bottom: 8px;
+    }
+    .hobby-desc {
+      font-size: 12px;
+      color: var(--muted);
+      line-height: 1.6;
+    }
+
+    /* ── Bottom CTA ────────────────────────────────── */
+    .about-footer-cta {
+      background: var(--ink);
+      padding: 64px;
+      text-align: center;
+    }
+    .about-footer-cta h2 {
+      font-family: 'Rubik', sans-serif;
+      font-size: 1.8rem;
+      font-weight: 800;
+      color: #fff;
+      margin: 0 0 12px;
+      letter-spacing: -0.02em;
+    }
+    .about-footer-cta p {
+      font-size: 14px;
+      color: rgba(255,255,255,0.55);
+      margin: 0 0 32px;
+    }
+    .about-footer-cta .btn-row {
+      display: flex;
+      justify-content: center;
+      gap: 14px;
+      flex-wrap: wrap;
+    }
+    .btn-gold {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      background: #c8912a;
+      color: #1a1208;
+      font-family: 'Rubik', sans-serif;
+      font-size: 12px;
+      font-weight: 700;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      text-decoration: none;
+      padding: 13px 26px;
+      transition: background .2s;
+    }
+    .btn-gold:hover { background: #e0a830; }
+    .btn-white-outline {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      border: 1.5px solid rgba(255,255,255,0.4);
+      color: rgba(255,255,255,0.8);
+      font-family: 'Rubik', sans-serif;
+      font-size: 12px;
+      font-weight: 700;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      text-decoration: none;
+      padding: 12px 24px;
+      transition: border-color .2s, color .2s;
+    }
+    .btn-white-outline:hover { border-color: #fff; color: #fff; }
+
+    /* ── Page Footer ───────────────────────────────── */
+    .page-footer {
+      border-top: 1px solid var(--border);
+      padding: 28px 64px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      font-size: 11px;
+      color: var(--muted);
+      letter-spacing: 0.06em;
+      text-transform: uppercase;
+    }
+    .page-footer a { color: var(--muted); text-decoration: none; }
+    .page-footer a:hover { color: var(--ink); }
+
+    @media (max-width: 900px) {
+      .about-intro { grid-template-columns: 1fr; }
+      .about-photo-wrap { height: 60vw; min-height: 320px; }
+      .about-text-wrap { padding: 48px 32px; }
+      .quick-strip { grid-template-columns: repeat(2, 1fr); }
+      .about-body { padding: 48px 32px; }
+      .award-cards { grid-template-columns: 1fr; }
+      .skills-groups { grid-template-columns: 1fr 1fr; }
+      .hobby-grid { grid-template-columns: 1fr 1fr; }
+      .about-footer-cta { padding: 48px 32px; }
+      .page-footer { padding: 24px 32px; }
+    }
+  </style>
+</head>
+<body>
+
+  <div class="salmon-glow" aria-hidden="true"></div>
+
+  <!-- ── Sidebar ──────────────────────────────────── -->
+  <aside class="sidebar" aria-label="Site navigation">
+    <button class="hamburger-btn" id="hamburgerBtn" aria-label="Open menu" aria-expanded="false" aria-controls="drawer">
+      <span class="hamburger-icon" aria-hidden="true">
+        <span></span><span></span><span></span>
+      </span>
+    </button>
+  </aside>
+
+  <!-- ── Drawer ───────────────────────────────────── -->
+  <div class="drawer-overlay" id="drawerOverlay" aria-hidden="true"></div>
+  <nav class="drawer" id="drawer" aria-label="Main menu" aria-hidden="true">
+    <button class="drawer-close-btn" id="drawerCloseBtn" aria-label="Close menu">&#x2715;</button>
+    <a href="index.html" class="drawer-wordmark" tabindex="-1">
+      <span class="wm-line">PORTFOLIO&nbsp;&nbsp;</span>
+      <span class="wm-line">&nbsp;&nbsp;&nbsp;&nbsp;MENU</span>
+    </a>
+    <div class="drawer-nav">
+      <div class="drawer-nav-group">
+        <a href="index.html">ALL PROJECTS &rarr;</a>
+        <a href="about.html">ABOUT &rarr;</a>
+      </div>
+      <div class="drawer-nav-group">
+        <a href="https://www.linkedin.com/in/juan-cortes-7421b6398/" target="_blank" rel="noopener">LinkedIn</a>
+        <a href="contact.html">CONTACT</a>
+      </div>
+    </div>
+  </nav>
+
+  <!-- ── Main ─────────────────────────────────────── -->
+  <div class="main-content">
+
+    <header class="site-header">
+      <a href="index.html" class="wordmark" aria-label="Portfolio home">
+        <span class="wm-line">JUAN&nbsp;&nbsp;SEBASTIAN</span>
+        <span class="wm-line">CORTES&nbsp;&nbsp;&nbsp;&nbsp;</span>
+      </a>
+      <div class="portfolio-logo">ABOUT</div>
+    </header>
+
+    <!-- ── Intro Split ─────────────────────────────── -->
+    <div class="about-intro">
+      <div class="about-photo-wrap">
+        <img src="assets/profile.jpg" alt="Juan Sebastian Cortes — coastal cliff, California">
+      </div>
+      <div class="about-text-wrap">
+        <p class="about-eyebrow">GIS Researcher &nbsp;·&nbsp; Cartographer &nbsp;·&nbsp; Architect</p>
+        <h1 class="about-name">Juan<br>Sebastian<br>Cortes</h1>
+        <p class="about-title">M.S. Geographic Information Science &amp; Technology<br>University of Southern California &nbsp;·&nbsp; Expected Dec 2026</p>
+        <p class="about-lead">
+          I'm a Colombian spatial scientist and former architect currently based in Denver, CO. I design maps, build geospatial tools, and tell data-driven stories about the places and systems that shape our world, from wildfire-damaged water infrastructure in California to vanishing páramo ecosystems in the Colombian Andes.
+        </p>
+        <div class="about-cta-row">
+          <a href="index.html" class="btn-primary">View Portfolio &rarr;</a>
+          <a href="contact.html" class="btn-outline">Say Hello</a>
+        </div>
+      </div>
+    </div>
+
+    <!-- ── Quick Strip ─────────────────────────────── -->
+    <div class="quick-strip">
+      <div class="quick-item">
+        <span class="quick-label">From</span>
+        <span class="quick-value">Bogotá, Colombia</span>
+      </div>
+      <div class="quick-item">
+        <span class="quick-label">Based in</span>
+        <span class="quick-value">Denver, CO</span>
+      </div>
+      <div class="quick-item">
+        <span class="quick-label">Background</span>
+        <span class="quick-value">Architecture → GIS</span>
+      </div>
+      <div class="quick-item">
+        <span class="quick-label">Languages</span>
+        <span class="quick-value">Spanish · English</span>
+      </div>
+    </div>
+
+    <!-- ── Body ───────────────────────────────────── -->
+    <div class="about-body">
+
+      <!-- My Story -->
+      <p class="section-rule">My Story</p>
+      <p class="body-p">
+        I started my career as an architect at Universidad de los Andes in Bogotá, where I developed a deep interest in how space, infrastructure, and people interact at the urban scale. That curiosity led me to GIS — first as a tool in design projects, then as a discipline of its own. After contributing to the architectural design of four stations along Bogotá's first metro line and working in water sustainability research, I made the leap to pursue a master's degree in Geographic Information Science and Technology at USC.
+      </p>
+      <p class="body-p">
+        At USC's Spatial Sciences Institute, I've built Python toolboxes for predictive infrastructure modeling, designed interactive biodiversity web maps, simulated wildfire spread with agent-based models, and conducted spatial econometric studies of environmental inequality. My work sits at the intersection of data science, cartography, and environmental storytelling, with a particular focus on Colombia and the American West.
+      </p>
+
+      <!-- Awards -->
+      <p class="section-rule">Awards &amp; Recognition</p>
+      <div class="award-cards">
+        <div class="award-card">
+          <div class="award-icon">🏆</div>
+          <div>
+            <div class="award-title">Tom McKnight &amp; Joan Clemens Award<br>Outstanding Paper by a Master's Student</div>
+            <div class="award-org">Association of Pacific Coast Geographers (APCG) &nbsp;·&nbsp; 2025</div>
+          </div>
+        </div>
+        <div class="award-card">
+          <div class="award-icon">🗺</div>
+          <div>
+            <div class="award-title">Best Story Map<br>ArcGIS StoryMaps Competition</div>
+            <div class="award-org">Esri &nbsp;·&nbsp; 2025</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Education -->
+      <p class="section-rule">Education</p>
+      <ul class="edu-list">
+        <li class="edu-item">
+          <div>
+            <div class="edu-school">University of Southern California</div>
+            <div class="edu-degree">M.S. Geographic Information Science and Technology &nbsp;·&nbsp; Spatial Sciences Institute</div>
+          </div>
+          <div class="edu-year">Los Angeles, CA<br>Expected Dec 2026</div>
+        </li>
+        <li class="edu-item">
+          <div>
+            <div class="edu-school">Universidad de los Andes</div>
+            <div class="edu-degree">Bachelor of Architecture and Design</div>
+          </div>
+          <div class="edu-year">Bogotá, Colombia<br>April 2020</div>
+        </li>
+      </ul>
+
+      <!-- Experience -->
+      <p class="section-rule">Experience</p>
+      <ul class="exp-list">
+        <li class="exp-item">
+          <div class="exp-period">Summer 2025</div>
+          <div>
+            <div class="exp-role">GIS Intern</div>
+            <div class="exp-org">Las Flores Water Company &nbsp;·&nbsp; Altadena, CA</div>
+            <div class="exp-desc">Led post-fire field data collection and built a FEMA-ready report to fund water-meter repairs after the 2025 Altadena (Eaton) Fire, using ArcGIS Survey123 and ArcGIS StoryMaps.</div>
+          </div>
+        </li>
+        <li class="exp-item">
+          <div class="exp-period">Aug–Dec 2025</div>
+          <div>
+            <div class="exp-role">Teaching Assistant, Human Populations and Natural Hazards</div>
+            <div class="exp-org">University of Southern California &nbsp;·&nbsp; Los Angeles, CA</div>
+            <div class="exp-desc">Supported instruction and applied GIS learning for an undergraduate course on hazard exposure, vulnerability, and environmental risk, covering floods, wildfires, earthquakes, and sea-level rise.</div>
+          </div>
+        </li>
+        <li class="exp-item">
+          <div class="exp-period">Feb 2021–Nov 2022</div>
+          <div>
+            <div class="exp-role">Design Architect</div>
+            <div class="exp-org">WSP, Bogotá Metro Line 1 &nbsp;·&nbsp; Bogotá, Colombia</div>
+            <div class="exp-desc">Created architectural designs for four stations along Bogotá's first metro line, working in multidisciplinary teams and applying GIS for spatial decisions in station placement and infrastructure planning.</div>
+          </div>
+        </li>
+        <li class="exp-item">
+          <div class="exp-period">Jul–Dec 2019</div>
+          <div>
+            <div class="exp-role">Research Assistant</div>
+            <div class="exp-org">Universidad de los Andes &nbsp;·&nbsp; Bogotá, Colombia</div>
+            <div class="exp-desc">Contributed to water management studies for Bogotá's river systems, applying GIS and demographic data to support environmental assessment and sustainable urban planning research.</div>
+          </div>
+        </li>
+      </ul>
+
+      <!-- Skills -->
+      <p class="section-rule">Skills &amp; Tools</p>
+      <div class="skills-groups">
+        <div class="skill-group">
+          <h4>GIS &amp; Spatial Analysis</h4>
+          <div class="skill-tags">
+            <span class="skill-tag highlight">ArcGIS Pro</span>
+            <span class="skill-tag highlight">ArcPy</span>
+            <span class="skill-tag">QGIS</span>
+            <span class="skill-tag">GeoPandas</span>
+            <span class="skill-tag">ArcGIS JS API</span>
+            <span class="skill-tag">Spatial Statistics</span>
+          </div>
+        </div>
+        <div class="skill-group">
+          <h4>Programming &amp; Data</h4>
+          <div class="skill-tags">
+            <span class="skill-tag highlight">Python</span>
+            <span class="skill-tag">R / RStudio</span>
+            <span class="skill-tag">Jupyter</span>
+            <span class="skill-tag">scikit-learn</span>
+            <span class="skill-tag">GitHub</span>
+            <span class="skill-tag">HTML / CSS / JS</span>
+          </div>
+        </div>
+        <div class="skill-group">
+          <h4>Design &amp; Visualization</h4>
+          <div class="skill-tags">
+            <span class="skill-tag highlight">Adobe Creative Suite</span>
+            <span class="skill-tag highlight">AutoCAD</span>
+            <span class="skill-tag highlight">Revit</span>
+            <span class="skill-tag">Rhinoceros</span>
+            <span class="skill-tag">SketchUp</span>
+            <span class="skill-tag">Blender</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Hobbies -->
+      <p class="section-rule">Outside the Lab</p>
+      <div class="hobby-grid">
+        <div class="hobby-card">
+          <div class="hobby-name">Plants</div>
+          <div class="hobby-desc">Cultivating a growing collection of tropical and Andean plants, a small piece of Colombia at home.</div>
+        </div>
+        <div class="hobby-card">
+          <div class="hobby-name">Hiking</div>
+          <div class="hobby-desc">Exploring trails and terrain across California and Colorado, maps in hand, always.</div>
+        </div>
+        <div class="hobby-card">
+          <div class="hobby-name">Drones</div>
+          <div class="hobby-desc">Flying and capturing aerial perspectives, what started as a hobby has become a tool for spatial storytelling.</div>
+        </div>
+        <div class="hobby-card">
+          <div class="hobby-name">Pottery</div>
+          <div class="hobby-desc">Throwing on the wheel and hand-building, a slow, tactile counterpoint to a screen-heavy field.</div>
+        </div>
+      </div>
+
+    </div><!-- /.about-body -->
+
+    <!-- ── Footer CTA ───────────────────────────────── -->
+    <div class="about-footer-cta">
+      <h2>Want to work together?</h2>
+      <p>I'm always open to interesting projects, collaborations, and conversations.</p>
+      <div class="btn-row">
+        <a href="contact.html" class="btn-gold">Get in Touch &rarr;</a>
+        <a href="index.html" class="btn-white-outline">View My Work</a>
+      </div>
+    </div>
+
+    <div class="page-footer">
+      <span>Juan Sebastian Cortes &nbsp;·&nbsp; USC Spatial Sciences Institute &nbsp;·&nbsp; 2026</span>
+      <a href="index.html">&larr; Back to Portfolio</a>
+    </div>
+
+  </div><!-- /.main-content -->
+
+  <script>
+    (function () {
+      const hamburgerBtn   = document.getElementById('hamburgerBtn');
+      const drawerCloseBtn = document.getElementById('drawerCloseBtn');
+      const drawer         = document.getElementById('drawer');
+      const overlay        = document.getElementById('drawerOverlay');
+      function openDrawer() {
+        drawer.classList.add('is-open'); overlay.classList.add('is-open');
+        drawer.setAttribute('aria-hidden','false'); overlay.setAttribute('aria-hidden','false');
+        hamburgerBtn.setAttribute('aria-expanded','true'); drawerCloseBtn.focus();
+      }
+      function closeDrawer() {
+        drawer.classList.remove('is-open'); overlay.classList.remove('is-open');
+        drawer.setAttribute('aria-hidden','true'); overlay.setAttribute('aria-hidden','true');
+        hamburgerBtn.setAttribute('aria-expanded','false'); hamburgerBtn.focus();
+      }
+      hamburgerBtn.addEventListener('click', openDrawer);
+      drawerCloseBtn.addEventListener('click', closeDrawer);
+      overlay.addEventListener('click', closeDrawer);
+      document.addEventListener('keydown', e => { if (e.key==='Escape' && drawer.classList.contains('is-open')) closeDrawer(); });
+    })();
+  </script>
+</body>
+</html>

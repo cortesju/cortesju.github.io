@@ -1,0 +1,655 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>DTLA Adaptive Reuse — Juan Sebastian Cortes</title>
+  <link href="https://fonts.googleapis.com/css2?family=Rubik:wght@400;500;700;900&display=swap" rel="stylesheet"/>
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    :root {
+      --white:       #faf9f6;
+      --text:        #1a1a1a;
+      --muted:       #888;
+      --border:      #d8d2c8;
+      --warm-gray:   #ece8e2;
+      --usc-cardinal:#990000;
+      --award-gold:  #c9a227;
+      --award-light: #f5e6b0;
+      --dark:        #1a1210;
+      --body-font:   "Neue Haas Grotesk","Haas Grot Text","Helvetica Neue",Arial,sans-serif;
+      --head-font:   'Rubik', sans-serif;
+    }
+
+    body { font-family: var(--body-font); background: var(--white); color: var(--text); font-size: 14.5px; line-height: 1.65; }
+    a { text-decoration: none; color: inherit; }
+
+    /* ── NAV ── */
+    nav { display: flex; align-items: center; justify-content: space-between; padding: 18px 40px; border-bottom: 0.8px solid #000; position: sticky; top: 0; background: var(--white); z-index: 100; }
+    .nav-name { font-family: var(--head-font); font-weight: 700; font-size: 13px; letter-spacing: 0.06em; text-transform: uppercase; line-height: 1.3; }
+    .nav-right { display: flex; gap: 32px; font-family: var(--head-font); font-weight: 700; font-size: 12px; letter-spacing: 0.08em; text-transform: uppercase; }
+    .nav-right a { color: var(--muted); } .nav-right a:hover { color: var(--text); }
+
+    /* ── META BAR ── */
+    .project-meta-bar { display: flex; align-items: center; justify-content: space-between; padding: 10.4px 40px; border-bottom: 0.8px solid #000; }
+    .project-title-bar { font-family: var(--head-font); font-weight: 700; font-size: 13px; letter-spacing: 0.06em; text-transform: uppercase; color: rgba(0,0,0,0.75); }
+    .project-nav-links { display: flex; gap: 16px; font-family: var(--body-font); font-size: 13px; color: rgba(0,0,0,0.7); }
+    .project-nav-links a { color: rgba(0,0,0,0.7); } .project-nav-links a:hover { color: #000; }
+
+    /* ── HERO ── */
+    .hero { position: relative; width: 100%; height: 520px; overflow: hidden; background: var(--dark); }
+    .hero img { width: 100%; height: 100%; object-fit: cover; opacity: 0.6; }
+    .hero-overlay { position: absolute; inset: 0; background: linear-gradient(to top, rgba(26,18,16,0.97) 0%, rgba(26,18,16,0.35) 55%, transparent 100%); pointer-events: none; }
+    .hero-content { position: absolute; bottom: 0; left: 0; right: 0; padding: 48px 40px 40px; }
+    .hero-eyebrow { font-family: var(--head-font); font-weight: 700; font-size: 11px; letter-spacing: 0.16em; text-transform: uppercase; color: var(--award-gold); margin-bottom: 14px; }
+    .hero-title { font-family: var(--head-font); font-weight: 900; font-size: clamp(28px, 4.5vw, 52px); color: white; line-height: 1.1; margin-bottom: 10px; max-width: 800px; }
+    .hero-sub { font-size: 11px; color: rgba(255,255,255,0.5); font-family: var(--head-font); letter-spacing: 0.06em; text-transform: uppercase; margin-top: 10px; }
+
+    /* ── AWARD BANNER ── */
+    .award-banner { background: linear-gradient(135deg, #1a1210 0%, #2d1f10 100%); border-top: 2px solid var(--award-gold); border-bottom: 1px solid #3a2a1a; padding: 20px 40px; display: flex; align-items: center; gap: 24px; }
+    .award-icon { font-size: 28px; flex-shrink: 0; }
+    .award-text { flex: 1; }
+    .award-title { font-family: var(--head-font); font-weight: 700; font-size: 15px; color: var(--award-gold); margin-bottom: 4px; }
+    .award-sub { font-family: var(--head-font); font-size: 11px; color: rgba(255,255,255,0.5); letter-spacing: 0.08em; text-transform: uppercase; }
+    .award-amount { font-family: var(--head-font); font-weight: 900; font-size: 30px; color: var(--award-gold); flex-shrink: 0; }
+
+    /* ── TIMELINE STRIP ── */
+    .timeline-strip { display: flex; align-items: stretch; border-bottom: 0.8px solid #000; background: var(--warm-gray); overflow: hidden; }
+    .tl-item { flex: 1; padding: 20px 28px; border-right: 0.8px solid var(--border); }
+    .tl-item:last-child { border-right: none; }
+    .tl-item.active { background: var(--white); }
+    .tl-date { font-family: var(--head-font); font-size: 10px; letter-spacing: 0.12em; text-transform: uppercase; color: var(--muted); margin-bottom: 4px; }
+    .tl-label { font-size: 13px; font-weight: 500; color: var(--text); line-height: 1.4; }
+    .tl-badge { display: inline-block; margin-top: 6px; font-family: var(--head-font); font-size: 9px; font-weight: 700; letter-spacing: 0.08em; text-transform: uppercase; padding: 2px 8px; }
+    .tl-award  { background: var(--award-light); color: #7a5a00; }
+    .tl-course { background: #e8eaf5; color: #3a3a7a; }
+    .tl-research { background: #fde8e8; color: var(--usc-cardinal); }
+    .tl-arrow { display: flex; align-items: center; padding: 0 8px; color: var(--muted); font-size: 18px; flex-shrink: 0; border-right: 0.8px solid var(--border); }
+
+    /* ── LAYOUT ── */
+    .project-body { display: grid; grid-template-columns: 220px 1fr; max-width: 1200px; margin: 0 auto; padding: 60px 40px; }
+    .sidebar { padding-right: 48px; border-right: 0.8px solid #000; }
+    .sidebar-block { margin-bottom: 36px; }
+    .sidebar-label { font-family: var(--head-font); font-size: 10px; letter-spacing: 0.12em; text-transform: uppercase; color: var(--muted); margin-bottom: 6px; }
+    .sidebar-value { font-size: 13.5px; font-weight: 500; line-height: 1.6; }
+    .tag-list { display: flex; flex-wrap: wrap; gap: 6px; margin-top: 4px; }
+    .tag { font-family: var(--head-font); font-size: 10px; font-weight: 700; letter-spacing: 0.06em; text-transform: uppercase; padding: 3px 8px; border: 0.8px solid var(--border); color: var(--muted); }
+    .tag.red  { border-color: var(--usc-cardinal); color: var(--usc-cardinal); }
+    .tag.gold { border-color: var(--award-gold); color: #7a5a00; background: var(--award-light); }
+
+    .cert-mini { border: 2px solid var(--award-gold); background: linear-gradient(135deg,#fdf8ee,#fff9e8); padding: 16px; text-align: center; margin-top: 4px; }
+    .cert-mini-org { font-family: var(--head-font); font-weight: 700; font-size: 11px; color: #5a4a00; margin-bottom: 4px; line-height: 1.4; }
+    .cert-mini-award { font-family: var(--head-font); font-size: 9px; font-weight: 700; letter-spacing: 0.06em; text-transform: uppercase; color: var(--award-gold); margin-bottom: 8px; }
+    .cert-mini-amount { font-family: var(--head-font); font-weight: 900; font-size: 24px; color: var(--award-gold); }
+    .cert-mini-date { font-family: var(--head-font); font-size: 9px; color: #999; margin-top: 4px; }
+
+    .main-content { padding-left: 56px; }
+    h2.section-heading { font-family: var(--head-font); font-weight: 700; font-size: 11px; letter-spacing: 0.14em; text-transform: uppercase; color: var(--muted); margin-bottom: 16px; margin-top: 52px; padding-bottom: 10px; border-bottom: 0.8px solid #000; }
+    h2.section-heading:first-child { margin-top: 0; }
+    p { font-size: 14px; line-height: 1.75; color: #333; margin-bottom: 18px; }
+
+    /* ── ORIGIN QUOTE ── */
+    .origin-quote { border-left: 4px solid var(--usc-cardinal); padding: 20px 24px; background: #fdf5f5; margin: 28px 0; }
+    .origin-quote p { font-family: var(--head-font); font-weight: 500; font-size: 17px; color: #2a1a1a; margin: 0; line-height: 1.6; font-style: italic; }
+    .origin-quote cite { display: block; font-family: var(--head-font); font-size: 11px; letter-spacing: 0.08em; text-transform: uppercase; color: var(--muted); margin-top: 10px; font-style: normal; }
+
+    /* ── STATS ── */
+    .stats-bar { display: grid; grid-template-columns: repeat(4,1fr); gap: 1px; background: var(--border); border: 0.8px solid #000; margin: 36px 0; }
+    .stat-item { background: var(--white); padding: 24px 16px; text-align: center; }
+    .stat-number { font-family: var(--head-font); font-weight: 900; font-size: 26px; color: var(--usc-cardinal); display: block; line-height: 1; margin-bottom: 7px; }
+    .stat-number.gold { color: var(--award-gold); }
+    .stat-label { font-size: 10px; letter-spacing: 0.08em; text-transform: uppercase; color: var(--muted); line-height: 1.4; }
+
+    /* ── PART DIVIDER ── */
+    .part-divider { display: flex; align-items: center; gap: 16px; margin: 52px 0 32px; }
+    .part-num { font-family: var(--head-font); font-weight: 900; font-size: 56px; color: var(--warm-gray); line-height: 1; flex-shrink: 0; }
+    .part-info { border-left: 3px solid var(--usc-cardinal); padding-left: 16px; }
+    .part-label { font-family: var(--head-font); font-weight: 700; font-size: 10px; letter-spacing: 0.14em; text-transform: uppercase; color: var(--muted); margin-bottom: 4px; }
+    .part-title { font-family: var(--head-font); font-weight: 700; font-size: 20px; color: var(--text); }
+    .part-date { font-family: var(--head-font); font-size: 11px; color: var(--usc-cardinal); margin-top: 3px; letter-spacing: 0.06em; font-weight: 700; }
+
+    /* ── IMAGES ── */
+    .image-grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin: 28px 0; }
+    .image-grid-3 { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 12px; margin: 28px 0; }
+    .image-slot { background: var(--warm-gray); overflow: hidden; display: flex; align-items: center; justify-content: center; }
+    .image-slot.ar-43  { aspect-ratio: 4/3; }
+    .image-slot.ar-169 { aspect-ratio: 16/9; }
+    .image-slot.ar-32  { aspect-ratio: 3/2; }
+    .image-slot.ar-11  { aspect-ratio: 1/1; }
+    .image-slot img { width: 100%; height: 100%; object-fit: cover; display: block; }
+    .image-full { width: 100%; margin: 28px 0; overflow: hidden; }
+    .image-full img { width: 100%; display: block; }
+    .image-caption { font-family: var(--head-font); font-size: 10px; color: var(--muted); margin-top: 6px; line-height: 1.5; letter-spacing: 0.03em; }
+
+    /* ── SLIDE GALLERY (full-width scrollable) ── */
+    .slide-gallery { display: grid; grid-template-columns: repeat(3,1fr); gap: 10px; margin: 28px 0; }
+    .slide-frame { background: #111; overflow: hidden; aspect-ratio: 16/9; }
+    .slide-frame img { width: 100%; height: 100%; object-fit: cover; display: block; }
+    .slide-label { font-family: var(--head-font); font-size: 9px; letter-spacing: 0.08em; text-transform: uppercase; color: var(--muted); margin-top: 4px; }
+
+    /* ── RESEARCH QUESTION CARDS ── */
+    .rq-cards { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin: 24px 0; }
+    .rq-card { border: 0.8px solid var(--border); padding: 22px; }
+    .rq-num { font-family: var(--head-font); font-weight: 900; font-size: 36px; color: var(--warm-gray); line-height: 1; margin-bottom: 8px; }
+    .rq-title { font-family: var(--head-font); font-weight: 700; font-size: 11px; letter-spacing: 0.08em; text-transform: uppercase; color: var(--usc-cardinal); margin-bottom: 8px; }
+    .rq-card p { font-size: 13px; color: #555; margin: 0; line-height: 1.6; }
+
+    /* ── ARO TABLE ── */
+    .aro-table { width: 100%; border-collapse: collapse; margin: 24px 0; font-size: 13px; }
+    .aro-table th { font-family: var(--head-font); font-weight: 700; font-size: 10px; letter-spacing: 0.1em; text-transform: uppercase; color: var(--muted); text-align: left; padding: 9px 14px; border-bottom: 2px solid var(--border); background: var(--warm-gray); }
+    .aro-table td { padding: 9px 14px; border-bottom: 0.8px solid var(--border); }
+    .aro-table tr:last-child td { border-bottom: none; }
+    .aro-table tr:hover td { background: #f5f2ee; }
+    .aro-pct { font-family: var(--head-font); font-weight: 700; font-size: 12px; color: var(--usc-cardinal); }
+
+    /* ── DATASET TABLE ── */
+    .dataset-table { width: 100%; border-collapse: collapse; margin: 20px 0; font-size: 12.5px; }
+    .dataset-table th { font-family: var(--head-font); font-weight: 700; font-size: 10px; letter-spacing: 0.1em; text-transform: uppercase; color: var(--muted); text-align: left; padding: 9px 12px; border-bottom: 2px solid var(--border); background: var(--warm-gray); }
+    .dataset-table td { padding: 9px 12px; border-bottom: 0.8px solid var(--border); vertical-align: top; line-height: 1.5; }
+    .dataset-table tr:last-child td { border-bottom: none; }
+    .dataset-table tr:hover td { background: #f5f2ee; }
+    .ds-name { font-family: var(--head-font); font-weight: 700; font-size: 11px; color: var(--usc-cardinal); }
+
+    /* ── SCORE STRIP ── */
+    .score-strip { display: grid; grid-template-columns: repeat(4,1fr); gap: 1px; background: var(--border); border: 0.8px solid #000; margin: 24px 0; }
+    .score-cell { background: var(--white); padding: 18px 14px; text-align: center; }
+    .score-val { font-family: var(--head-font); font-weight: 900; font-size: 36px; display: block; line-height: 1; margin-bottom: 6px; }
+    .score-label { font-size: 11px; color: var(--muted); letter-spacing: 0.02em; line-height: 1.4; }
+
+    /* ── CODE BLOCK ── */
+    .code-block { background: #1e1a18; border: 1px solid #3a2a20; padding: 22px 26px; margin: 24px 0; font-family: var(--head-font); font-size: 12px; line-height: 1.8; overflow-x: auto; border-radius: 2px; }
+    .c-kw { color: #e07050; } .c-fn { color: #7ec8a0; } .c-str { color: #e8c060; }
+    .c-comment { color: #5a6a5a; } .c-var { color: #ddd; } .c-num { color: #e07050; }
+
+    /* ── PROCESS STEPS ── */
+    .process-steps { list-style: none; margin: 24px 0; }
+    .process-steps li { display: flex; gap: 20px; margin-bottom: 20px; padding-bottom: 20px; border-bottom: 0.8px solid var(--border); }
+    .process-steps li:last-child { border-bottom: none; }
+    .step-num { font-family: var(--head-font); font-weight: 700; font-size: 11px; color: var(--usc-cardinal); min-width: 24px; padding-top: 2px; }
+    .step-body strong { display: block; font-size: 13.5px; font-weight: 600; margin-bottom: 4px; }
+    .step-body p { font-size: 13px; color: #555; margin: 0; }
+
+    /* ── CALLOUT ── */
+    .callout { border-left: 3px solid var(--usc-cardinal); padding: 16px 20px; background: #fdf5f5; margin: 28px 0; }
+    .callout p { font-size: 14px; color: #444; margin: 0; font-style: italic; }
+
+    /* ── AWARD CERTIFICATE ── */
+    .cert-display { border: 3px solid var(--award-gold); background: linear-gradient(135deg,#fdf8ee,#fff9e8); padding: 36px; margin: 28px 0; text-align: center; position: relative; }
+    .cert-display::before { content:''; position: absolute; inset: 6px; border: 1px solid rgba(201,162,39,0.3); pointer-events: none; }
+    .cert-org { font-family: var(--head-font); font-weight: 700; font-size: 17px; color: #3a2a00; margin-bottom: 4px; }
+    .cert-location { font-family: var(--head-font); font-size: 11px; letter-spacing: 0.1em; text-transform: uppercase; color: var(--award-gold); margin-bottom: 20px; font-weight: 700; }
+    .cert-award-name { font-family: var(--head-font); font-size: 14px; color: #5a4a00; margin-bottom: 16px; line-height: 1.6; }
+    .cert-recipient { font-family: var(--head-font); font-weight: 900; font-size: 26px; color: var(--dark); margin-bottom: 8px; }
+    .cert-amount-display { font-family: var(--head-font); font-weight: 900; font-size: 44px; color: var(--award-gold); margin: 12px 0; }
+    .cert-date { font-family: var(--head-font); font-size: 11px; color: var(--muted); letter-spacing: 0.08em; text-transform: uppercase; margin-top: 8px; }
+    .cert-signatories { display: flex; justify-content: space-between; margin-top: 24px; font-family: var(--head-font); font-size: 11px; color: var(--muted); letter-spacing: 0.06em; }
+
+    /* ── FUTURE CARDS ── */
+    .future-cards { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 10px; margin: 24px 0; }
+    .future-card { border: 0.8px solid var(--border); padding: 18px; }
+    .future-card .icon { font-size: 18px; margin-bottom: 10px; }
+    .future-card strong { display: block; font-family: var(--head-font); font-weight: 700; font-size: 11px; letter-spacing: 0.07em; text-transform: uppercase; margin-bottom: 8px; }
+    .future-card p { font-size: 12.5px; color: #555; margin: 0; line-height: 1.6; }
+
+    footer { border-top: 0.8px solid #000; padding: 28px 40px; display: flex; justify-content: space-between; align-items: center; font-family: var(--head-font); font-size: 11px; color: var(--muted); letter-spacing: 0.06em; text-transform: uppercase; margin-top: 80px; }
+    footer a { color: var(--muted); } footer a:hover { color: var(--text); }
+
+    @media (max-width: 768px) {
+      .project-body { grid-template-columns: 1fr; padding: 36px 20px; }
+      .sidebar { border-right: none; border-bottom: 0.8px solid #000; padding-right: 0; padding-bottom: 32px; margin-bottom: 32px; }
+      .main-content { padding-left: 0; }
+      .stats-bar, .score-strip { grid-template-columns: repeat(2,1fr); }
+      .image-grid-2, .image-grid-3, .rq-cards, .future-cards, .slide-gallery { grid-template-columns: 1fr; }
+      nav, .project-meta-bar { padding: 14px 20px; }
+      .timeline-strip { flex-direction: column; }
+      .tl-arrow { display: none; }
+      .award-banner { flex-wrap: wrap; }
+      .hero-content { padding: 32px 20px 28px; }
+    }
+  </style>
+</head>
+<body>
+
+<nav>
+  <div class="nav-name">Juan Sebastian<br>Cortes</div>
+  <div class="nav-right">
+    <a href="index.html">Portfolio</a>
+    <a href="#">About</a>
+    <a href="#">Contact</a>
+  </div>
+</nav>
+
+<div class="project-meta-bar">
+  <div class="project-title-bar">DTLA Adaptive Reuse — Research + Tool</div>
+  <div class="project-nav-links">
+    <a href="project4.html">← Prev</a>
+    <a href="index.html">All Projects</a>
+    <a href="project6.html">Next →</a>
+  </div>
+</div>
+
+<!-- HERO -->
+<div class="hero">
+  <img src="assets/P5/1.jpg" alt="Downtown Los Angeles — Adaptive Reuse Research">
+  <div class="hero-overlay"></div>
+  <div class="hero-content">
+    <div class="hero-eyebrow">🏆 APCG Award-Winning Research · USC · 2025</div>
+    <div class="hero-title">Parcel-Level Building<br>Reuse Readiness in<br>Downtown Los Angeles</div>
+    <div class="hero-sub">Research · Conference Presentation · Python GIS Tool · ArcGIS Pro</div>
+  </div>
+</div>
+
+<!-- AWARD BANNER -->
+<div class="award-banner">
+  <div class="award-icon">🏅</div>
+  <div class="award-text">
+    <div class="award-title">Tom McKnight & Joan Clemens Award — Outstanding Paper by a Master's Student</div>
+    <div class="award-sub">Association of Pacific Coast Geographers · Santa Clarita, CA · October 11, 2025</div>
+  </div>
+  <div class="award-amount">$1,500</div>
+</div>
+
+<!-- TIMELINE -->
+<div class="timeline-strip">
+  <div class="tl-item">
+    <div class="tl-date">Summer 2025</div>
+    <div class="tl-label">Research question emerges while living in DTLA</div>
+    <span class="tl-badge tl-research">Origin</span>
+  </div>
+  <div class="tl-arrow">→</div>
+  <div class="tl-item active">
+    <div class="tl-date">October 2025</div>
+    <div class="tl-label">Presented at APCG Annual Conference, Santa Clarita</div>
+    <span class="tl-badge tl-award">🏆 Award Winner</span>
+  </div>
+  <div class="tl-arrow">→</div>
+  <div class="tl-item">
+    <div class="tl-date">December 2025</div>
+    <div class="tl-label">Concepts built into ArcGIS Pro Python Toolbox (SSCI 581)</div>
+    <span class="tl-badge tl-course">Python Tool</span>
+  </div>
+</div>
+
+<!-- BODY -->
+<div class="project-body">
+
+  <!-- SIDEBAR -->
+  <aside class="sidebar">
+    <div class="sidebar-block">
+      <div class="sidebar-label">Award</div>
+      <div class="cert-mini">
+        <div class="cert-mini-org">Association of Pacific Coast Geographers</div>
+        <div class="cert-mini-award">Tom McKnight &amp; Joan Clemens Award</div>
+        <div class="cert-mini-amount">🏅</div>
+        <div class="cert-mini-date">October 11, 2025</div>
+      </div>
+    </div>
+    <div class="sidebar-block">
+      <div class="sidebar-label">Course / Venue</div>
+      <div class="sidebar-value" style="font-size:13px;line-height:1.7;">
+        APCG 2025 Conference<br>
+        SSCI 581 — Geospatial Programming<br>
+        USC Spatial Sciences Institute
+      </div>
+    </div>
+    <div class="sidebar-block">
+      <div class="sidebar-label">Role</div>
+      <div class="sidebar-value">Solo — Research design,<br>GIS analysis, Python<br>tool development,<br>conference presentation</div>
+    </div>
+    <div class="sidebar-block">
+      <div class="sidebar-label">Tools</div>
+      <div class="tag-list">
+        <span class="tag red">ArcGIS Pro</span>
+        <span class="tag red">arcpy</span>
+        <span class="tag red">Python .pyt</span>
+        <span class="tag">Metro LA Open Data</span>
+        <span class="tag">LA City GitHub</span>
+        <span class="tag">CicLAvia OSM</span>
+        <span class="tag">ARO Policy Data</span>
+      </div>
+    </div>
+    <div class="sidebar-block">
+      <div class="sidebar-label">Study Area</div>
+      <div class="sidebar-value" style="font-size:13px;">Downtown Los Angeles<br><span style="font-family:var(--head-font);font-size:11px;color:var(--muted);">ARO Master Plan boundary<br>EPSG 32611 · WGS84 UTM 11N</span></div>
+    </div>
+    <div class="sidebar-block">
+      <div class="sidebar-label">Output Score</div>
+      <div class="sidebar-value" style="font-size:13px;">readiness_0_100<br><span style="font-family:var(--head-font);font-size:11px;color:var(--muted);">0 = no buffer overlap<br>100 = all 3 buffers hit</span></div>
+    </div>
+  </aside>
+
+  <!-- MAIN -->
+  <main class="main-content">
+
+    <h2 class="section-heading">Where This Started</h2>
+    <div class="origin-quote">
+      <p>"Why are there so many empty historic and commercial buildings around here? Is it financial? Is it policy-related? Or do people just not want to live in them?"</p>
+      <cite>— Observation while living in Downtown LA, Summer 2025</cite>
+    </div>
+    <p>
+      Downtown Los Angeles has cycled through financial districts, commercial hubs, and cultural revivals over the past century. Yet walking its streets reveals a persistent paradox: hundreds of vacant and underused buildings sit within blocks of a housing crisis that has placed LA among the most unaffordable cities in the country.
+    </p>
+    <p>
+      The Adaptive Reuse Ordinance (ARO), introduced in 1999, was designed to close this gap — converting old commercial and industrial buildings into residential and mixed-use spaces while preserving the city's architectural heritage. This project became a spatial research investigation: which parcels in DTLA are most ready for adaptive reuse right now? The answer depends on proximity to transit, street-level activity, and the precedent set by 25 years of ARO conversions.
+    </p>
+
+    <div class="stats-bar">
+      <div class="stat-item"><span class="stat-number">153</span><span class="stat-label">ARO projects<br>citywide</span></div>
+      <div class="stat-item"><span class="stat-number">72%</span><span class="stat-label">ARO projects within<br>½ mile of Metro</span></div>
+      <div class="stat-item"><span class="stat-number">13,358</span><span class="stat-label">Dwelling units<br>converted</span></div>
+      <div class="stat-item"><span class="stat-number gold">2025</span><span class="stat-label">APCG award<br>Santa Clarita, CA</span></div>
+    </div>
+
+    <!-- PART 1 -->
+    <div class="part-divider">
+      <div class="part-num">01</div>
+      <div class="part-info">
+        <div class="part-label">Part One</div>
+        <div class="part-title">APCG Conference Research</div>
+        <div class="part-date">October 2025 · Award-Winning Presentation</div>
+      </div>
+    </div>
+
+    <h2 class="section-heading">Research Questions</h2>
+    <div class="rq-cards">
+      <div class="rq-card">
+        <div class="rq-num">01</div>
+        <div class="rq-title">Transit Access</div>
+        <p>Where are the DTLA parcels most ready for adaptive reuse, measured by proximity to Metro rail stations and bus routes? Do ARO conversions cluster within half-mile transit catchments?</p>
+      </div>
+      <div class="rq-card">
+        <div class="rq-num">02</div>
+        <div class="rq-title">Street-Level Activity</div>
+        <p>Can open-street events like CicLAvia influence building reuse interest? How does event-driven foot traffic and bicycle lane proximity signal redevelopment opportunity?</p>
+      </div>
+    </div>
+
+    <!-- SLIDES 2–4: context, ARO, transit -->
+    <h2 class="section-heading">Presentation Slides</h2>
+    <div class="image-grid-2">
+      <div>
+        <div class="image-slot ar-169">
+          <img src="assets/P5/2.jpg" alt="DTLA context and ARO background">
+        </div>
+        <p class="image-caption">DTLA context — LA's housing crisis and the 25-year history of the Adaptive Reuse Ordinance.</p>
+      </div>
+      <div>
+        <div class="image-slot ar-169">
+          <img src="assets/P5/3.jpg" alt="ARO policy and zoning framework">
+        </div>
+        <p class="image-caption">ARO policy framework — eligibility criteria, zoning overlays, and incentive structures for conversion projects.</p>
+      </div>
+    </div>
+
+    <div class="image-grid-3">
+      <div>
+        <div class="image-slot ar-169">
+          <img src="assets/P5/4.jpg" alt="ARO projects over the years">
+        </div>
+        <p class="image-caption">ARO conversions over time — 25 years of projects mapped across DTLA.</p>
+      </div>
+      <div>
+        <div class="image-slot ar-169">
+          <img src="assets/P5/5.jpg" alt="Metro buffers and ARO overlap">
+        </div>
+        <p class="image-caption">Metro station ½-mile buffers overlaid on ARO projects — 72% of conversions fall within one catchment.</p>
+      </div>
+      <div>
+        <div class="image-slot ar-169">
+          <img src="assets/P5/6.jpg" alt="Bus routes and bicycle lanes">
+        </div>
+        <p class="image-caption">Bus routes and bicycle lane corridors — secondary transit layers for parcel scoring.</p>
+      </div>
+    </div>
+
+    <h2 class="section-heading">Key Finding — Transit & ARO Patterns</h2>
+    <p>
+      Data from 153 documented ARO conversions revealed a strong spatial relationship between transit access and redevelopment activity. Parcels within half a mile of a Metro station accounted for a disproportionate share of all conversions — and the most transit-accessible parcels also concentrated the most dwelling units and commercial condominiums.
+    </p>
+    <table class="aro-table">
+      <thead>
+        <tr><th>Project Characteristics</th><th>Total</th><th>Within ½ mi of Metro</th><th>% of Total</th><th>Outside ½ mi</th></tr>
+      </thead>
+      <tbody>
+        <tr><td>Projects citywide</td><td>153</td><td>110</td><td class="aro-pct">72%</td><td>43</td></tr>
+        <tr><td>Dwelling units</td><td>13,358</td><td>10,716</td><td class="aro-pct">80%</td><td>2,642</td></tr>
+        <tr><td>Commercial condominiums</td><td>689</td><td>670</td><td class="aro-pct">97%</td><td>19</td></tr>
+        <tr><td>Commercial sq footage</td><td>164,853</td><td>92,853</td><td class="aro-pct">56%</td><td>72,000</td></tr>
+      </tbody>
+    </table>
+
+    <h2 class="section-heading">The CicLAvia Finding</h2>
+    <p>
+      One of the most surprising results was the spatial influence of CicLAvia — LA's open-street events that temporarily close miles of roads to cars. Historical CicLAvia routes, when mapped against ARO conversions and vacant parcel clusters, revealed that corridors with recurring open-street activity correlated strongly with concentrations of adaptive-reuse candidates.
+    </p>
+    <div class="callout">
+      <p>CicLAvia's Heart of LA 2017 event produced a 25% average increase in local business sales and a 48% increase in Metro TAP sales at the 7th Street/Metro Center station — suggesting that temporary street activations are measurable signals of long-term neighborhood regeneration potential.</p>
+    </div>
+    <div class="image-grid-2">
+      <div>
+        <div class="image-slot ar-169">
+          <img src="assets/P5/7.jpg" alt="CicLAvia route and open streets comparison">
+        </div>
+        <p class="image-caption">CicLAvia Heart of LA route — Broadway corridor as a temporary pedestrian-activated space; Bogotá Ciclovía comparison.</p>
+      </div>
+      <div>
+        <div class="image-slot ar-169">
+          <img src="assets/P5/8.jpg" alt="CicLAvia quantitative impact and candidate parcels">
+        </div>
+        <p class="image-caption">CicLAvia 2017 impact data and candidate parcel identification — highest-scoring zones near Civic Center and the historic core.</p>
+      </div>
+    </div>
+
+    <!-- SLIDE 9: conclusions / candidate map -->
+    <div class="image-full">
+      <div class="image-slot ar-169">
+        <img src="assets/P5/9.jpg" alt="Conference conclusions and candidate parcel map">
+      </div>
+      <p class="image-caption">Conference conclusions — parcel candidates circled near Civic Center and City Hall; convergence of transit, bike, and CicLAvia buffers.</p>
+    </div>
+
+    <!-- AWARD -->
+    <h2 class="section-heading">Award — APCG 2025</h2>
+    <div class="cert-display">
+      <div class="cert-org">Association of Pacific Coast Geographers</div>
+      <div class="cert-location">Santa Clarita, CA · 2025</div>
+      <div class="cert-award-name">Tom McKnight and Joan Clemens Award<br>for the Outstanding Paper by a Master's Student<br>Awarded to</div>
+      <div class="cert-recipient">Juan Sebastian Cortez</div>
+      <div class="cert-amount-display">Outstanding Paper</div>
+      <div class="cert-date">October 11, 2025</div>
+      <div class="cert-signatories">
+        <span>Elena Givental, APCG President</span>
+        <span>Lorne Platt, Awards Chair</span>
+      </div>
+    </div>
+
+    <!-- PART 2 -->
+    <div class="part-divider">
+      <div class="part-num">02</div>
+      <div class="part-info">
+        <div class="part-label">Part Two</div>
+        <div class="part-title">Vacant Reuse Buffer Scorer</div>
+        <div class="part-date">December 2025 · SSCI 581 Python Toolbox</div>
+      </div>
+    </div>
+
+    <h2 class="section-heading">From Research to Tool</h2>
+    <p>
+      The research findings from the APCG presentation — that transit access and street-level activity best predicted adaptive-reuse concentration — became the conceptual foundation for a working ArcGIS Pro Python Toolbox. Built in SSCI 581 (Geospatial Programming), the Vacant Reuse Buffer Scorer automates the accessibility scoring workflow across all vacant parcels in the Downtown ARO boundary.
+    </p>
+
+    <h2 class="section-heading">Study Area</h2>
+    <div class="image-full">
+      <div class="image-slot ar-169" style="aspect-ratio:unset;height:420px;">
+        <img src="assets/P5/STUDYAREA.jpg" alt="DTLA study area — vacant parcels, Metro stations, CicLAvia, bikeways">
+      </div>
+      <p class="image-caption">Input layers clipped to the Downtown ARO Incentive Area boundary — vacant parcels, Metro stations, CicLAvia route, and bicycle lane network.</p>
+    </div>
+
+    <h2 class="section-heading">Scoring Logic — Buffer Hit Counter</h2>
+    <p>Each vacant parcel receives a score from 0 to 3 based on how many of three 0.5-mile buffer zones it falls within. The half-mile threshold reflects standard urban planning metrics for pedestrian accessibility.</p>
+    <div class="score-strip">
+      <div class="score-cell"><span class="score-val" style="color:#bbb">0</span><div class="score-label">No buffer overlap<br>Low accessibility</div></div>
+      <div class="score-cell"><span class="score-val" style="color:#c9a227">1</span><div class="score-label">1 buffer hit<br>(bike, metro, or CicLAvia)</div></div>
+      <div class="score-cell"><span class="score-val" style="color:#d35400">2</span><div class="score-label">2 buffer hits<br>Good accessibility</div></div>
+      <div class="score-cell"><span class="score-val" style="color:#990000">3</span><div class="score-label">All 3 buffers hit<br>Highest readiness</div></div>
+    </div>
+
+    <!-- TOOL SCREENSHOTS -->
+    <h2 class="section-heading">Tool Interface — ArcGIS Pro</h2>
+    <div class="image-grid-3">
+      <div>
+        <div class="image-slot ar-43">
+          <img src="assets/P5/Screenshot 2026-05-12 000618.png" alt="ArcGIS Pro Python Toolbox interface">
+        </div>
+        <p class="image-caption">Python Toolbox (.pyt) registered in ArcGIS Pro Catalog pane.</p>
+      </div>
+      <div>
+        <div class="image-slot ar-43">
+          <img src="assets/P5/Screenshot 2026-05-12 000629.png" alt="Tool parameters dialog">
+        </div>
+        <p class="image-caption">Tool parameter dialog — input layers and output geodatabase path.</p>
+      </div>
+      <div>
+        <div class="image-slot ar-43">
+          <img src="assets/P5/Screenshot 2026-05-12 000637.png" alt="Buffer creation step">
+        </div>
+        <p class="image-caption">Buffer creation — 0.5-mile dissolve buffers around Metro stations, bike lanes, and CicLAvia route.</p>
+      </div>
+      <div>
+        <div class="image-slot ar-43">
+          <img src="assets/P5/Screenshot 2026-05-12 000642.png" alt="SelectLayerByLocation result">
+        </div>
+        <p class="image-caption">SelectLayerByLocation intersect — binary flags (in_bike, in_metro, in_ciclo) written to parcels.</p>
+      </div>
+      <div>
+        <div class="image-slot ar-43">
+          <img src="assets/P5/Screenshot 2026-05-12 000647.png" alt="Attribute table with scores">
+        </div>
+        <p class="image-caption">Attribute table showing buffer_hits and readiness_0_100 fields calculated for each parcel.</p>
+      </div>
+      <div>
+        <div class="image-slot ar-43">
+          <img src="assets/P5/Screenshot 2026-05-12 000651.png" alt="Symbology and graduated colors">
+        </div>
+        <p class="image-caption">Graduated color symbology applied to readiness_0_100 — 0 to 100 scale.</p>
+      </div>
+    </div>
+
+    <div>
+      <div class="image-slot ar-169">
+        <img src="assets/P5/Screenshot 2026-05-12 000657.png" alt="Final tool run in ArcGIS Pro">
+      </div>
+      <p class="image-caption" style="margin-top:6px;">Completed tool run — all output fields written, layer added to map canvas.</p>
+    </div>
+
+    <h2 class="section-heading">Input Datasets — Python Toolbox</h2>
+    <table class="dataset-table">
+      <thead><tr><th>Dataset</th><th>Source</th><th>Type</th><th>Use</th></tr></thead>
+      <tbody>
+        <tr><td><div class="ds-name">Parcels</div></td><td>LA City Open Data (GitHub)</td><td>Polygon</td><td>Full parcel fabric for DTLA study area</td></tr>
+        <tr><td><div class="ds-name">Vacant Parcels</div></td><td>LA City Open Data (GitHub)</td><td>Point</td><td>Scored target layer (VacantParcels_Clip)</td></tr>
+        <tr><td><div class="ds-name">Bicycle Lanes</div></td><td>LA City Open Data (GitHub)</td><td>Line</td><td>0.5 mi buffer → in_bike flag</td></tr>
+        <tr><td><div class="ds-name">Metro Stations</div></td><td>Metro Los Angeles</td><td>Point</td><td>0.5 mi buffer → in_metro flag</td></tr>
+        <tr><td><div class="ds-name">Metro Rail Lines</div></td><td>Metro Los Angeles</td><td>Line</td><td>Rail corridor context</td></tr>
+        <tr><td><div class="ds-name">CicLAvia Route</div></td><td>OpenStreetMap</td><td>Line</td><td>0.5 mi buffer → in_ciclo flag</td></tr>
+      </tbody>
+    </table>
+
+    <h2 class="section-heading">Tool Development Workflow</h2>
+    <ul class="process-steps">
+      <li>
+        <span class="step-num">01</span>
+        <div class="step-body">
+          <strong>Python Toolbox (.pyt) in ArcGIS Pro</strong>
+          <p>Built as a native ArcGIS Pro Python Toolbox with one custom tool: Buffer Hit Counter (Vacant Parcels). Created directly from the Catalog pane with full parameter binding and geoprocessing compatibility.</p>
+        </div>
+      </li>
+      <li>
+        <span class="step-num">02</span>
+        <div class="step-body">
+          <strong>Projection validation and GDB management</strong>
+          <p>All layers verified in WGS 1984 / UTM Zone 11N (EPSG 32611). A helper function ensures the output geodatabase (Reuse.gdb) exists and creates it if missing — resolving early path conflict errors.</p>
+        </div>
+      </li>
+      <li>
+        <span class="step-num">03</span>
+        <div class="step-body">
+          <strong>Buffer creation and SelectLayerByLocation</strong>
+          <p>arcpy.analysis.Buffer creates dissolved 0.5-mile buffers around bicycle lanes, Metro stations, and CicLAvia routes. SelectLayerByLocation identifies which vacant parcel points intersect each buffer, writing binary flags.</p>
+        </div>
+      </li>
+      <li>
+        <span class="step-num">04</span>
+        <div class="step-body">
+          <strong>Composite score and normalization</strong>
+          <p>buffer_hits (0–3) computed by summing the three binary flags. readiness_0_100 scales this to 0–100 using: int(round((buffer_hits / 3.0) * 100)). All fields added before layer creation to avoid ArcGIS file lock errors.</p>
+        </div>
+      </li>
+    </ul>
+
+    <h2 class="section-heading">Python — Core Scoring Logic</h2>
+    <div class="code-block">
+<span class="c-comment"># Buffer Creation</span><br>
+<span class="c-var">bike_buf</span>  <span class="c-kw">=</span> <span class="c-fn">_mkbuf</span>(<span class="c-var">bike_p</span>,  <span class="c-str">"bike"</span>)<br>
+<span class="c-var">metro_buf</span> <span class="c-kw">=</span> <span class="c-fn">_mkbuf</span>(<span class="c-var">metro_p</span>, <span class="c-str">"metro"</span>)<br>
+<span class="c-var">ciclo_buf</span> <span class="c-kw">=</span> <span class="c-fn">_mkbuf</span>(<span class="c-var">ciclo_p</span>, <span class="c-str">"ciclo"</span>) <span class="c-kw">if</span> <span class="c-var">ciclo_p</span> <span class="c-kw">else</span> <span class="c-var">None</span><br>
+<br>
+<span class="c-comment"># Intersect each parcel with each buffer → binary flags</span><br>
+<span class="c-var">arcpy.management.SelectLayerByLocation</span>(<span class="c-var">lyr</span>, <span class="c-str">"INTERSECT"</span>, <span class="c-var">bike_buf</span>)<br>
+<span class="c-var">arcpy.management.CalculateField</span>(<span class="c-var">lyr</span>, <span class="c-str">"in_bike"</span>, <span class="c-num">1</span>)<br>
+<span class="c-comment"># ... repeat for metro, ciclo ...</span><br>
+<br>
+<span class="c-comment"># Composite score: sum of flags → normalize 0–100</span><br>
+<span class="c-var">arcpy.management.CalculateField</span>(<br>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="c-var">out_pts</span>, <span class="c-str">"buffer_hits"</span>,<br>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="c-str">"{!in_bike!} + {!in_metro!} + {!in_ciclo!}"</span><br>
+)<br>
+<span class="c-var">arcpy.management.CalculateField</span>(<br>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="c-var">out_pts</span>, <span class="c-str">"readiness_0_100"</span>,<br>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="c-str">"int(round((!buffer_hits! / 3.0) * 100))"</span><br>
+)
+    </div>
+
+    <h2 class="section-heading">Tool Output — DTLA Vacancy Scoring</h2>
+    <div class="image-full">
+      <div class="image-slot" style="aspect-ratio:unset;height:480px;">
+        <img src="assets/P5/Map 2 Results.jpg" alt="Final RISK readiness score map — DTLA vacant parcels">
+      </div>
+      <p class="image-caption" style="margin-top:6px;">Final readiness scores — parcels scoring 2–3 concentrate along Broadway, Spring St., and the Metro A Line corridor, exactly where ARO conversions have historically clustered.</p>
+    </div>
+
+    <div class="callout">
+      <p>The tool's results validated the research hypothesis: highest-scoring parcels (2–3 buffer intersections) align with the corridors where the ARO program has already proven successful over 25 years. The CicLAvia layer adds a dynamic civic dimension — parcels near recurring open-street routes scored higher, demonstrating that temporary activations are measurable signals of long-term redevelopment potential.</p>
+    </div>
+
+    <h2 class="section-heading">Future Work</h2>
+    <div class="future-cards">
+      <div class="future-card">
+        <div class="icon">🗺️</div>
+        <strong>Network Analysis</strong>
+        <p>Replace Euclidean buffers with network-based pedestrian accessibility analysis for more realistic walkability zones along actual street networks.</p>
+      </div>
+      <div class="future-card">
+        <div class="icon">🏢</div>
+        <strong>Building Attributes</strong>
+        <p>Integrate zoning classification, building age, floor area ratio, and permit history to create a multi-factor reuse index beyond proximity scoring.</p>
+      </div>
+      <div class="future-card">
+        <div class="icon">📊</div>
+        <strong>Weighted Variables</strong>
+        <p>Assign differential weights — greater importance to Metro proximity or event frequency — to tailor the index for equity-focused or density-focused planning goals.</p>
+      </div>
+    </div>
+
+  </main>
+</div>
+
+<footer>
+  <span>Juan Sebastian Cortes — Portfolio</span>
+  <a href="index.html">← Back to all projects</a>
+</footer>
+
+<script src="lightbox.js"></script>
+</body>
+</html>

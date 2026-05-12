@@ -1,0 +1,884 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>From Ashes to Action — Juan Sebastian Cortes</title>
+  <link href="https://fonts.googleapis.com/css2?family=Rubik:wght@400;500;700&display=swap" rel="stylesheet"/>
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --black: #111;
+      --white: #faf9f7;
+      --gold: #b8860b;
+      --warm-gray: #e8e4df;
+      --text: #1a1a1a;
+      --muted: #888;
+      --accent: #c4903a;
+      --border: #d5cfc8;
+    }
+
+    body {
+      font-family: "Neue Haas Grotesk", "Haas Grot Text", "Helvetica Neue", Arial, sans-serif;
+      background: var(--white);
+      color: var(--text);
+      font-size: 15px;
+      line-height: 1.65;
+    }
+
+    /* ── NAV ── */
+    nav {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 18px 40px;
+      border-bottom: 1px solid var(--border);
+      position: sticky;
+      top: 0;
+      background: var(--white);
+      z-index: 100;
+    }
+    .nav-name {
+      font-family: 'Rubik', sans-serif;
+      font-weight: 600;
+      font-size: 13px;
+      letter-spacing: 0.06em;
+      text-transform: uppercase;
+      line-height: 1.3;
+    }
+    .nav-right {
+      display: flex;
+      align-items: center;
+      gap: 32px;
+      font-family: 'Rubik', sans-serif;
+      font-size: 12px;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+    }
+    .nav-right a {
+      color: var(--muted);
+      text-decoration: none;
+      transition: color 0.2s;
+    }
+    .nav-right a:hover { color: var(--text); }
+    .nav-right .active { color: var(--text); }
+
+    /* ── PROJECT META BAR ── */
+    .project-meta-bar {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 14px 40px;
+      border-bottom: 1px solid var(--border);
+      background: var(--white);
+    }
+    .project-title-bar {
+      font-family: 'Rubik', sans-serif;
+      font-size: 13px;
+      font-weight: 600;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+    }
+    .project-nav-links {
+      display: flex;
+      gap: 24px;
+      font-family: 'Rubik', sans-serif;
+      font-size: 12px;
+      letter-spacing: 0.06em;
+    }
+    .project-nav-links a {
+      color: var(--muted);
+      text-decoration: none;
+      transition: color 0.2s;
+    }
+    .project-nav-links a:hover { color: var(--text); }
+
+    /* ── HERO ── */
+    .hero {
+      position: relative;
+      width: 100%;
+      height: 420px;
+      overflow: hidden;
+      background: #3a2e1a;
+    }
+    .hero img,
+    .hero video {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      opacity: 0.88;
+    }
+    .hero-label {
+      position: absolute;
+      bottom: 28px;
+      left: 40px;
+      color: white;
+      font-family: 'Rubik', sans-serif;
+      font-size: 11px;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      opacity: 0.75;
+    }
+
+    /* ── BODY LAYOUT ── */
+    .project-body {
+      display: grid;
+      grid-template-columns: 220px 1fr;
+      gap: 0;
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 60px 40px;
+    }
+
+    /* ── SIDEBAR ── */
+    .sidebar {
+      padding-right: 48px;
+      border-right: 1px solid var(--border);
+    }
+    .sidebar-block {
+      margin-bottom: 36px;
+    }
+    .sidebar-label {
+      font-family: 'Rubik', sans-serif;
+      font-size: 10px;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      color: var(--muted);
+      margin-bottom: 6px;
+    }
+    .sidebar-value {
+      font-size: 14px;
+      font-weight: 500;
+      color: var(--text);
+      line-height: 1.5;
+    }
+    .sidebar-value a {
+      color: var(--accent);
+      text-decoration: none;
+      font-family: 'Rubik', sans-serif;
+      font-size: 12px;
+      letter-spacing: 0.04em;
+    }
+    .sidebar-value a:hover { text-decoration: underline; }
+
+    .tag-list {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 6px;
+      margin-top: 4px;
+    }
+    .tag {
+      font-family: 'Rubik', sans-serif;
+      font-size: 10px;
+      letter-spacing: 0.06em;
+      text-transform: uppercase;
+      padding: 3px 8px;
+      border: 1px solid var(--border);
+      color: var(--muted);
+      border-radius: 2px;
+    }
+
+    /* ── MAIN CONTENT ── */
+    .main-content {
+      padding-left: 56px;
+    }
+
+    h2.section-heading {
+      font-family: 'Rubik', sans-serif;
+      font-size: 11px;
+      letter-spacing: 0.14em;
+      text-transform: uppercase;
+      color: var(--muted);
+      margin-bottom: 16px;
+      margin-top: 52px;
+      padding-bottom: 10px;
+      border-bottom: 1px solid var(--border);
+    }
+    h2.section-heading:first-child { margin-top: 0; }
+
+    p {
+      font-size: 15px;
+      line-height: 1.75;
+      color: #333;
+      margin-bottom: 18px;
+    }
+
+    /* ── STATS BAR ── */
+    .stats-bar {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 1px;
+      background: var(--border);
+      border: 1px solid var(--border);
+      margin: 36px 0;
+    }
+    .stat-item {
+      background: var(--white);
+      padding: 24px 20px;
+      text-align: center;
+    }
+    .stat-number {
+      font-family: 'Rubik', sans-serif;
+      font-size: 28px;
+      font-weight: 600;
+      color: var(--accent);
+      display: block;
+      line-height: 1;
+      margin-bottom: 6px;
+    }
+    .stat-label {
+      font-size: 11px;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      color: var(--muted);
+    }
+
+    /* ── STORYMAPS EMBED CTA ── */
+    .storymap-cta {
+      border: 1px solid var(--border);
+      background: #f5f0ea;
+      padding: 32px 36px;
+      margin: 36px 0;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 24px;
+    }
+    .storymap-cta-text {
+      font-size: 14px;
+      color: #555;
+      line-height: 1.6;
+    }
+    .storymap-cta-text strong {
+      display: block;
+      font-family: 'Rubik', sans-serif;
+      font-size: 12px;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      color: var(--text);
+      margin-bottom: 6px;
+    }
+    .btn-storymaps {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      background: var(--text);
+      color: white;
+      text-decoration: none;
+      font-family: 'Rubik', sans-serif;
+      font-size: 12px;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      padding: 13px 22px;
+      white-space: nowrap;
+      transition: background 0.2s;
+    }
+    .btn-storymaps:hover { background: var(--accent); }
+    .btn-storymaps svg { flex-shrink: 0; }
+
+    /* ── IMAGE GRID ── */
+    .image-grid-2 {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 12px;
+      margin: 28px 0;
+    }
+    .image-grid-3 {
+      display: grid;
+      grid-template-columns: 1fr 1fr 1fr;
+      gap: 12px;
+      margin: 28px 0;
+    }
+    .image-slot {
+      aspect-ratio: 4/3;
+      background: var(--warm-gray);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      position: relative;
+      overflow: hidden;
+    }
+    .image-slot img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+    }
+    .image-slot.portrait { aspect-ratio: 3/4; }
+    .image-slot.landscape-wide { aspect-ratio: 16/9; }
+    .image-caption {
+      font-family: 'Rubik', sans-serif;
+      font-size: 10px;
+      letter-spacing: 0.06em;
+      color: var(--muted);
+      margin-top: 6px;
+      line-height: 1.4;
+    }
+
+    /* ── MAP EMBED ── */
+    .map-embed {
+      border: 1px solid var(--border);
+      height: 440px;
+      background: #ddd8cf;
+      margin: 28px 0;
+      position: relative;
+      overflow: hidden;
+    }
+    .map-embed iframe {
+      width: 100%;
+      height: 100%;
+      border: none;
+      display: block;
+    }
+    .map-label {
+      position: absolute;
+      top: 12px;
+      left: 14px;
+      font-family: 'Rubik', sans-serif;
+      font-size: 10px;
+      letter-spacing: 0.10em;
+      text-transform: uppercase;
+      background: rgba(255,255,255,0.9);
+      padding: 4px 10px;
+      color: #555;
+      pointer-events: none;
+      z-index: 2;
+    }
+
+    /* ── VIDEO BLOCK ── */
+    .video-block {
+      margin: 28px 0;
+      position: relative;
+      background: #111;
+      overflow: hidden;
+    }
+    .video-block video {
+      width: 100%;
+      display: block;
+      max-height: 420px;
+      object-fit: cover;
+    }
+
+    /* ── PROCESS LIST ── */
+    .process-steps {
+      list-style: none;
+      margin: 24px 0;
+    }
+    .process-steps li {
+      display: flex;
+      gap: 20px;
+      margin-bottom: 20px;
+      padding-bottom: 20px;
+      border-bottom: 1px solid var(--border);
+    }
+    .process-steps li:last-child { border-bottom: none; }
+    .step-num {
+      font-family: 'Rubik', sans-serif;
+      font-size: 11px;
+      color: var(--accent);
+      font-weight: 600;
+      min-width: 24px;
+      padding-top: 2px;
+    }
+    .step-body strong {
+      display: block;
+      font-size: 14px;
+      font-weight: 500;
+      margin-bottom: 4px;
+    }
+    .step-body p {
+      font-size: 13.5px;
+      color: #555;
+      margin: 0;
+    }
+
+    /* ── CALLOUT ── */
+    .callout {
+      border-left: 3px solid var(--accent);
+      padding: 16px 20px;
+      background: #faf5ed;
+      margin: 28px 0;
+    }
+    .callout p {
+      font-size: 14px;
+      color: #444;
+      margin: 0;
+      font-style: italic;
+    }
+
+    /* ── AWARD STRIP ── */
+    .award-strip {
+      display: grid;
+      grid-template-columns: 1fr auto;
+      gap: 16px;
+      align-items: start;
+      margin: 28px 0;
+      padding: 28px;
+      border: 1px solid var(--border);
+      background: #f8f4ee;
+    }
+    .award-strip-text h3 {
+      font-family: 'Rubik', sans-serif;
+      font-size: 13px;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      color: var(--text);
+      margin-bottom: 8px;
+      font-weight: 600;
+    }
+    .award-strip-text p {
+      font-size: 13.5px;
+      color: #555;
+      margin: 0;
+      line-height: 1.6;
+    }
+    .award-certs {
+      display: flex;
+      gap: 10px;
+      flex-shrink: 0;
+    }
+    .award-certs img {
+      height: 140px;
+      width: auto;
+      object-fit: contain;
+      border: 1px solid var(--border);
+      background: #fff;
+    }
+
+    /* ── TEAM ── */
+    .team-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 8px;
+      margin: 20px 0;
+    }
+    .team-member {
+      padding: 14px 16px;
+      border: 1px solid var(--border);
+      font-size: 13px;
+    }
+    .team-member strong {
+      display: block;
+      font-weight: 500;
+      margin-bottom: 2px;
+    }
+    .team-member span {
+      font-size: 12px;
+      color: var(--muted);
+      font-family: 'Rubik', sans-serif;
+    }
+
+    /* ── FOOTER ── */
+    footer {
+      border-top: 1px solid var(--border);
+      padding: 28px 40px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      font-family: 'Rubik', sans-serif;
+      font-size: 11px;
+      color: var(--muted);
+      letter-spacing: 0.06em;
+      text-transform: uppercase;
+      margin-top: 80px;
+    }
+    footer a { color: var(--muted); text-decoration: none; }
+    footer a:hover { color: var(--text); }
+
+    @media (max-width: 768px) {
+      .project-body { grid-template-columns: 1fr; padding: 36px 20px; }
+      .sidebar { border-right: none; border-bottom: 1px solid var(--border); padding-right: 0; padding-bottom: 32px; margin-bottom: 32px; }
+      .main-content { padding-left: 0; }
+      .stats-bar { grid-template-columns: repeat(2, 1fr); }
+      .image-grid-2, .image-grid-3 { grid-template-columns: 1fr; }
+      .team-grid { grid-template-columns: 1fr; }
+      nav, .project-meta-bar { padding: 14px 20px; }
+      .storymap-cta { flex-direction: column; align-items: flex-start; }
+      .award-strip { grid-template-columns: 1fr; }
+      .award-certs { justify-content: flex-start; }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- NAV -->
+  <nav>
+    <div class="nav-name">Juan Sebastian<br>Cortes</div>
+    <div class="nav-right">
+      <a href="index.html" class="active">Portfolio</a>
+      <a href="#">About</a>
+      <a href="#">Contact</a>
+    </div>
+  </nav>
+
+  <!-- PROJECT META BAR -->
+  <div class="project-meta-bar">
+    <div class="project-title-bar">From Ashes to Action</div>
+    <div class="project-nav-links">
+      <a href="#">&larr; Prev</a>
+      <a href="index.html">All Projects</a>
+      <a href="#">Next &rarr;</a>
+    </div>
+  </div>
+
+  <!-- HERO — drone video cover -->
+  <div class="hero">
+    <video autoplay muted loop playsinline preload="auto" poster="assets/P1/DJI_0150.JPG">
+      <source src="assets/P1/COver 1.mp4" type="video/mp4">
+    </video>
+    <div class="hero-label">Altadena, California &mdash; Post-Eaton Fire, January 2025</div>
+  </div>
+
+  <!-- BODY -->
+  <div class="project-body">
+
+    <!-- SIDEBAR -->
+    <aside class="sidebar">
+      <div class="sidebar-block">
+        <div class="sidebar-label">Year</div>
+        <div class="sidebar-value">2025 &ndash; 2026</div>
+      </div>
+      <div class="sidebar-block">
+        <div class="sidebar-label">Client</div>
+        <div class="sidebar-value">Las Flores Water Company</div>
+      </div>
+      <div class="sidebar-block">
+        <div class="sidebar-label">Organization</div>
+        <div class="sidebar-value">USC Spatial Sciences Institute</div>
+      </div>
+      <div class="sidebar-block">
+        <div class="sidebar-label">Role</div>
+        <div class="sidebar-value">GIS Analyst<br>Drone Operator<br>StoryMap Author</div>
+      </div>
+      <div class="sidebar-block">
+        <div class="sidebar-label">Tools</div>
+        <div class="tag-list">
+          <span class="tag">ArcGIS Pro</span>
+          <span class="tag">Survey123</span>
+          <span class="tag">Field Maps</span>
+          <span class="tag">StoryMaps</span>
+          <span class="tag">Drone / UAV</span>
+          <span class="tag">FEMA BRIC</span>
+        </div>
+      </div>
+      <div class="sidebar-block">
+        <div class="sidebar-label">StoryMap</div>
+        <div class="sidebar-value">
+          <a href="https://storymaps.arcgis.com/stories/85bff3144ac048faae7432be7e494d5c" target="_blank" rel="noopener">
+            &rarr; View Full StoryMap
+          </a>
+        </div>
+      </div>
+    </aside>
+
+    <!-- MAIN CONTENT -->
+    <main class="main-content">
+
+      <!-- OVERVIEW -->
+      <h2 class="section-heading">Overview</h2>
+      <p>
+        On January 7, 2025, the Eaton Fire ignited in the hills above Altadena, California. Burning for 24 days, it
+        consumed over 14,000 acres and destroyed more than 9,000 structures &mdash; devastating a community already
+        marked by deep disparities in disaster resilience. Nearly half of Altadena&rsquo;s Black households lost
+        their homes or suffered severe damage.
+      </p>
+      <p>
+        Among the hardest-hit institutions was the Las Flores Water Company, one of the last locally owned water
+        utilities in the greater Los Angeles area. Founded in 1885 by community residents, Las Flores lost 75% of
+        its customer base in the fire. Unlike large municipal utilities, it had no reserve institutional support
+        &mdash; and federal recovery funding required precise, parcel-level damage documentation to even begin the
+        application process.
+      </p>
+      <p>
+        This project, completed as a summer internship through USC&rsquo;s Spatial Sciences Institute, delivered
+        that documentation: a GIS-based field inventory of every water meter in the service area, paired with two
+        interactive web maps and a formal FEMA damage report.
+      </p>
+
+      <!-- RECOGNITION -->
+      <h2 class="section-heading">Recognition</h2>
+      <div class="award-strip">
+        <div class="award-strip-text">
+          <h3>2025 ArcGIS StoryMaps Competition &mdash; Student Winner</h3>
+          <p>
+            <em>From Ashes to Action: Documenting Altadena&rsquo;s water infrastructure revival</em> was selected
+            as a Student Winner in Esri&rsquo;s 2025 ArcGIS StoryMaps Competition, recognizing outstanding spatial
+            storytelling among university students worldwide.
+          </p>
+        </div>
+        <div class="award-certs">
+          <img src="assets/P1/certificate ashes to action.JPG" alt="2025 ArcGIS StoryMaps Competition Student Winner certificate">
+          <img src="assets/P1/LinkedIn X Badge Infrastructure Student Winner.JPG" alt="2025 ArcGIS StoryMaps Student Winner badge">
+        </div>
+      </div>
+
+      <!-- STATS -->
+      <div class="stats-bar">
+        <div class="stat-item">
+          <span class="stat-number">1,078</span>
+          <span class="stat-label">Water meters inventoried</span>
+        </div>
+        <div class="stat-item">
+          <span class="stat-number">75%</span>
+          <span class="stat-label">Customers lost by Las Flores</span>
+        </div>
+        <div class="stat-item">
+          <span class="stat-number">14,000+</span>
+          <span class="stat-label">Acres burned</span>
+        </div>
+        <div class="stat-item">
+          <span class="stat-number">24</span>
+          <span class="stat-label">Days the fire burned</span>
+        </div>
+      </div>
+
+      <!-- STORYMAPS CTA -->
+      <div class="storymap-cta">
+        <div class="storymap-cta-text">
+          <strong>Interactive StoryMap</strong>
+          Explore the full narrative, interactive damage maps, field photography, and methodology in the
+          ArcGIS StoryMap built for this project.
+        </div>
+        <a class="btn-storymaps" href="https://storymaps.arcgis.com/stories/85bff3144ac048faae7432be7e494d5c" target="_blank" rel="noopener">
+          <svg width="14" height="14" viewBox="0 0 14 14" fill="none" aria-hidden="true">
+            <path d="M2 7h10M8 3l4 4-4 4" stroke="white" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+          </svg>
+          Open StoryMap
+        </a>
+      </div>
+
+      <!-- CONTEXT -->
+      <h2 class="section-heading">Context &mdash; Las Flores Water Company</h2>
+      <p>
+        Las Flores is a rare institution: a community-owned water utility operating on a cooperative model since
+        1885, where each household holds shares and is responsible for maintaining their own meters and pipelines.
+        This structure fostered deep community stewardship &mdash; but also meant the company lacked the reserves
+        and institutional infrastructure of a municipal system when disaster struck.
+      </p>
+
+      <!-- Eaton Fire map -->
+      <div class="image-grid-2" style="margin-bottom: 8px;">
+        <div>
+          <div class="image-slot landscape-wide">
+            <img src="assets/P1/Location EF.jpg" alt="Eaton Fire perimeter map — Altadena, Pasadena area">
+          </div>
+          <p class="image-caption">Eaton Fire burn perimeter &mdash; 14,117 acres, January&ndash;February 2025</p>
+        </div>
+        <div style="display:flex;flex-direction:column;gap:8px;">
+          <div class="callout" style="margin:0;flex:1;display:flex;align-items:center;">
+            <p>&ldquo;Local control and shared ownership are Las Flores&rsquo;s greatest strengths &mdash; and in a disaster, its greatest vulnerability. There was no large utility to absorb the shock. Recovery depended entirely on what could be documented.&rdquo;</p>
+          </div>
+          <p style="font-size:13.5px;color:#555;margin:0;">
+            Other local companies were also impacted: Lincoln lost 60% of customers and Rubio lost 35%. But
+            Las Flores, bearing the heaviest losses, became the focal point for coordinated GIS-based recovery
+            documentation.
+          </p>
+        </div>
+      </div>
+
+      <!-- DATA COLLECTION -->
+      <h2 class="section-heading">Data Collection &mdash; Fieldwork with Survey123</h2>
+      <p>
+        Our three-person team deployed Survey123 for ArcGIS as the field data collection platform. Each team
+        member worked with a customized form that captured the full condition picture of every meter in the
+        service area.
+      </p>
+
+      <ul class="process-steps">
+        <li>
+          <span class="step-num">01</span>
+          <div class="step-body">
+            <strong>GPS Geotagging</strong>
+            <p>Each water meter was precisely geolocated using Survey123&rsquo;s built-in GPS, creating a
+            spatial anchor for every data record &mdash; even in areas with irregular addressing from fire damage.</p>
+          </div>
+        </li>
+        <li>
+          <span class="step-num">02</span>
+          <div class="step-body">
+            <strong>Field Photography</strong>
+            <p>Photos of each meter were captured documenting physical condition: melted components, exposed
+            pipelines, scorched enclosures, and missing hardware. These photos were embedded directly in the
+            FEMA report.</p>
+          </div>
+        </li>
+        <li>
+          <span class="step-num">03</span>
+          <div class="step-body">
+            <strong>Address &amp; Parcel Linking</strong>
+            <p>Each meter was linked to a specific street address and matched to its internal parcel number
+            &mdash; critical for FEMA&rsquo;s parcel-level verification requirements.</p>
+          </div>
+        </li>
+        <li>
+          <span class="step-num">04</span>
+          <div class="step-body">
+            <strong>Damage Classification</strong>
+            <p>Meters were classified by condition status, allowing the final dataset to quantify the extent
+            of destruction across the service area at a glance.</p>
+          </div>
+        </li>
+      </ul>
+
+      <!-- Service area web map (webmap 1) -->
+      <div class="map-embed">
+        <span class="map-label">Las Flores Service Area &mdash; Field Inventory Overview</span>
+        <iframe
+          src="https://www.arcgis.com/apps/mapviewer/index.html?webmap=5cb3c98fa194490fa0ca9b9fd5ffc8d0&ui=min"
+          title="Las Flores Water Company service area — field inventory overview"
+          allowfullscreen
+          loading="lazy">
+        </iframe>
+      </div>
+
+      <!-- MAPPING -->
+      <h2 class="section-heading">Mapping &mdash; ArcGIS Pro Processing</h2>
+      <p>
+        Raw Survey123 data was brought into ArcGIS Pro for cleaning, validation, and spatial analysis. GPS
+        points collected in the field often had minor location errors due to poor signal in the burn zones
+        &mdash; each was manually corrected and verified against parcel boundaries.
+      </p>
+      <p>
+        A general street layer was used to compute service connections from each meter to the central
+        distribution pipe. In some cases, centerlines had to be manually redrawn to account for
+        inconsistencies between field-collected points and the underlying infrastructure data. Duplicate
+        entries &mdash; instances where one parcel contained multiple meters &mdash; were identified
+        and resolved.
+      </p>
+
+      <!-- Damage assessment web map (webmap 2) -->
+      <div class="map-embed">
+        <span class="map-label">Parcel-Level Damage Assessment &mdash; All 1,078 Meters</span>
+        <iframe
+          src="https://www.arcgis.com/apps/mapviewer/index.html?webmap=b0e7d73d809a48949d2a2f74a9ef2e29&ui=min"
+          title="Las Flores damage assessment — all meters with condition status"
+          allowfullscreen
+          loading="lazy">
+        </iframe>
+      </div>
+
+      <!-- ArcGIS Pro map screenshots -->
+      <div class="image-grid-3">
+        <div>
+          <div class="image-slot">
+            <img src="assets/P1/Screenshot 2026-05-11 172013.png" alt="ArcGIS Pro map view 1">
+          </div>
+          <p class="image-caption">Service connections — centerline mapping, ArcGIS Pro</p>
+        </div>
+        <div>
+          <div class="image-slot">
+            <img src="assets/P1/Screenshot 2026-05-11 172050.png" alt="ArcGIS Pro map view 2">
+          </div>
+          <p class="image-caption">Meter point density by damage classification</p>
+        </div>
+        <div>
+          <div class="image-slot">
+            <img src="assets/P1/Screenshot 2026-05-11 172400.png" alt="ArcGIS Pro map view 3">
+          </div>
+          <p class="image-caption">Parcel boundary validation — GPS correction pass</p>
+        </div>
+      </div>
+
+      <!-- IMPACT -->
+      <h2 class="section-heading">Impact &amp; FEMA Documentation</h2>
+      <p>
+        The completed inventory directly supported Las Flores&rsquo;s FEMA funding applications. Federal
+        recovery programs &mdash; including BRIC (Building Resilient Infrastructure and Communities) and
+        HMGP (Hazard Mitigation Grant Program) &mdash; require detailed, parcel-level damage evidence before
+        releasing infrastructure repair funds. For a small cooperative utility, this standard is nearly
+        impossible to meet without dedicated GIS capacity.
+      </p>
+      <p>
+        The final FEMA report, generated directly from Survey123, included photographs and condition
+        assessments for all 1,078 meters, geolocation and timestamp data for each entry, and specific
+        field notes documenting the nature and extent of damage.
+      </p>
+      <div class="callout">
+        <p>This project demonstrates how GIS tools and student-led data collection can level the playing
+        field for small, community-owned utilities navigating post-disaster federal funding processes
+        &mdash; systems that were built for large institutional applicants.</p>
+      </div>
+
+      <!-- DRONE VIDEO -->
+      <h2 class="section-heading">Aerial Documentation</h2>
+      <p>
+        Drone footage was captured across the Las Flores service area to provide contextual aerial
+        documentation of fire extent and infrastructure damage, showing the scale of destruction
+        across Altadena&rsquo;s residential grid.
+      </p>
+
+      <!-- Primary drone video — color corrected edit -->
+      <div class="video-block">
+        <video autoplay muted loop playsinline preload="auto" poster="assets/P1/DJI_0150.JPG">
+          <source src="assets/P1/colorcorr1.mp4" type="video/mp4">
+          Your browser does not support the video tag.
+        </video>
+      </div>
+
+      <!-- Aerial still photos from drone -->
+      <div class="image-grid-3">
+        <div>
+          <div class="image-slot">
+            <img src="assets/P1/DJI_0147.JPG" alt="Drone aerial photo of Altadena burn area">
+          </div>
+          <p class="image-caption">Altadena residential grid — post-fire burn extent, looking west</p>
+        </div>
+        <div>
+          <div class="image-slot">
+            <img src="assets/P1/DJI_0150.JPG" alt="Drone aerial photo of Altadena burn area">
+          </div>
+          <p class="image-caption">Las Flores service area — scale of destruction visible from 400 ft AGL</p>
+        </div>
+        <div>
+          <div class="image-slot">
+            <img src="assets/P1/DJI_0154.JPG" alt="Drone aerial photo of Altadena burn area">
+          </div>
+          <p class="image-caption">Cleared parcels and standing structures — damage boundary detail</p>
+        </div>
+      </div>
+
+      <!-- TEAM -->
+      <h2 class="section-heading">Team &amp; Acknowledgements</h2>
+      <div class="team-grid">
+        <div class="team-member">
+          <strong>Juan Sebastian Cortes</strong>
+          <span>StoryMap, Drone, Mapping</span>
+        </div>
+        <div class="team-member">
+          <strong>Brian Pidduck</strong>
+          <span>Data Collection</span>
+        </div>
+        <div class="team-member">
+          <strong>Philippe Naviaux</strong>
+          <span>Data Collection</span>
+        </div>
+        <div class="team-member">
+          <strong>Beau MacDonald</strong>
+          <span>Data Quality &mdash; USC SSI</span>
+        </div>
+        <div class="team-member">
+          <strong>Ha Nguyen</strong>
+          <span>Project Coordinator, Las Flores Board</span>
+        </div>
+        <div class="team-member">
+          <strong>Bill Kimberling</strong>
+          <span>Onsite Coordinator, Las Flores</span>
+        </div>
+        <div class="team-member">
+          <strong>Dr. Katherine Lester</strong>
+          <span>Director, M.S. Programs &mdash; USC SSI</span>
+        </div>
+      </div>
+
+    </main>
+  </div><!-- /.project-body -->
+
+  <footer>
+    <span>Juan Sebastian Cortes &mdash; Portfolio 2025</span>
+    <a href="index.html">&larr; Back to all projects</a>
+  </footer>
+
+  <script src="lightbox.js"></script>
+</body>
+</html>
