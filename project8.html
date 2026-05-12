@@ -572,10 +572,10 @@
     <!-- LIMITATIONS -->
     <h2 class="section-heading">Limitations</h2>
     <ul class="limitation-list">
-      <li><span class="lim-icon">⚠️</span><span><strong>1m DEM river alignment offset.</strong> At 1m resolution the flow accumulation channel was noticeably misaligned relative to the 10m/30m outputs and the USGS reference shapefile. Pour point placement at 1m relied on visual approximation, contributing to the lower watershed area estimate.</span></li>
-      <li><span class="lim-icon">⚠️</span><span><strong>Urban street grid artifacts.</strong> Flow accumulation rasters — especially at 1m — captured urban street grids as high-accumulation linear features. Iterative threshold adjustment suppressed most artifacts, but some straight-line features may persist in the final flow network.</span></li>
-      <li><span class="lim-icon">⚠️</span><span><strong>Fill tool NoData failure (1m DEM).</strong> The Fill tool initially produced NoData across the 1m raster. Though resolved by updating ArcGIS Pro, this underscores the importance of software currency when running computationally intensive tools on high-resolution inputs.</span></li>
-      <li><span class="lim-icon">⚠️</span><span><strong>30m pixelation.</strong> The 30m watershed boundary has a coarse, pixelated appearance at map scale, limiting its utility for high-quality cartographic output — despite adequately representing the overall drainage network extent.</span></li>
+      <li><span><strong>1m DEM river alignment offset.</strong> At 1m resolution the flow accumulation channel was noticeably misaligned relative to the 10m/30m outputs and the USGS reference shapefile. Pour point placement at 1m relied on visual approximation, contributing to the lower watershed area estimate.</span></li>
+      <li><span><strong>Urban street grid artifacts.</strong> Flow accumulation rasters — especially at 1m — captured urban street grids as high-accumulation linear features. Iterative threshold adjustment suppressed most artifacts, but some straight-line features may persist in the final flow network.</span></li>
+      <li><span><strong>Fill tool NoData failure (1m DEM).</strong> The Fill tool initially produced NoData across the 1m raster. Though resolved by updating ArcGIS Pro, this underscores the importance of software currency when running computationally intensive tools on high-resolution inputs.</span></li>
+      <li><span><strong>30m pixelation.</strong> The 30m watershed boundary has a coarse, pixelated appearance at map scale, limiting its utility for high-quality cartographic output — despite adequately representing the overall drainage network extent.</span></li>
     </ul>
 
   </main>
