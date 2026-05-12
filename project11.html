@@ -133,7 +133,10 @@
     .tag.buffer { background: var(--buffer); color: #fff; }
 
     /* ── Main Content ─────────────────────────────── */
-    .project-body { min-width: 0; }
+    .project-body {
+      display: block;   /* override styles.css flex rule */
+      min-width: 0;
+    }
 
     .section {
       font-size: 11px;
