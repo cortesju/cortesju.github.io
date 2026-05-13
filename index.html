@@ -5,8 +5,249 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Juan Sebastian Cortes</title>
   <link rel="stylesheet" href="styles.css">
+  <style>
+    /* ═══════════════════════════════════════════
+       COVER SCREEN
+       ═══════════════════════════════════════════ */
+    #cover-screen {
+      position: fixed;
+      inset: 0;
+      z-index: 10000;
+      background: #000;
+      overflow: hidden;
+    }
+
+    #cover-canvas {
+      position: absolute;
+      inset: 0;
+      width: 100%;
+      height: 100%;
+      display: block;
+    }
+
+    #cv-cursor {
+      position: fixed;
+      width: 5px;
+      height: 5px;
+      border-radius: 50%;
+      background: rgba(255, 255, 255, 0.9);
+      box-shadow: 0 0 10px 4px rgba(255, 255, 255, 0.28);
+      pointer-events: none;
+      transform: translate(-50%, -50%);
+      z-index: 10001;
+      opacity: 0;
+      transition: opacity 0.25s;
+    }
+
+    .cv-topbar {
+      position: absolute;
+      top: 28px;
+      left: 40px;
+      right: 40px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      font-family: 'Rubik', sans-serif;
+      font-weight: 500;
+      font-size: 9.5px;
+      letter-spacing: 0.11em;
+      text-transform: uppercase;
+      color: rgba(255, 255, 255, 0.38);
+      pointer-events: none;
+      user-select: none;
+    }
+
+    .cv-content {
+      position: absolute;
+      bottom: 170px;
+      left: 40px;
+      max-width: min(580px, 56vw);
+    }
+
+    .cv-name {
+      font-family: 'Rubik', sans-serif;
+      font-weight: 700;
+      font-size: clamp(2rem, 5.5vw, 4.2rem);
+      letter-spacing: -0.025em;
+      line-height: 1.0;
+      color: #fff;
+      text-transform: uppercase;
+      margin: 0 0 20px;
+    }
+
+    .cv-tagline {
+      font-family: 'Rubik', sans-serif;
+      font-weight: 500;
+      font-size: 10px;
+      letter-spacing: 0.13em;
+      text-transform: uppercase;
+      color: rgba(255, 255, 255, 0.48);
+      margin: 0 0 18px;
+    }
+
+    .cv-desc {
+      font-family: "Neue Haas Grotesk", "Haas Grot Text", "Helvetica Neue", Arial, sans-serif;
+      font-size: 13px;
+      color: rgba(255, 255, 255, 0.6);
+      line-height: 1.7;
+      margin: 0 0 36px;
+    }
+
+    .cv-cta {
+      display: inline-flex;
+      align-items: center;
+      gap: 18px;
+      border: 1px solid rgba(255, 255, 255, 0.48);
+      color: #fff;
+      background: transparent;
+      font-family: 'Rubik', sans-serif;
+      font-size: 10.5px;
+      font-weight: 700;
+      letter-spacing: 0.13em;
+      text-transform: uppercase;
+      padding: 15px 30px;
+      cursor: pointer;
+      transition: background 0.2s, border-color 0.2s;
+    }
+
+    .cv-cta:hover {
+      background: rgba(255, 255, 255, 0.08);
+      border-color: rgba(255, 255, 255, 0.85);
+    }
+
+    .cv-cta:focus-visible {
+      outline: 1px solid rgba(255, 255, 255, 0.6);
+      outline-offset: 3px;
+    }
+
+    .cv-coords {
+      position: absolute;
+      right: 40px;
+      top: 50%;
+      transform: translateY(-50%);
+      display: flex;
+      flex-direction: column;
+      gap: 4px;
+      font-family: 'Rubik', sans-serif;
+      font-size: 10px;
+      letter-spacing: 0.07em;
+      color: rgba(255, 255, 255, 0.35);
+      text-align: right;
+      pointer-events: none;
+      user-select: none;
+    }
+
+    .cv-scroll-hint {
+      position: absolute;
+      bottom: 70px;
+      left: 40px;
+      display: flex;
+      align-items: flex-end;
+      gap: 14px;
+      font-family: 'Rubik', sans-serif;
+      font-size: 8.5px;
+      font-weight: 500;
+      letter-spacing: 0.13em;
+      text-transform: uppercase;
+      color: rgba(255, 255, 255, 0.26);
+      line-height: 1.6;
+      pointer-events: none;
+      user-select: none;
+    }
+
+    .cv-scroll-line {
+      width: 1px;
+      height: 38px;
+      background: linear-gradient(to bottom, transparent, rgba(255, 255, 255, 0.26));
+      flex-shrink: 0;
+      margin-bottom: 3px;
+    }
+
+    .cv-footer {
+      position: absolute;
+      bottom: 22px;
+      left: 40px;
+      right: 40px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      font-family: 'Rubik', sans-serif;
+      font-size: 8.5px;
+      font-weight: 500;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      color: rgba(255, 255, 255, 0.2);
+      pointer-events: none;
+      user-select: none;
+    }
+
+    /* ── Cover: mobile ─────────────────────────────────── */
+    @media (max-width: 640px) {
+      .cv-topbar    { font-size: 8px; left: 20px; right: 20px; top: 18px; }
+      .cv-location  { display: none; }
+      .cv-content   { left: 20px; bottom: 130px; max-width: 88vw; }
+      .cv-name      { margin-bottom: 14px; }
+      .cv-desc      { font-size: 12px; margin-bottom: 26px; }
+      .cv-cta       { padding: 13px 22px; font-size: 10px; }
+      .cv-coords    { display: none; }
+      .cv-scroll-hint { left: 20px; bottom: 56px; }
+      .cv-footer    { left: 20px; right: 20px; font-size: 8px; bottom: 16px; }
+    }
+
+    /* ── Reduced motion ────────────────────────────────── */
+    @media (prefers-reduced-motion: reduce) {
+      #cover-screen { transition: none !important; }
+      #cover-canvas { opacity: 0.25; }
+    }
+  </style>
 </head>
 <body>
+
+  <!-- ══════════════════════════════════════════════════════════════
+       COVER SCREEN — full-screen interactive intro
+       Click "ENTER PORTFOLIO" or scroll down to reveal the grid.
+       ══════════════════════════════════════════════════════════════ -->
+  <div id="cover-screen" role="region" aria-label="Portfolio introduction">
+
+    <!-- Canvas: animated contour lines reactive to cursor -->
+    <canvas id="cover-canvas" aria-hidden="true"></canvas>
+
+    <!-- Cursor glow dot -->
+    <div id="cv-cursor" aria-hidden="true"></div>
+
+    <!-- Top bar: disciplines · location · live clock -->
+    <div class="cv-topbar" aria-hidden="true">
+      <span>GIS &nbsp;·&nbsp; CARTOGRAPHY &nbsp;·&nbsp; SPATIAL ANALYSIS &nbsp;·&nbsp; ARCHITECTURE</span>
+      <span class="cv-location">BOGOTÁ, CO &nbsp;&nbsp; <span id="cv-time"></span></span>
+    </div>
+
+    <!-- Main copy: bottom-left -->
+    <div class="cv-content">
+      <h1 class="cv-name">JUAN SEBASTIAN<br>CORTES</h1>
+      <p class="cv-tagline">GIS &nbsp;·&nbsp; CARTOGRAPHY &nbsp;·&nbsp; SPATIAL ANALYSIS &nbsp;·&nbsp; ARCHITECTURE</p>
+      <p class="cv-desc">Interactive portfolio mapping climate, infrastructure,<br>hazards, and urban systems.</p>
+      <button class="cv-cta" id="cv-enter-btn">ENTER PORTFOLIO &nbsp;&nbsp;→</button>
+    </div>
+
+    <!-- Coordinates: right-center -->
+    <div class="cv-coords" aria-hidden="true">
+      <span>4.7110° N</span>
+      <span>74.0721° W</span>
+    </div>
+
+    <!-- Scroll hint: bottom-left above footer -->
+    <div class="cv-scroll-hint" aria-hidden="true">
+      <div class="cv-scroll-line"></div>
+      <div>SCROLL OR CLICK<br>TO EXPLORE SELECTED PROJECTS</div>
+    </div>
+
+    <!-- Footer bar -->
+    <div class="cv-footer" aria-hidden="true">
+      <span>© 2025 JUAN SEBASTIAN CORTES</span>
+      <span>BUILT WITH DATA. DESIGNED TO INFORM.</span>
+    </div>
+
+  </div><!-- /#cover-screen -->
 
   <!-- ── Salmon Glow Overlay ─────────────────────────────────────── -->
   <div class="salmon-glow" aria-hidden="true"></div>
@@ -243,5 +484,196 @@
     })();
   </script>
  <script src="script.js"></script>
+
+  <!-- ── Cover Screen: Canvas Lines + Interaction ─────────────────── -->
+  <script>
+  (function () {
+    'use strict';
+
+    // ── Elements ────────────────────────────────────────────────────
+    var cover    = document.getElementById('cover-screen');
+    var canvas   = document.getElementById('cover-canvas');
+    var dotEl    = document.getElementById('cv-cursor');
+    var enterBtn = document.getElementById('cv-enter-btn');
+    var timeEl   = document.getElementById('cv-time');
+    if (!cover || !canvas) return;
+
+    var ctx = canvas.getContext('2d');
+
+    // ── Config ──────────────────────────────────────────────────────
+    var REDUCED      = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+    var NUM_LINES    = 60;     // total horizontal lines
+    var STEP         = 4;      // px between x-samples (performance vs quality)
+    var LINE_W       = 0.75;   // stroke width
+    var AMB_AMP      = 10;     // ambient wave height (px)
+    var AMB_FREQ     = 0.013;  // horizontal spatial frequency
+    var AMB_SPEED    = 0.22;   // animation speed (rad/s)
+    var PULL_RADIUS  = 270;    // cursor influence radius (px)
+    var PULL_STR     = 0.54;   // cursor pull strength (0–1)
+    var LERP_SPD     = 0.10;   // mouse smoothing (lower = laggier, more elegant)
+
+    // ── State ───────────────────────────────────────────────────────
+    var mouseRaw  = { x: 0,      y: 0 };
+    var mouseSmth = { x: -9999,  y: -9999 }; // offscreen until first move
+    var mouseIn   = false;
+    var exiting   = false;
+    var rafId     = null;
+    var t0        = performance.now();
+
+    // ── Canvas size ─────────────────────────────────────────────────
+    function resize() {
+      canvas.width  = cover.offsetWidth  || window.innerWidth;
+      canvas.height = cover.offsetHeight || window.innerHeight;
+      // Reset smooth position to center on resize
+      if (!mouseIn) {
+        mouseSmth.x = canvas.width  * 0.5;
+        mouseSmth.y = canvas.height * 0.5;
+      }
+    }
+    window.addEventListener('resize', resize);
+    resize();
+
+    // ── Draw ────────────────────────────────────────────────────────
+    function frame(ts) {
+      if (exiting) return;
+
+      var t  = (ts - t0) / 1000;
+      var W  = canvas.width;
+      var H  = canvas.height;
+      var gap = H / (NUM_LINES + 1);
+
+      // Lerp smooth mouse toward raw
+      mouseSmth.x += (mouseRaw.x - mouseSmth.x) * LERP_SPD;
+      mouseSmth.y += (mouseRaw.y - mouseSmth.y) * LERP_SPD;
+
+      ctx.clearRect(0, 0, W, H);
+      ctx.lineWidth   = LINE_W;
+      ctx.strokeStyle = 'rgba(255,255,255,0.82)';
+
+      for (var i = 0; i < NUM_LINES; i++) {
+        var y0    = (i + 1) * gap;
+        var phase = i * 0.42;
+
+        ctx.beginPath();
+        var first = true;
+
+        for (var x = 0; x <= W; x += STEP) {
+
+          // ── Ambient wave ──────────────────────────────────────────
+          // Lines near horizontal center have a slightly larger natural wobble
+          // (creates the seismic "spine" look from the reference)
+          var cBias = 1 + 0.7 * Math.exp(-Math.pow((x / W - 0.5) * 3.5, 2));
+          var dy = REDUCED ? 0
+            : Math.sin(x * AMB_FREQ + t * AMB_SPEED + phase) * AMB_AMP * cBias;
+
+          // ── Cursor pull ───────────────────────────────────────────
+          if (!REDUCED) {
+            var ddx  = x - mouseSmth.x;
+            var ddy  = mouseSmth.y - y0;          // vertical: cursor y minus line y
+            var dist = Math.sqrt(ddx * ddx + (mouseSmth.y - y0) * (mouseSmth.y - y0));
+
+            if (dist < PULL_RADIUS) {
+              var tn   = 1 - dist / PULL_RADIUS;
+              var infl = tn * tn * (3 - 2 * tn); // smoothstep — soft falloff
+              dy += ddy * infl * PULL_STR;
+            }
+          }
+
+          var y = y0 + dy;
+          if (first) { ctx.moveTo(x, y); first = false; }
+          else        { ctx.lineTo(x, y); }
+        }
+
+        ctx.stroke();
+      }
+
+      rafId = requestAnimationFrame(frame);
+    }
+
+    // ── Mouse ────────────────────────────────────────────────────────
+    cover.addEventListener('mousemove', function (e) {
+      var r    = cover.getBoundingClientRect();
+      mouseRaw.x = e.clientX - r.left;
+      mouseRaw.y = e.clientY - r.top;
+      mouseIn    = true;
+
+      dotEl.style.left    = e.clientX + 'px';
+      dotEl.style.top     = e.clientY + 'px';
+      dotEl.style.opacity = '1';
+    });
+
+    cover.addEventListener('mouseleave', function () {
+      mouseIn            = false;
+      dotEl.style.opacity = '0';
+    });
+
+    // ── Live clock ───────────────────────────────────────────────────
+    function tick() {
+      if (!timeEl || exiting) return;
+      var d   = new Date();
+      var hh  = d.getHours();
+      var h   = String(hh % 12 || 12).padStart(2, '0');
+      var m   = String(d.getMinutes()).padStart(2, '0');
+      var s   = String(d.getSeconds()).padStart(2, '0');
+      var ampm = hh >= 12 ? 'PM' : 'AM';
+      timeEl.textContent = h + ':' + m + ':' + s + ' ' + ampm;
+    }
+    tick();
+    var clockId = setInterval(tick, 1000);
+
+    // ── Exit cover ───────────────────────────────────────────────────
+    function exitCover() {
+      if (exiting) return;
+      exiting = true;
+      clearInterval(clockId);
+
+      cover.style.transition    = 'opacity 0.65s ease, transform 0.65s ease';
+      cover.style.opacity       = '0';
+      cover.style.transform     = 'translateY(-14px)';
+      cover.style.pointerEvents = 'none';
+      dotEl.style.opacity       = '0';
+
+      setTimeout(function () {
+        cover.style.display = 'none';
+        if (rafId) cancelAnimationFrame(rafId);
+      }, 700);
+    }
+
+    enterBtn.addEventListener('click', exitCover);
+
+    // Keyboard: Enter or Space on button already triggers click.
+    // Also allow pressing Enter anywhere on the cover (if focused).
+    cover.addEventListener('keydown', function (e) {
+      if (e.key === 'Enter') exitCover();
+    });
+
+    // ── Scroll wheel exit ────────────────────────────────────────────
+    var scrollAcc = 0;
+    window.addEventListener('wheel', function (e) {
+      if (exiting || cover.style.display === 'none') return;
+      if (e.deltaY > 0) {
+        scrollAcc += e.deltaY;
+        if (scrollAcc > 60) exitCover();
+      } else {
+        scrollAcc = 0;
+      }
+    }, { passive: true });
+
+    // ── Touch swipe-up exit ──────────────────────────────────────────
+    var touchY0 = 0;
+    window.addEventListener('touchstart', function (e) {
+      touchY0 = e.touches[0].clientY;
+    }, { passive: true });
+    window.addEventListener('touchend', function (e) {
+      if (exiting) return;
+      if (touchY0 - e.changedTouches[0].clientY > 52) exitCover();
+    }, { passive: true });
+
+    // ── Start ────────────────────────────────────────────────────────
+    rafId = requestAnimationFrame(frame);
+
+  }());
+  </script>
+
 </body>
 </html>
