@@ -218,7 +218,7 @@
     <!-- Top bar: disciplines · location · live clock -->
     <div class="cv-topbar" aria-hidden="true">
       <span>GIS &nbsp;·&nbsp; CARTOGRAPHY &nbsp;·&nbsp; SPATIAL ANALYSIS &nbsp;·&nbsp; ARCHITECTURE</span>
-      <span class="cv-location">BOGOTÁ, CO &nbsp;&nbsp; <span id="cv-time"></span></span>
+      <span class="cv-location">DENVER, CO &nbsp;&nbsp; <span id="cv-time"></span></span>
     </div>
 
     <!-- Main copy: bottom-left -->
@@ -503,14 +503,17 @@
     // ── Config ──────────────────────────────────────────────────────
     var REDUCED      = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
     var NUM_LINES    = 60;     // total horizontal lines
-    var STEP         = 4;      // px between x-samples (performance vs quality)
+    var STEP         = 3;      // px between x-samples
     var LINE_W       = 0.75;   // stroke width
-    var AMB_AMP      = 10;     // ambient wave height (px)
+    var AMB_AMP      = 5;      // ambient wave height (px) — subtler, spine is the hero
     var AMB_FREQ     = 0.013;  // horizontal spatial frequency
-    var AMB_SPEED    = 0.22;   // animation speed (rad/s)
-    var PULL_RADIUS  = 270;    // cursor influence radius (px)
-    var PULL_STR     = 0.54;   // cursor pull strength (0–1)
-    var LERP_SPD     = 0.10;   // mouse smoothing (lower = laggier, more elegant)
+    var AMB_SPEED    = 0.18;   // animation speed (rad/s)
+    var SPINE_AMP    = 58;     // seismic spine max displacement (px)
+    var SPINE_SIGMA  = 36;     // gaussian half-width of spine (px) — narrower = sharper trace
+    var SPINE_WANDER = 52;     // px the spine center drifts horizontally over time
+    var PULL_RADIUS  = 140;    // cursor influence radius (px) — tighter feel
+    var PULL_STR     = 0.58;   // cursor pull strength (0–1)
+    var LERP_SPD     = 0.10;   // mouse smoothing
 
     // ── State ───────────────────────────────────────────────────────
     var mouseRaw  = { x: 0,      y: 0 };
@@ -559,22 +562,28 @@
 
         for (var x = 0; x <= W; x += STEP) {
 
-          // ── Ambient wave ──────────────────────────────────────────
-          // Lines near horizontal center have a slightly larger natural wobble
-          // (creates the seismic "spine" look from the reference)
-          var cBias = 1 + 0.7 * Math.exp(-Math.pow((x / W - 0.5) * 3.5, 2));
+          // ── Ambient wave (subtle base texture) ───────────────────
           var dy = REDUCED ? 0
-            : Math.sin(x * AMB_FREQ + t * AMB_SPEED + phase) * AMB_AMP * cBias;
+            : Math.sin(x * AMB_FREQ + t * AMB_SPEED + phase) * AMB_AMP;
 
-          // ── Cursor pull ───────────────────────────────────────────
           if (!REDUCED) {
+            // ── Seismic spine ─────────────────────────────────────
+            // A narrow gaussian bump whose center drifts horizontally
+            // and whose height alternates per line — creates the
+            // dramatic seismograph / topographic-trace look
+            var spineX = W * 0.5 + Math.sin(i * 0.19 + t * 0.07) * SPINE_WANDER;
+            var spineH = Math.sin(i * 0.30 + t * 0.05) * SPINE_AMP;
+            var gauss  = Math.exp(-Math.pow((x - spineX) / SPINE_SIGMA, 2));
+            dy += spineH * gauss;
+
+            // ── Cursor pull (tight radius) ────────────────────────
             var ddx  = x - mouseSmth.x;
-            var ddy  = mouseSmth.y - y0;          // vertical: cursor y minus line y
+            var ddy  = mouseSmth.y - y0;
             var dist = Math.sqrt(ddx * ddx + (mouseSmth.y - y0) * (mouseSmth.y - y0));
 
             if (dist < PULL_RADIUS) {
               var tn   = 1 - dist / PULL_RADIUS;
-              var infl = tn * tn * (3 - 2 * tn); // smoothstep — soft falloff
+              var infl = tn * tn * (3 - 2 * tn); // smoothstep falloff
               dy += ddy * infl * PULL_STR;
             }
           }
@@ -610,13 +619,14 @@
     // ── Live clock ───────────────────────────────────────────────────
     function tick() {
       if (!timeEl || exiting) return;
-      var d   = new Date();
-      var hh  = d.getHours();
-      var h   = String(hh % 12 || 12).padStart(2, '0');
-      var m   = String(d.getMinutes()).padStart(2, '0');
-      var s   = String(d.getSeconds()).padStart(2, '0');
-      var ampm = hh >= 12 ? 'PM' : 'AM';
-      timeEl.textContent = h + ':' + m + ':' + s + ' ' + ampm;
+      // Always show Denver (Mountain) local time regardless of visitor's timezone
+      timeEl.textContent = new Date().toLocaleTimeString('en-US', {
+        timeZone: 'America/Denver',
+        hour:     '2-digit',
+        minute:   '2-digit',
+        second:   '2-digit',
+        hour12:   true
+      });
     }
     tick();
     var clockId = setInterval(tick, 1000);
