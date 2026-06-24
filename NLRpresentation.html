@@ -1,0 +1,1718 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Juan Sebastian Cortes — NLR GDS Candidate Presentation</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Sofia+Sans+Condensed:wght@400;600;700&family=Spline+Sans+Mono:wght@300;400&display=swap" rel="stylesheet" />
+  <style>
+    :root {
+      --bg:   #f7f7f7;
+      --ink:  #101010;
+      --gray: #aaa;
+      --gray2:#908c8c;
+      --white:#ffffff;
+      --ease: cubic-bezier(0.11, 0.82, 0.39, 0.92);
+    }
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    html { scroll-behavior: smooth; }
+    body {
+      font-family: 'Sofia Sans Condensed', sans-serif;
+      background: var(--bg); color: var(--ink); overflow-x: hidden;
+    }
+    a { text-decoration: none; color: inherit; }
+    img { display: block; width: 100%; height: 100%; object-fit: cover; }
+    ::selection { background: var(--ink); color: var(--bg); }
+
+    /* ── Loader ── */
+    .loader {
+      position: fixed; inset: 0; background: var(--bg);
+      z-index: 99999; display: flex; align-items: flex-end;
+      justify-content: space-between; padding: 0 48px 52px;
+      transition: opacity 0.7s var(--ease), visibility 0.7s;
+    }
+    .loader.done { opacity: 0; visibility: hidden; pointer-events: none; }
+    .loader__role {
+      font-family: 'Spline Sans Mono', monospace; font-size: 11px;
+      font-weight: 300; letter-spacing: 0.14em; text-transform: uppercase;
+      color: var(--gray2);
+    }
+    .loader__count {
+      font-size: 56px; font-weight: 700; letter-spacing: -0.08em;
+    }
+
+    /* ── Progress bar ── */
+    .progress {
+      position: fixed; top: 0; left: 0; height: 2px;
+      background: var(--ink); z-index: 9999;
+      width: 0%; transition: width 0.1s linear;
+    }
+
+    /* ── Container ── */
+    .container { max-width: 1700px; margin: 0 auto; padding: 0 48px; }
+    @media (max-width: 768px) { .container { padding: 0 20px; } }
+
+    /* ── Nav ── */
+    .nav {
+      position: fixed; top: 0; left: 0; width: 100%;
+      padding: 28px 0; z-index: 1000;
+      mix-blend-mode: difference; color: #efefef;
+      opacity: 0; pointer-events: none;
+      transition: opacity 0.5s var(--ease);
+    }
+    .nav.visible { opacity: 1; pointer-events: auto; }
+    .nav .container { display: flex; justify-content: flex-end; gap: 56px; }
+    .nav a {
+      font-family: 'Spline Sans Mono', monospace; font-size: 11px;
+      font-weight: 300; letter-spacing: 0.14em; text-transform: uppercase;
+      position: relative;
+    }
+    .nav a::after {
+      content: ''; position: absolute; bottom: -3px; left: 0; right: 0;
+      height: 1px; background: #efefef;
+      transform: scaleX(0); transform-origin: left;
+      transition: transform 0.4s var(--ease);
+    }
+    .nav a:hover::after { transform: scaleX(1); }
+
+    /* ── Section label ── */
+    .sec-label {
+      font-family: 'Spline Sans Mono', monospace; font-size: 11px;
+      font-weight: 300; letter-spacing: 0.14em; text-transform: uppercase;
+      color: var(--gray); display: flex; align-items: center; gap: 16px;
+    }
+    .sec-label::before { content: ''; display: block; width: 22px; height: 1px; background: currentColor; }
+
+    /* ── Clip reveal utility ── */
+    .reveal {
+      clip-path: polygon(0 0, 100% 0, 100% 100%, 0 100%);
+    }
+
+    .fade-up {
+      opacity: 1; transform: translateY(0);
+    }
+
+    /* ═══════════════════════════════════════
+       SECTION 1 — TITLE / OPENING
+       0:00 – 1:15
+    ═══════════════════════════════════════ */
+    .hero {
+      min-height: 100vh; display: flex; flex-direction: column;
+      justify-content: flex-end; padding-bottom: 72px; position: relative;
+    }
+    .hero-images { display: none; }
+    .hero-content { position: relative; z-index: 1; }
+    .hero-title { line-height: 0.86; pointer-events: none; }
+    .hero-line { overflow: hidden; display: block; }
+    .hero-word {
+      display: inline-block;
+      font-size: clamp(64px, 14vw, 260px);
+      font-weight: 700; letter-spacing: -0.07em; text-transform: uppercase;
+      transform: translateY(110%);
+      transition: transform 1.1s var(--ease);
+    }
+    .hero-word.visible { transform: translateY(0); }
+    .hero-word:nth-child(2) { transition-delay: 0.05s; }
+    .hero-bottom {
+      display: flex; justify-content: space-between; align-items: flex-end;
+      margin-top: 44px;
+      opacity: 0; transition: opacity 0.9s var(--ease) 0.5s;
+    }
+    .hero-bottom.visible { opacity: 1; }
+    .hero-role {
+      font-family: 'Spline Sans Mono', monospace; font-size: clamp(10px, 0.85vw, 14px);
+      font-weight: 300; letter-spacing: 0.08em; text-transform: uppercase;
+      color: var(--gray2); line-height: 2;
+    }
+    .hero-card {
+      background: rgba(231,231,231,0.92); backdrop-filter: blur(6px);
+      padding: 36px 32px; width: clamp(240px, 24vw, 420px);
+    }
+    .hero-card__label {
+      font-family: 'Spline Sans Mono', monospace; font-size: 10px; font-weight: 300;
+      letter-spacing: 0.15em; text-transform: uppercase;
+      color: var(--gray2); margin-bottom: 16px;
+    }
+    .hero-card__name {
+      font-size: clamp(26px, 2.8vw, 44px);
+      font-weight: 700; letter-spacing: -0.04em;
+      text-transform: uppercase; line-height: 0.92; margin-bottom: 24px;
+    }
+    .hero-card__info {
+      font-family: 'Spline Sans Mono', monospace; font-size: 10px; font-weight: 300;
+      letter-spacing: 0.06em; text-transform: uppercase;
+      color: var(--gray2); line-height: 2;
+    }
+    .timing-badge {
+      font-family: 'Spline Sans Mono', monospace; font-size: 10px; font-weight: 300;
+      letter-spacing: 0.12em; text-transform: uppercase;
+      color: var(--gray); border: 1px solid currentColor;
+      padding: 4px 10px; display: inline-block;
+    }
+
+    /* ═══════════════════════════════════════
+       SECTION 2 — BACKGROUND (INTRO)
+    ═══════════════════════════════════════ */
+    .intro {
+      background: var(--ink); color: var(--bg);
+      padding: 120px 0 100px;
+    }
+    .intro-row {
+      display: grid; grid-template-columns: 1fr 1fr; gap: 80px;
+      align-items: start; margin-top: 64px;
+      border-top: 1px solid rgba(255,255,255,0.08); padding-top: 64px;
+    }
+    @media (max-width: 900px) { .intro-row { grid-template-columns: 1fr; } }
+    .intro-big {
+      font-size: clamp(52px, 8vw, 128px); font-weight: 700;
+      letter-spacing: -0.06em; text-transform: uppercase; line-height: 0.86;
+    }
+    .intro-timeline { display: flex; flex-direction: column; }
+    .tl-item {
+      border-bottom: 1px solid rgba(255,255,255,0.08); padding: 26px 0;
+      opacity: 1;
+    }
+    .tl-item__date {
+      font-family: 'Spline Sans Mono', monospace; font-size: 10px; font-weight: 300;
+      letter-spacing: 0.12em; text-transform: uppercase;
+      color: rgba(255,255,255,0.28); margin-bottom: 6px;
+    }
+    .tl-item__title {
+      font-size: clamp(18px, 1.8vw, 26px); font-weight: 700;
+      letter-spacing: -0.02em; text-transform: uppercase; line-height: 1;
+      color: var(--bg); margin-bottom: 4px;
+    }
+    .tl-item__sub {
+      font-family: 'Spline Sans Mono', monospace; font-size: 11px; font-weight: 300;
+      letter-spacing: 0.05em; text-transform: uppercase;
+      color: var(--gray); line-height: 1.6;
+    }
+    .awards-row {
+      display: grid; grid-template-columns: 1fr 1fr;
+      border-top: 1px solid rgba(255,255,255,0.08);
+    }
+    .award {
+      padding: 24px 20px 24px 0;
+      border-right: 1px solid rgba(255,255,255,0.08);
+    }
+    .award:last-child { border-right: none; padding-left: 20px; padding-right: 0; }
+    .award__label {
+      font-family: 'Spline Sans Mono', monospace; font-size: 9px; font-weight: 300;
+      letter-spacing: 0.14em; text-transform: uppercase;
+      color: rgba(255,255,255,0.22); margin-bottom: 8px;
+    }
+    .award__title {
+      font-size: clamp(13px, 1.4vw, 18px); font-weight: 700;
+      letter-spacing: -0.02em; text-transform: uppercase; line-height: 1.05;
+      margin-bottom: 4px;
+    }
+    .award__sub {
+      font-family: 'Spline Sans Mono', monospace; font-size: 10px; font-weight: 300;
+      letter-spacing: 0.06em; text-transform: uppercase; color: var(--gray);
+    }
+
+    /* ═══════════════════════════════════════
+       SECTION 3 — ROADMAP
+       1:15 – 1:45
+    ═══════════════════════════════════════ */
+    .roadmap {
+      background: var(--bg); padding: 100px 0;
+    }
+    .roadmap-header {
+      display: flex; justify-content: space-between; align-items: flex-end;
+      border-bottom: 1px solid var(--ink); padding-bottom: 36px; margin-bottom: 0;
+    }
+    .roadmap-big {
+      font-size: clamp(48px, 7vw, 110px); font-weight: 700;
+      letter-spacing: -0.06em; text-transform: uppercase; line-height: 0.88;
+    }
+    .roadmap-grid {
+      display: grid; grid-template-columns: 1fr 1fr 1fr;
+      border-left: 1px solid var(--ink);
+    }
+    @media (max-width: 768px) { .roadmap-grid { grid-template-columns: 1fr; } }
+    .roadmap-card {
+      border-right: 1px solid var(--ink); border-bottom: 1px solid var(--ink);
+      overflow: hidden; cursor: default;
+      transition: background 0.45s var(--ease), color 0.45s var(--ease);
+    }
+    .roadmap-card:hover { background: var(--ink); color: var(--bg); }
+    .roadmap-img {
+      height: 200px; overflow: hidden;
+    }
+    .roadmap-img img { width: 100%; height: 100%; object-fit: cover; }
+    .roadmap-body { padding: 28px 28px 32px; }
+    .roadmap-idx {
+      font-family: 'Spline Sans Mono', monospace; font-size: 10px; font-weight: 300;
+      letter-spacing: 0.14em; text-transform: uppercase; color: var(--gray);
+      margin-bottom: 10px;
+    }
+    .roadmap-name {
+      font-size: clamp(22px, 2.4vw, 38px); font-weight: 700;
+      letter-spacing: -0.03em; text-transform: uppercase;
+      line-height: 0.92; margin-bottom: 12px;
+    }
+    .roadmap-why {
+      font-family: 'Spline Sans Mono', monospace; font-size: 11px; font-weight: 300;
+      letter-spacing: 0.04em; text-transform: uppercase;
+      color: var(--gray2); line-height: 1.7;
+    }
+    .roadmap-card:hover .roadmap-why { color: rgba(255,255,255,0.5); }
+    .roadmap-card:hover .roadmap-idx { color: rgba(255,255,255,0.3); }
+
+    /* ═══════════════════════════════════════
+       SHARED PROJECT STYLES  (white bg)
+    ═══════════════════════════════════════ */
+    .proj-section {
+      background: var(--bg); color: var(--ink); padding: 0;
+    }
+
+    /* Project header stripe — stays dark */
+    .proj-header {
+      background: var(--ink); color: var(--bg);
+      padding: 80px 0 60px;
+    }
+    .proj-num-row {
+      display: flex; justify-content: space-between; align-items: flex-end;
+      margin-bottom: 40px;
+    }
+    .proj-big {
+      font-size: clamp(60px, 11vw, 180px); font-weight: 700;
+      letter-spacing: -0.07em; text-transform: uppercase; line-height: 0.86;
+    }
+    .proj-tags { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 28px; }
+    .tag {
+      font-family: 'Spline Sans Mono', monospace; font-size: 10px; font-weight: 300;
+      letter-spacing: 0.1em; text-transform: uppercase;
+      border: 1px solid rgba(255,255,255,0.22); padding: 5px 12px;
+      color: rgba(255,255,255,0.5);
+    }
+
+    /* Slide-like blocks within each project */
+    .proj-slide {
+      border-top: 1px solid rgba(0,0,0,0.08);
+      padding: 72px 0;
+    }
+    .proj-slide-2col {
+      display: grid; grid-template-columns: 1fr 1fr; gap: 72px; align-items: start;
+    }
+    .proj-slide-2col-wide {
+      display: grid; grid-template-columns: 0.85fr 1.15fr; gap: 72px; align-items: start;
+    }
+    @media (max-width: 900px) {
+      .proj-slide-2col,
+      .proj-slide-2col-wide { grid-template-columns: 1fr; gap: 40px; }
+    }
+    .proj-slide__title {
+      font-size: clamp(26px, 3.2vw, 52px); font-weight: 700;
+      letter-spacing: -0.04em; text-transform: uppercase;
+      line-height: 0.9; margin-bottom: 20px;
+    }
+    .proj-slide__body {
+      font-family: 'Spline Sans Mono', monospace; font-size: clamp(10px, 0.88vw, 13px);
+      font-weight: 300; line-height: 1.9; text-transform: uppercase;
+      color: var(--gray2);
+    }
+    .proj-slide__body b { color: var(--ink); font-weight: 400; }
+    .proj-slide__label {
+      font-family: 'Spline Sans Mono', monospace; font-size: 10px; font-weight: 300;
+      letter-spacing: 0.14em; text-transform: uppercase;
+      color: var(--gray); margin-bottom: 12px;
+    }
+    .proj-img {
+      overflow: hidden; background: #e8e8e8;
+    }
+    .proj-img img {
+      width: 100%; aspect-ratio: 16/10; object-fit: cover;
+    }
+
+    /* Module row (portfolio-style) */
+    .module-row {
+      border: 1px solid rgba(0,0,0,0.1); margin-bottom: 20px; overflow: hidden;
+    }
+    .module-row__header {
+      background: var(--ink); color: var(--bg);
+      display: flex; align-items: center; gap: 20px;
+      padding: 14px 24px;
+    }
+    .module-row__num {
+      font-family: 'Spline Sans Mono', monospace; font-size: 11px; font-weight: 300;
+      letter-spacing: 0.12em; opacity: 0.4;
+    }
+    .module-row__title {
+      font-size: clamp(13px, 1.3vw, 18px); font-weight: 700;
+      letter-spacing: -0.01em; text-transform: uppercase;
+    }
+    .module-row__body {
+      display: grid; grid-template-columns: 1fr 1fr;
+    }
+    @media (max-width: 800px) { .module-row__body { grid-template-columns: 1fr; } }
+    .module-row__img {
+      overflow: hidden; background: #eee; aspect-ratio: 16/9;
+    }
+    .module-row__img img { width: 100%; height: 100%; object-fit: cover; }
+    .module-row__text {
+      padding: 28px 28px;
+      border-left: 1px solid rgba(0,0,0,0.08);
+      font-family: 'Spline Sans Mono', monospace; font-size: clamp(10px, 0.82vw, 12px);
+      font-weight: 300; line-height: 1.9; text-transform: uppercase;
+      color: var(--gray2);
+    }
+    .module-row__text b { color: var(--ink); font-weight: 400; }
+    .module-chips { display: flex; flex-wrap: wrap; gap: 6px; margin-top: 16px; }
+    .chip {
+      font-family: 'Spline Sans Mono', monospace; font-size: 9px; font-weight: 300;
+      letter-spacing: 0.1em; text-transform: uppercase;
+      border: 1px solid rgba(0,0,0,0.18); padding: 4px 10px; color: var(--gray2);
+    }
+
+    /* Stats row — light version */
+    .stats-row {
+      display: grid; grid-template-columns: repeat(4, 1fr);
+      border-top: 1px solid rgba(0,0,0,0.1);
+      border-bottom: 1px solid rgba(0,0,0,0.1);
+      margin: 40px 0;
+    }
+    @media (max-width: 600px) { .stats-row { grid-template-columns: 1fr 1fr; } }
+    .stat {
+      padding: 28px 0; border-right: 1px solid rgba(0,0,0,0.1);
+    }
+    .stat:last-child { border-right: none; }
+    .stat:not(:first-child) { padding-left: 20px; }
+    .stat__num {
+      font-size: clamp(32px, 4.5vw, 72px); font-weight: 700;
+      letter-spacing: -0.05em; line-height: 1; color: var(--ink);
+    }
+    .stat__label {
+      font-family: 'Spline Sans Mono', monospace; font-size: 9px; font-weight: 300;
+      letter-spacing: 0.1em; text-transform: uppercase; color: var(--gray);
+      margin-top: 6px;
+    }
+
+    /* Data source grid — light */
+    .data-source-grid {
+      display: grid; grid-template-columns: 1fr 1fr; gap: 1px;
+      background: rgba(0,0,0,0.08); margin-top: 28px;
+    }
+    .ds-cell { background: var(--bg); padding: 18px 16px; }
+    .ds-cell__provider {
+      font-size: clamp(14px, 1.4vw, 20px); font-weight: 700;
+      letter-spacing: -0.02em; text-transform: uppercase;
+      line-height: 1; margin-bottom: 5px; color: var(--ink);
+    }
+    .ds-cell__detail {
+      font-family: 'Spline Sans Mono', monospace; font-size: 10px; font-weight: 300;
+      letter-spacing: 0.08em; text-transform: uppercase; color: var(--gray);
+    }
+
+    /* Weight table — light */
+    .weight-table { width: 100%; border-collapse: collapse; margin-top: 24px; }
+    .weight-table th {
+      font-family: 'Spline Sans Mono', monospace; font-size: 9px; font-weight: 300;
+      letter-spacing: 0.14em; text-transform: uppercase; color: var(--gray);
+      text-align: left; padding: 10px 0; border-bottom: 1px solid rgba(0,0,0,0.1);
+    }
+    .weight-table td {
+      font-family: 'Spline Sans Mono', monospace; font-size: 11px; font-weight: 300;
+      text-transform: uppercase; padding: 12px 0;
+      border-bottom: 1px solid rgba(0,0,0,0.06); color: var(--gray2);
+    }
+    .weight-table td:first-child { color: var(--ink); font-size: 13px; font-weight: 600; }
+    .weight-bar {
+      display: inline-block; height: 3px; background: rgba(0,0,0,0.2);
+      vertical-align: middle; margin-right: 10px;
+    }
+
+    /* Pipeline steps — light */
+    .pipeline { display: flex; flex-direction: column; gap: 0; margin-top: 24px; }
+    .pipeline-step {
+      display: flex; align-items: flex-start; gap: 20px;
+      padding: 18px 0; border-bottom: 1px solid rgba(0,0,0,0.07);
+    }
+    .pipeline-step__num {
+      font-size: clamp(28px, 3vw, 48px); font-weight: 700;
+      letter-spacing: -0.05em; color: rgba(0,0,0,0.08);
+      min-width: 52px; line-height: 1;
+    }
+    .pipeline-step__body { flex: 1; }
+    .pipeline-step__title {
+      font-size: clamp(14px, 1.4vw, 20px); font-weight: 700;
+      letter-spacing: -0.02em; text-transform: uppercase;
+      line-height: 1; margin-bottom: 4px; color: var(--ink);
+    }
+    .pipeline-step__sub {
+      font-family: 'Spline Sans Mono', monospace; font-size: 10px; font-weight: 300;
+      letter-spacing: 0.06em; text-transform: uppercase; color: var(--gray);
+    }
+
+    /* NLR connection note — light */
+    .nlr-note {
+      border-left: 2px solid rgba(0,0,0,0.15);
+      padding: 16px 20px; margin-top: 28px; background: rgba(0,0,0,0.02);
+    }
+    .nlr-note__label {
+      font-family: 'Spline Sans Mono', monospace; font-size: 9px; font-weight: 300;
+      letter-spacing: 0.16em; text-transform: uppercase;
+      color: var(--gray); margin-bottom: 6px;
+    }
+    .nlr-note__text {
+      font-family: 'Spline Sans Mono', monospace; font-size: clamp(10px, 0.82vw, 12px);
+      font-weight: 300; line-height: 1.8; text-transform: uppercase;
+      color: var(--gray2);
+    }
+
+    /* CTA link — light */
+    .proj-cta {
+      display: inline-flex; align-items: center; gap: 10px;
+      font-family: 'Spline Sans Mono', monospace; font-size: 12px;
+      font-weight: 300; letter-spacing: 0.1em; text-transform: uppercase;
+      color: var(--ink); position: relative; padding-bottom: 3px;
+      margin-top: 24px;
+    }
+    .proj-cta::after {
+      content: ''; position: absolute; bottom: 0; left: 0; right: 0;
+      height: 1px; background: var(--ink);
+      transform: scaleX(1); transform-origin: left;
+      transition: transform 0.4s var(--ease);
+    }
+    .proj-cta:hover::after { transform: scaleX(0); transform-origin: right; }
+    .proj-cta svg { width: 12px; height: 12px; transition: transform 0.35s var(--ease); }
+    .proj-cta:hover svg { transform: rotate(45deg); }
+
+    /* Live link banner */
+    .live-banner {
+      display: flex; align-items: center; justify-content: space-between;
+      border: 1px solid var(--ink); padding: 28px 36px; margin: 48px 0 0;
+      background: var(--ink); color: var(--bg);
+      transition: background 0.35s var(--ease), color 0.35s var(--ease);
+    }
+    .live-banner:hover { background: var(--bg); color: var(--ink); }
+    .live-banner__label {
+      font-family: 'Spline Sans Mono', monospace; font-size: 10px; font-weight: 300;
+      letter-spacing: 0.16em; text-transform: uppercase; opacity: 0.5;
+      margin-bottom: 6px;
+    }
+    .live-banner__url {
+      font-size: clamp(22px, 3vw, 48px); font-weight: 700;
+      letter-spacing: -0.04em; text-transform: uppercase; line-height: 1;
+    }
+    .live-banner__arrow {
+      font-size: clamp(32px, 4vw, 60px); font-weight: 700;
+      letter-spacing: -0.04em; opacity: 0.6;
+      transition: transform 0.35s var(--ease);
+    }
+    .live-banner:hover .live-banner__arrow { transform: rotate(45deg); }
+
+    /* Divider between projects */
+    .proj-divider {
+      background: rgba(0,0,0,0.08); height: 1px;
+    }
+
+    /* ═══════════════════════════════════════
+       SECTION — CLOSING / WHY NLR
+       12:45 – 14:15
+    ═══════════════════════════════════════ */
+    .closing {
+      background: var(--ink); color: var(--bg);
+      padding: 120px 0 0;
+    }
+    .closing-statement {
+      font-size: clamp(36px, 6vw, 100px); font-weight: 700;
+      letter-spacing: -0.06em; text-transform: uppercase; line-height: 0.88;
+      margin: 52px 0 64px;
+    }
+    .panelist-grid {
+      display: grid; grid-template-columns: 1fr 1fr;
+      border-top: 1px solid rgba(255,255,255,0.08);
+    }
+    @media (max-width: 680px) { .panelist-grid { grid-template-columns: 1fr; } }
+    .panelist {
+      padding: 36px 28px 36px 0;
+      border-bottom: 1px solid rgba(255,255,255,0.08);
+      border-right: 1px solid rgba(255,255,255,0.08);
+      opacity: 1;
+    }
+    .panelist:nth-child(even) { padding: 36px 0 36px 28px; border-right: none; }
+    .panelist__who {
+      font-family: 'Spline Sans Mono', monospace; font-size: 10px; font-weight: 300;
+      letter-spacing: 0.12em; text-transform: uppercase;
+      color: rgba(255,255,255,0.25); margin-bottom: 10px;
+    }
+    .panelist__title {
+      font-size: clamp(16px, 1.6vw, 22px); font-weight: 700;
+      letter-spacing: -0.02em; text-transform: uppercase; line-height: 1;
+      margin-bottom: 8px;
+    }
+    .panelist__connection {
+      font-family: 'Spline Sans Mono', monospace; font-size: 11px; font-weight: 300;
+      letter-spacing: 0.04em; text-transform: uppercase;
+      color: var(--gray); line-height: 1.7; margin-bottom: 14px;
+    }
+    .panelist__ask {
+      font-family: 'Spline Sans Mono', monospace; font-size: 10px; font-weight: 300;
+      letter-spacing: 0.06em; text-transform: uppercase;
+      color: rgba(255,255,255,0.3);
+      border-top: 1px solid rgba(255,255,255,0.07); padding-top: 12px;
+    }
+
+    /* ── Footer ── */
+    footer { background: var(--bg); padding: 80px 0 32px; }
+    .footer-top {
+      display: flex; justify-content: space-between; align-items: flex-start;
+      margin-bottom: 72px;
+    }
+    .footer-note {
+      font-size: clamp(11px, 0.9vw, 14px); font-weight: 600;
+      letter-spacing: -0.01em; text-transform: uppercase;
+      color: var(--gray2); max-width: 280px; line-height: 1.5;
+    }
+    .footer-right { text-align: right; }
+    .footer-email {
+      font-size: clamp(18px, 2.8vw, 44px); font-weight: 700;
+      letter-spacing: -0.03em; display: block;
+      line-height: 1; position: relative; padding-bottom: 3px;
+    }
+    .footer-email::after {
+      content: ''; position: absolute; bottom: 0; left: 0; right: 0;
+      height: 2px; background: var(--ink);
+      transform: scaleX(0); transform-origin: right;
+      transition: transform 0.6s var(--ease);
+    }
+    .footer-email:hover::after { transform: scaleX(1); transform-origin: left; }
+    .footer-links {
+      display: flex; gap: 36px; justify-content: flex-end; margin-top: 20px;
+    }
+    .footer-links a {
+      font-family: 'Spline Sans Mono', monospace; font-size: 11px;
+      font-weight: 300; letter-spacing: 0.08em; text-transform: uppercase;
+      position: relative; padding-bottom: 2px;
+    }
+    .footer-links a::after {
+      content: ''; position: absolute; bottom: 0; left: 0; right: 0;
+      height: 1px; background: var(--ink);
+      transform: scaleX(0); transform-origin: left;
+      transition: transform 0.4s var(--ease);
+    }
+    .footer-links a:hover::after { transform: scaleX(1); }
+    .footer-name {
+      font-size: clamp(52px, 12vw, 210px); font-weight: 700;
+      letter-spacing: -0.07em; text-transform: uppercase;
+      line-height: 0.82; white-space: nowrap; overflow: hidden;
+    }
+    .footer-bottom {
+      display: flex; justify-content: space-between;
+      border-top: 1px solid rgba(0,0,0,0.1); padding-top: 20px; margin-top: 24px;
+      font-family: 'Spline Sans Mono', monospace; font-size: 10px; font-weight: 300;
+      letter-spacing: 0.08em; text-transform: uppercase; color: var(--gray2);
+    }
+
+    /* ── Code tab system ── */
+    .proj-tab-bar {
+      display: flex; align-items: stretch;
+      border-bottom: 1px solid rgba(0,0,0,0.1);
+      background: var(--bg);
+    }
+    .proj-tab-btn {
+      font-family: 'Spline Sans Mono', monospace; font-size: 10px; font-weight: 300;
+      letter-spacing: 0.18em; text-transform: uppercase;
+      padding: 18px 32px; border: none; background: none; cursor: pointer;
+      color: var(--gray); border-bottom: 2px solid transparent;
+      margin-bottom: -1px; transition: color 0.2s, border-color 0.2s;
+    }
+    .proj-tab-btn.active { color: var(--ink); border-bottom-color: var(--ink); }
+    .proj-tab-btn:hover:not(.active) { color: var(--ink); }
+    .proj-tab-panel { display: none; }
+    .proj-tab-panel.active { display: block; }
+
+    /* ── Code section blocks ── */
+    .code-section { border: 1px solid rgba(0,0,0,0.1); margin-bottom: 20px; overflow: hidden; }
+    .code-section__hdr {
+      background: var(--ink); color: var(--bg);
+      display: flex; align-items: center; gap: 20px; padding: 14px 24px;
+    }
+    .code-section__num {
+      font-family: 'Spline Sans Mono', monospace; font-size: 11px;
+      font-weight: 300; letter-spacing: 0.12em; opacity: 0.4;
+    }
+    .code-section__title {
+      font-size: clamp(12px,1.2vw,16px); font-weight: 700;
+      letter-spacing: -0.01em; text-transform: uppercase;
+    }
+    .code-section__body { display: grid; grid-template-columns: 1fr 1fr; }
+    .code-section__explain {
+      padding: 28px; border-right: 1px solid rgba(0,0,0,0.08);
+      font-family: 'Spline Sans Mono', monospace;
+      font-size: clamp(9px,0.78vw,11px); font-weight: 300;
+      line-height: 1.9; text-transform: uppercase; color: var(--gray2);
+    }
+    .code-section__explain b { color: var(--ink); font-weight: 400; }
+    .code-block {
+      margin: 0; padding: 28px 24px; background: #0f0f0f; overflow-x: auto;
+      font-family: 'Spline Sans Mono', monospace;
+      font-size: clamp(9px,0.78vw,11px); font-weight: 300;
+      line-height: 1.85; color: #cdd2da; white-space: pre;
+    }
+    .ck { color: #c792ea; } /* keyword */
+    .cf { color: #82aaff; } /* function/def name */
+    .cs { color: #c3e88d; } /* string */
+    .cn { color: #f78c6c; } /* number */
+    .cc { color: #546e7a; } /* comment */
+    .co { color: #ffcb6b; } /* operator / special */
+  </style>
+</head>
+<body>
+
+  <div class="loader" id="loader">
+    <div class="loader__role">NLR GDS Candidate &middot; 2025</div>
+    <div class="loader__count" id="loaderCount">0%</div>
+  </div>
+
+  <div class="progress" id="progress"></div>
+
+  <nav class="nav" id="nav">
+    <div class="container">
+      <a href="#intro">Introduction</a>
+      <a href="#roadmap">Projects</a>
+      <a href="#closing">Questions</a>
+    </div>
+  </nav>
+
+  <main>
+
+    <!-- ═══════════════════════════════════
+         SLIDE 1 — OPENING  0:00–1:15
+    ═══════════════════════════════════ -->
+    <section class="hero" id="hero">
+      <!-- Background: architecture image left, GIS image right -->
+      <div class="hero-images">
+        <div class="hero-img-panel" id="heroPanelL">
+          <!-- architecture / metro reference -->
+          <img src="assets/P4/Cover.png" alt="architecture background" />
+        </div>
+        <div class="hero-img-panel" id="heroPanelR">
+          <!-- GIS / geospatial reference -->
+          <img src="assets/P12/Screenshot 2026-05-12 105944.png" alt="GIS background" />
+        </div>
+      </div>
+      <div class="container hero-content">
+        <div class="hero-title">
+          <span class="hero-line"><span class="hero-word">JUAN</span></span>
+          <span class="hero-line"><span class="hero-word">SEBASTIAN</span></span>
+          <span class="hero-line"><span class="hero-word">CORTES</span></span>
+        </div>
+        <div class="hero-bottom" id="heroBottom">
+          <div class="hero-role">
+            / Architecture &rarr; Geospatial Data Science<br>
+            / Graduate Intern Candidate &mdash; GDS Modeling &amp; Analysis<br>
+            / USC Spatial Sciences Institute &middot; M.S. GIST
+          </div>
+          <div class="hero-card">
+            <div class="hero-card__label">Candidate Presentation &middot; 15 min</div>
+            <div class="hero-card__name">NLR<br>Geospatial<br>Data Science</div>
+            <div class="hero-card__info">
+              National Renewable Energy Laboratory<br>
+              Strategic Energy Analysis Center
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ═══════════════════════════════════
+         BACKGROUND — WHO YOU ARE
+    ═══════════════════════════════════ -->
+    <section class="intro" id="intro">
+      <div class="container">
+        <div style="display:flex;justify-content:space-between;align-items:flex-start;">
+          <div class="sec-label" style="color:rgba(255,255,255,0.3);">01 &middot; Background</div>
+          <span class="timing-badge" style="color:rgba(255,255,255,0.2);border-color:rgba(255,255,255,0.12);">0:00 &ndash; 1:15</span>
+        </div>
+
+        <div class="intro-row">
+          <div>
+            <div class="intro-big reveal" id="introBig">FROM<br>ARCHI&shy;TECTURE<br>TO GIS</div>
+          </div>
+          <div class="intro-timeline">
+            <div class="tl-item fade-up" data-tl>
+              <div class="tl-item__date">Feb 2021 &ndash; Nov 2022 &middot; WSP</div>
+              <div class="tl-item__title">Design Architect</div>
+              <div class="tl-item__sub">Bogota Metro Line 1 &mdash; station placement &amp; infrastructure planning<br>Space, infrastructure, and the people who depend on it.</div>
+            </div>
+            <div class="tl-item fade-up" data-tl>
+              <div class="tl-item__date">Universidad de los Andes</div>
+              <div class="tl-item__title">Research Assistant</div>
+              <div class="tl-item__sub">Bogota River Systems &mdash; water management &amp; demographic GIS</div>
+            </div>
+            <div class="tl-item fade-up" data-tl>
+              <div class="tl-item__date">Expected December 2026</div>
+              <div class="tl-item__title">M.S. GIS &amp; Technology</div>
+              <div class="tl-item__sub">USC Spatial Sciences Institute &mdash; Python tools, ML classifiers, composite indices</div>
+            </div>
+            <div class="awards-row">
+              <div class="award fade-up" data-tl>
+                <div class="award__label">APCG 2025</div>
+                <div class="award__title">Tom McKnight &amp; Joan Clemens Award</div>
+                <div class="award__sub">Outstanding Paper &middot; Master&rsquo;s Student</div>
+              </div>
+              <div class="award fade-up" data-tl>
+                <div class="award__label">Esri 2025</div>
+                <div class="award__title">Best Story Map</div>
+                <div class="award__sub">ArcGIS StoryMaps Student Competition</div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ═══════════════════════════════════
+         SLIDE 2 — ROADMAP  1:15–1:45
+    ═══════════════════════════════════ -->
+    <section class="roadmap" id="roadmap">
+      <div class="container">
+        <div class="roadmap-header fade-up">
+          <div>
+            <div class="sec-label" style="margin-bottom:22px;">02 &middot; Roadmap</div>
+            <div class="roadmap-big">THREE<br>PROJECTS</div>
+          </div>
+          <span class="timing-badge">1:15 &ndash; 1:45</span>
+        </div>
+        <div class="roadmap-grid">
+          <div class="roadmap-card">
+            <div class="roadmap-img" data-rimg>
+              <img src="assets/NRL/Screenshot 2026-05-12 105944.png" alt="Vanishing Clouds" />
+            </div>
+            <div class="roadmap-body">
+              <div class="roadmap-idx">A &middot; Index</div>
+              <div class="roadmap-name">Vanishing<br>Clouds</div>
+              <div class="roadmap-why">Composite geospatial index at national scale &mdash; structurally closest to what your team does with reV.</div>
+            </div>
+          </div>
+          <div class="roadmap-card">
+            <div class="roadmap-img" data-rimg>
+              <img src="https://cospatial.xyz/assets/P4/Cover.png" alt="Seattle Water" />
+            </div>
+            <div class="roadmap-body">
+              <div class="roadmap-idx">B &middot; Tool</div>
+              <div class="roadmap-name">Seattle<br>Water Main<br>Risk Tool</div>
+              <div class="roadmap-why">Reusable, parameterized Python automation &mdash; built to run on any municipality&rsquo;s data, not just Seattle&rsquo;s.</div>
+            </div>
+          </div>
+          <div class="roadmap-card">
+            <div class="roadmap-img" data-rimg>
+              <img src="https://cospatial.xyz/assets/FieldSight/Cover.png" alt="FieldSight" />
+            </div>
+            <div class="roadmap-body">
+              <div class="roadmap-idx">C &middot; Model</div>
+              <div class="roadmap-name">FieldSight</div>
+              <div class="roadmap-why">ML image classification pipeline &mdash; spatiotemporal, confidence-weighted, built for a real post-disaster stakeholder.</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ═══════════════════════════════════
+         PROJECT 1 — VANISHING CLOUDS
+         1:45 – 5:30
+    ═══════════════════════════════════ -->
+    <section class="proj-section" id="p1">
+      <div class="proj-header">
+        <div class="container">
+          <div class="proj-num-row">
+            <div class="sec-label" style="color:rgba(255,255,255,0.3);">03 &middot; Project A &mdash; Index</div>
+            <span class="timing-badge" style="color:rgba(255,255,255,0.2);border-color:rgba(255,255,255,0.12);">1:45 &ndash; 5:30</span>
+          </div>
+          <div class="proj-big" id="p1Big">VANISHING<br>CLOUDS</div>
+          <div class="proj-tags">
+            <span class="tag">Leaflet.js</span>
+            <span class="tag">ArcGIS JS API</span>
+            <span class="tag">MapBiomas</span>
+            <span class="tag">NASA FIRMS</span>
+            <span class="tag">GBIF</span>
+            <span class="tag">IAvH</span>
+            <span class="tag">Python</span>
+            <span class="tag">GeoPandas</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="container">
+
+        <!-- Overview + stats + hero image -->
+        <div class="proj-slide">
+          <div class="proj-slide-2col">
+            <div>
+              <div class="proj-slide__label">Overview</div>
+              <div class="proj-slide__title">Colombia&rsquo;s<br>Paramo Crisis</div>
+              <div class="proj-slide__body" style="margin-top:16px;">
+                An interactive web atlas documenting the decline of Colombia&rsquo;s paramo ecosystems &mdash; the high-altitude wetlands that supply drinking water to <b>48 million people</b>, host over 500 endemic species, and represent more than <b>70% of the world&rsquo;s paramos</b>.<br><br>
+                The central argument: Colombia holds an ecosystem that is endemic at the landscape scale &mdash; not just in its species, but in the very conditions that allow it to exist.
+              </div>
+              <div class="nlr-note">
+                <div class="nlr-note__label">Connection to reV &mdash; Galen Maclaurin</div>
+                <div class="nlr-note__text">Same composite-index problem reV solves: where does the signal say to act when each input has a different native resolution, projection, and provider?</div>
+              </div>
+              <!-- Four data sources -->
+              <div class="data-source-grid">
+                <div class="ds-cell">
+                  <div class="ds-cell__provider">MapBiomas</div>
+                  <div class="ds-cell__detail">Land cover change &middot; 1986&ndash;present &middot; Raster</div>
+                </div>
+                <div class="ds-cell">
+                  <div class="ds-cell__provider">NASA FIRMS</div>
+                  <div class="ds-cell__detail">Active fire detections &middot; Near real-time &middot; Points</div>
+                </div>
+                <div class="ds-cell">
+                  <div class="ds-cell__provider">IAvH</div>
+                  <div class="ds-cell__detail">Paramo boundaries &middot; Shapefiles</div>
+                </div>
+                <div class="ds-cell">
+                  <div class="ds-cell__provider">GBIF</div>
+                  <div class="ds-cell__detail">Species occurrence records &middot; Heterogeneous</div>
+                </div>
+              </div>
+            </div>
+            <!-- Hero landing image — clickable link to live site -->
+            <div>
+              <a href="https://vanishingclouds.xyz" target="_blank" style="display:block;position:relative;">
+                <div class="proj-img">
+                  <img src="assets/NRL/Screenshot 2026-05-12 105944.png" alt="Vanishing Clouds landing" style="aspect-ratio:16/10;" />
+                </div>
+                <div style="position:absolute;top:16px;left:16px;background:rgba(0,0,0,0.7);color:#fff;
+                  font-family:'Spline Sans Mono',monospace;font-size:10px;font-weight:300;
+                  letter-spacing:0.14em;text-transform:uppercase;padding:6px 12px;">
+                  &bull; Live &mdash; vanishingclouds.xyz
+                </div>
+              </a>
+              <!-- Stats -->
+              <div class="stats-row" style="grid-template-columns:repeat(4,1fr);">
+                <div class="stat"><div class="stat__num">37</div><div class="stat__label">Paramo complexes</div></div>
+                <div class="stat"><div class="stat__num">201</div><div class="stat__label">Species records</div></div>
+                <div class="stat"><div class="stat__num">40</div><div class="stat__label">Fire alerts</div></div>
+                <div class="stat"><div class="stat__num">45</div><div class="stat__label">Urgency zones</div></div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- SIX MODULES header -->
+        <div style="border-top:1px solid rgba(0,0,0,0.08);padding:48px 0 32px;">
+          <div class="proj-slide__label">Six Interactive Modules</div>
+          <div class="proj-slide__title" style="font-size:clamp(20px,2.2vw,36px);">Each module focuses on one dimension &mdash; from geography and ecology to biodiversity and human pressure &mdash; building toward a composite understanding.</div>
+        </div>
+
+        <!-- Module 01 — Paramos -->
+        <div class="module-row">
+          <div class="module-row__header">
+            <span class="module-row__num">01</span>
+            <span class="module-row__title">Paramos &mdash; Geography &amp; Distribution</span>
+          </div>
+          <div class="module-row__body">
+            <div class="module-row__img">
+              <img src="assets/NRL/Screenshot 2026-05-12 105958.png" alt="Paramos module" />
+            </div>
+            <div class="module-row__text">
+              All 37 of Colombia&rsquo;s officially recognized paramo complexes displayed as interactive polygons across the three Andean cordilleras. Clicking any complex opens a detail card showing its code, district, biome, surface area, and elevation range.<br><br>
+              <b>360&deg; field-view markers</b> appear as users zoom in, revealing georeferenced photographs taken directly inside the paramo. A <b>dynamic elevation cross-section</b> at the bottom renders the terrain profile at the current latitude in real time.
+              <div class="module-chips">
+                <span class="chip">37 paramo complexes</span>
+                <span class="chip">360&deg; field-view markers</span>
+                <span class="chip">Complex detail cards</span>
+                <span class="chip">Elevation cross-section</span>
+                <span class="chip">IAvH boundaries</span>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Module 02 — Build a Paramo -->
+        <div class="module-row">
+          <div class="module-row__header">
+            <span class="module-row__num">02</span>
+            <span class="module-row__title">Build a Paramo &mdash; Environmental Conditions</span>
+          </div>
+          <div class="module-row__body">
+            <div class="module-row__img">
+              <img src="assets/NRL/Screenshot 2026-05-12 110036.png" alt="Build a Paramo module" />
+            </div>
+            <div class="module-row__text">
+              Paramos don&rsquo;t emerge at random &mdash; they require five converging conditions. This module lets users toggle each environmental layer individually and watch the map respond: <b>high elevation (&ge;2,800m)</b>, cold temperatures, abundant moisture, tropical latitude, and Andean geography.<br><br>
+              A composite <b>Climate Match Score</b> layer synthesizes temperature and precipitation to show where paramo-like conditions exist globally, revealing that the Colombian Andes are the only place where all factors converge at scale.
+              <div class="module-chips">
+                <span class="chip">Elevation &ge;2,800m</span>
+                <span class="chip">Temperature 2&ndash;10&deg;C</span>
+                <span class="chip">Climate Match Score</span>
+                <span class="chip">Equatorial influence</span>
+                <span class="chip">Global suitability</span>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Module 03 — Species -->
+        <div class="module-row">
+          <div class="module-row__header">
+            <span class="module-row__num">03</span>
+            <span class="module-row__title">Species &mdash; Biodiversity &amp; Occurrence</span>
+          </div>
+          <div class="module-row__body">
+            <div class="module-row__img">
+              <img src="assets/NRL/Screenshot 2026-05-12 110110.png" alt="Species richness hexmap" />
+            </div>
+            <div class="module-row__text">
+              A hexagonal grid shaded by species richness reveals biodiversity hotspots across Colombia&rsquo;s paramos. A <b>temporal slider animates GBIF occurrence records</b> from Pre-1980 through to the present, showing how documentation has grown over decades.<br><br>
+              Individual species are filterable by group (Flora/Fauna) and IUCN threat status (CR, EN, VU). Clicking any entry opens a detail card with a <b>field photograph, taxonomy, year of first record</b>, and geographic coordinates.
+              <div class="module-chips">
+                <span class="chip">201 occurrence records</span>
+                <span class="chip">GBIF API</span>
+                <span class="chip">Temporal slider</span>
+                <span class="chip">CR / EN / VU filter</span>
+                <span class="chip">Species detail cards</span>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Module 04 — Threats -->
+        <div class="module-row">
+          <div class="module-row__header">
+            <span class="module-row__num">04</span>
+            <span class="module-row__title">Threats &mdash; Land-Cover Change &amp; Fire Pressure</span>
+          </div>
+          <div class="module-row__body">
+            <div class="module-row__img">
+              <img src="assets/NRL/Screenshot 2026-05-12 110200.png" alt="Threats module" />
+            </div>
+            <div class="module-row__text">
+              Six threat views expose the human pressures reshaping paramo landscapes from 1986 to 2024, powered by <b>MapBiomas Colombia annual land-cover classifications</b>: a land-cover timeline, threat category by year, agriculture expansion by complex, urban proximity risk, total land-cover change, and fire pressure.<br><br>
+              A curated <b>Threats in the News</b> panel surfaces recent journalism from AIDA, Yale Environment 360, and The Revelator &mdash; linking the spatial data directly to active legal battles over mining concessions inside constitutionally protected paramo zones.
+              <div class="module-chips">
+                <span class="chip">MapBiomas 1986&ndash;2024</span>
+                <span class="chip">Agriculture expansion</span>
+                <span class="chip">Urban proximity risk</span>
+                <span class="chip">NASA FIRMS fire alerts</span>
+                <span class="chip">Threats in the News</span>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Module 05 — Urgency Index -->
+        <div class="module-row" style="margin-bottom:0;">
+          <div class="module-row__header">
+            <span class="module-row__num">05</span>
+            <span class="module-row__title">Urgency &mdash; Conservation Priority Index</span>
+          </div>
+          <div class="module-row__body">
+            <div class="module-row__img">
+              <img src="assets/NRL/Screenshot 2026-06-23 231904.png" alt="Urgency index map" />
+            </div>
+            <div class="module-row__text">
+              The Urgency module synthesizes all preceding threat layers &mdash; land-cover change, fire pressure, agriculture expansion, and urban proximity &mdash; into a <b>single composite conservation urgency index</b> across all 45 urgency zones.<br><br>
+              The index is designed to help researchers, policymakers, and the public quickly identify which paramo complexes face the most acute combination of threats. <b>This is the same composite-signal problem reV solves</b> &mdash; not any one factor, but the weighted combination across competing spatial inputs.
+              <div class="module-chips">
+                <span class="chip">45 urgency zones</span>
+                <span class="chip">Composite index</span>
+                <span class="chip">Multi-layer weighting</span>
+                <span class="chip">Normalization pipeline</span>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Live atlas banner -->
+        <a href="https://vanishingclouds.xyz" target="_blank" class="live-banner">
+          <div>
+            <div class="live-banner__label">Live &mdash; Open Web Atlas</div>
+            <div class="live-banner__url">vanishingclouds.xyz</div>
+          </div>
+          <div class="live-banner__arrow">&nearr;</div>
+        </a>
+
+      </div>
+    </section>
+
+    <!-- ═══════════════════════════════════
+         PROJECT 2 — SEATTLE WATER MAIN
+         5:30 – 9:15
+    ═══════════════════════════════════ -->
+    <div class="proj-divider"></div>
+    <section class="proj-section proj-tab-group" id="p2">
+      <div class="proj-header">
+        <div class="container">
+          <div class="proj-num-row">
+            <div class="sec-label" style="color:rgba(255,255,255,0.3);">04 &middot; Project B &mdash; Tool</div>
+            <span class="timing-badge" style="color:rgba(255,255,255,0.2);border-color:rgba(255,255,255,0.12);">5:30 &ndash; 9:15</span>
+          </div>
+          <div class="proj-big" id="p2Big">SEATTLE<br>WATER<br>MAIN</div>
+          <div class="proj-tags">
+            <span class="tag">Python</span>
+            <span class="tag">QGIS</span>
+            <span class="tag">Jupyter</span>
+            <span class="tag">GeoPandas</span>
+            <span class="tag">Geoprocessing Script</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="proj-tab-bar">
+        <button class="proj-tab-btn active" data-tab="project">Project</button>
+        <button class="proj-tab-btn" data-tab="code">&lt;/&gt;&nbsp;&nbsp;Code</button>
+      </div>
+      <div class="proj-tab-panel active" data-tab="project">
+      <div class="container">
+        <!-- Overview + formula -->
+        <div class="proj-slide">
+          <div class="proj-slide-2col">
+            <div>
+              <div class="proj-slide__label">The Formula &mdash; RISK_IDX</div>
+              <div class="proj-slide__title">Five Components.<br>One Score.</div>
+              <div class="proj-slide__body" style="margin-top:16px;">
+                A weighted composite failure-risk index for every water main segment in Seattle&rsquo;s entire distribution network. Parameterized and portable &mdash; built to run on any municipality&rsquo;s data, not just Seattle&rsquo;s.
+              </div>
+              <table class="weight-table">
+                <thead><tr><th>Component</th><th>Weight</th><th>Logic</th></tr></thead>
+                <tbody>
+                  <tr><td>Pipe Age</td><td><span class="weight-bar" style="width:60px"></span>30%</td><td>Older = higher risk</td></tr>
+                  <tr><td>Material</td><td><span class="weight-bar" style="width:50px"></span>25%</td><td>Cast iron &gt; PVC</td></tr>
+                  <tr><td>Diameter</td><td><span class="weight-bar" style="width:40px"></span>20%</td><td>4&rdquo; &gt; 36&rdquo;</td></tr>
+                  <tr><td>Pressure Class</td><td><span class="weight-bar" style="width:30px"></span>15%</td><td>Higher pressure = more stress</td></tr>
+                  <tr><td>Relining History</td><td><span class="weight-bar" style="width:20px"></span>10%</td><td>No relining = unmitigated age</td></tr>
+                </tbody>
+              </table>
+              <div class="nlr-note">
+                <div class="nlr-note__label">Real bug caught in prototyping</div>
+                <div class="nlr-note__text">Diameter was normalized on a millimeter scale &mdash; flagged every single pipe in Seattle as high-risk. Caught in Jupyter before it ever touched the geoprocessing layer.</div>
+              </div>
+            </div>
+            <div class="proj-img">
+              <img src="assets/P4/StudyAreaSeatle.jpg" alt="Seattle study area" style="aspect-ratio:1/1;object-position:center;" />
+            </div>
+          </div>
+        </div>
+
+        <!-- Before / After -->
+        <div class="proj-slide">
+          <div style="margin-bottom:28px;">
+            <div class="proj-slide__label">From Raw Network &rarr; Risk Index</div>
+            <div class="proj-slide__title">The Result</div>
+            <div class="proj-slide__body" style="margin-top:12px;max-width:680px;">
+              Every pipe segment scored and classified. Tool writes all five component scores plus the composite RISK_IDX back onto every feature &mdash; not just a map, a <b>queryable dataset</b>.
+            </div>
+          </div>
+          <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;">
+            <div>
+              <div class="proj-slide__label" style="margin-bottom:8px;">Before &mdash; Raw network</div>
+              <div class="proj-img"><img src="assets/P4/Before.jpg" alt="Before scoring" style="aspect-ratio:4/3;" /></div>
+            </div>
+            <div>
+              <div class="proj-slide__label" style="margin-bottom:8px;">After &mdash; RISK_IDX scored</div>
+              <div class="proj-img"><img src="assets/P4/result.jpg" alt="RISK_IDX result" style="aspect-ratio:4/3;" /></div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Tool design -->
+        <div class="proj-slide">
+          <div class="proj-slide-2col">
+            <div>
+              <div class="proj-slide__label">The Tool Design</div>
+              <div class="proj-slide__title">Portable by<br>Design</div>
+              <div class="proj-slide__body" style="margin-top:16px;">
+                Relies only on attributes <b>almost every utility already maintains</b>: age, material, diameter, pressure class, relining history. Not a one-off Seattle analysis.
+                <br><br>
+                Parameterized so weights are adjustable at runtime. Writes all component scores back to every feature. Helper function prevents re-adding fields on repeat runs.
+              </div>
+              <div class="nlr-note">
+                <div class="nlr-note__label">Connection to NLR</div>
+                <div class="nlr-note__text">Reusable, parameterized geospatial tooling &mdash; the kind your team builds constantly across different energy technologies and regions.</div>
+              </div>
+            </div>
+            <div>
+              <div class="proj-slide__label">Development Approach</div>
+              <div class="proj-slide__title">Prototype Fast.<br>Then<br>Productionize.</div>
+              <div class="proj-slide__body" style="margin-top:16px;">
+                <b>Step 1</b> &mdash; Jupyter + pandas to iterate on weights and catch unit errors.<br><br>
+                <b>Step 2</b> &mdash; Rebuilt as a QGIS geoprocessing script once the logic was validated in Jupyter.<br><br>
+                <b>Step 3</b> &mdash; Packaged as script toolbox anyone can run against their own data.
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      </div><!-- /project tab -->
+
+      <!-- CODE TAB: Seattle -->
+      <div class="proj-tab-panel" data-tab="code">
+        <div class="container" style="padding-top:60px;padding-bottom:80px;">
+          <div style="padding-bottom:36px;border-bottom:1px solid rgba(0,0,0,0.08);margin-bottom:40px;">
+            <div class="proj-slide__label">Code walkthrough &mdash; WaterMainRiskTools.pyt</div>
+            <div class="proj-slide__title" style="font-size:clamp(20px,2.2vw,34px);">Three decisions worth explaining: idempotent field management, the risk formula, and two-pass normalization.</div>
+          </div>
+
+          <div class="code-section">
+            <div class="code-section__hdr">
+              <span class="code-section__num">01</span>
+              <span class="code-section__title">ensure_field() &mdash; Safe to Re-Run</span>
+            </div>
+            <div class="code-section__body">
+              <div class="code-section__explain">
+                Adding a field that already exists throws a fatal error in most geoprocessing APIs. <b>ensure_field()</b> checks the existing field list first.<br><br>
+                This lets the analyst <b>adjust weights and re-score</b> the same dataset multiple times without having to delete and recreate the feature class. In a real utility workflow that matters a lot.
+              </div>
+              <pre class="code-block"><span class="ck">def</span> <span class="cf">ensure_field</span>(name, ftype):
+    existing = [
+        f.name.<span class="cf">upper</span>()
+        <span class="ck">for</span> f <span class="ck">in</span> arcpy.<span class="cf">ListFields</span>(in_fc)
+    ]
+    <span class="ck">if</span> name.<span class="cf">upper</span>() <span class="ck">not in</span> existing:
+        arcpy.<span class="cf">AddField_management</span>(
+            in_fc, name, ftype
+        )
+
+<span class="cc"># Called before any cursor opens:</span>
+<span class="cf">ensure_field</span>(<span class="cs">"PIPE_AGE"</span>,    <span class="cs">"LONG"</span>)
+<span class="cf">ensure_field</span>(<span class="cs">"DIAMETER_MM"</span>, <span class="cs">"DOUBLE"</span>)
+<span class="cf">ensure_field</span>(<span class="cs">"SIMPLE_RISK"</span>, <span class="cs">"DOUBLE"</span>)
+<span class="cf">ensure_field</span>(<span class="cs">"RISK_RANK"</span>,   <span class="cs">"LONG"</span>)
+<span class="cf">ensure_field</span>(<span class="cs">"TOP1PCT"</span>,     <span class="cs">"SHORT"</span>)</pre>
+            </div>
+          </div>
+
+          <div class="code-section">
+            <div class="code-section__hdr">
+              <span class="code-section__num">02</span>
+              <span class="code-section__title">Risk Formula &mdash; Age &divide; Diameter + Unit Conversion</span>
+            </div>
+            <div class="code-section__body">
+              <div class="code-section__explain">
+                The formula is simple: <b>older + smaller diameter = higher risk</b>. The tricky part was units.<br><br>
+                Seattle's data stores diameter in <b>inches</b>, but some records look like "6" and others look like "152." The <b>diam &lt; 200</b> heuristic catches it &mdash; anything under 200 is treated as inches and multiplied by 25.4. Without this, a 6mm pipe and a 6-inch pipe would score identically wrong.
+              </div>
+              <pre class="code-block"><span class="cc"># Convert diameter: inches → mm if needed</span>
+<span class="ck">if</span> diam <span class="co">&lt;</span> <span class="cn">200</span>:        <span class="cc"># looks like inches</span>
+    diam_mm = diam <span class="co">*</span> <span class="cn">25.4</span>
+<span class="ck">else</span>:                <span class="cc"># already mm</span>
+    diam_mm = diam
+
+<span class="cc"># Age from installation year</span>
+pipe_age = current_year <span class="co">-</span> inst_year
+
+<span class="cc"># The formula: older + smaller = higher risk</span>
+<span class="ck">if</span> pipe_age <span class="ck">and</span> diam_mm <span class="co">&gt;</span> <span class="cn">0</span>:
+    tmp_risk = <span class="cf">float</span>(pipe_age) <span class="co">/</span> diam_mm
+
+<span class="cc"># 80yr, 6" pipe:  80 / 152.4 = 0.525  ← high</span>
+<span class="cc"># 10yr, 36" pipe: 10 / 914.4 = 0.010  ← low</span></pre>
+            </div>
+          </div>
+
+          <div class="code-section" style="margin-bottom:0;">
+            <div class="code-section__hdr">
+              <span class="code-section__num">03</span>
+              <span class="code-section__title">Two-Pass Algorithm &mdash; Compute, Then Normalize &amp; Rank</span>
+            </div>
+            <div class="code-section__body">
+              <div class="code-section__explain">
+                Normalization requires knowing the <b>max risk across all segments</b> &mdash; which means you can't normalize in the same pass where you compute it.<br><br>
+                <b>Pass 1</b>: compute raw risk for every row, collect into a list.<br>
+                <b>Pass 2</b>: sort, assign percentile ranks, normalize to 0&ndash;1, flag the top 1%.<br><br>
+                Same pattern applies to any ranking problem in a geoprocessing tool.
+              </div>
+              <pre class="code-block"><span class="cc"># PASS 1 — collect raw scores</span>
+risk_list = []
+<span class="ck">with</span> arcpy.da.<span class="cf">UpdateCursor</span>(in_fc, fields) <span class="ck">as</span> cur:
+    <span class="ck">for</span> row <span class="ck">in</span> cur:
+        tmp_risk = <span class="cf">float</span>(pipe_age) <span class="co">/</span> diam_mm
+        risk_list.<span class="cf">append</span>((oid, tmp_risk))
+
+<span class="cc"># PASS 2 — normalize, rank, flag top 1%</span>
+max_risk  = <span class="cf">max</span>(r <span class="ck">for</span> _, r <span class="ck">in</span> risk_list)
+top_cut   = <span class="cf">max</span>(<span class="cn">1</span>, <span class="cf">int</span>(<span class="cf">len</span>(risk_list) <span class="co">*</span> <span class="cn">0.01</span>))
+sorted_rl = <span class="cf">sorted</span>(
+    risk_list, key=<span class="ck">lambda</span> x: x[<span class="cn">1</span>], reverse=<span class="ck">True</span>
+)
+<span class="ck">for</span> rank, (oid, r) <span class="ck">in</span> <span class="cf">enumerate</span>(sorted_rl, start=<span class="cn">1</span>):
+    rank_map[oid] = rank
+    prob_map[oid] = r <span class="co">/</span> max_risk   <span class="cc"># → 0–1</span>
+    top_map[oid]  = <span class="cn">1</span> <span class="ck">if</span> rank <span class="co">&lt;=</span> top_cut <span class="ck">else</span> <span class="cn">0</span></pre>
+            </div>
+          </div>
+
+        </div>
+      </div><!-- /code tab -->
+    </section>
+
+    <!-- ═══════════════════════════════════
+         PROJECT 3 — FIELDSIGHT
+         9:15 – 12:45
+    ═══════════════════════════════════ -->
+    <div class="proj-divider"></div>
+    <section class="proj-section proj-tab-group" id="p3">
+      <div class="proj-header">
+        <div class="container">
+          <div class="proj-num-row">
+            <div class="sec-label" style="color:rgba(255,255,255,0.3);">05 &middot; Project C &mdash; Model</div>
+            <span class="timing-badge" style="color:rgba(255,255,255,0.2);border-color:rgba(255,255,255,0.12);">9:15 &ndash; 12:45</span>
+          </div>
+          <div class="proj-big" id="p3Big">FIELD<br>SIGHT</div>
+          <div class="proj-tags">
+            <span class="tag">PyTorch</span>
+            <span class="tag">Survey123</span>
+            <span class="tag">QGIS</span>
+            <span class="tag">Python</span>
+            <span class="tag">GeoPandas</span>
+            <span class="tag">Streamlit</span>
+            <span class="tag">Binary Classifiers</span>
+            <span class="tag">Confidence Scoring</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="proj-tab-bar">
+        <button class="proj-tab-btn active" data-tab="project">Project</button>
+        <button class="proj-tab-btn" data-tab="code">&lt;/&gt;&nbsp;&nbsp;Code</button>
+      </div>
+      <div class="proj-tab-panel active" data-tab="project">
+      <div class="container">
+
+        <!-- Overview + live link badge + stats -->
+        <div class="proj-slide">
+          <div class="proj-slide-2col">
+            <div>
+              <div class="proj-slide__label">Overview &mdash; 2025 Eaton Fire, Altadena CA</div>
+              <div class="proj-slide__title">Turning Field<br>Photos into<br>Decisions</div>
+              <div class="proj-slide__body" style="margin-top:16px;">
+                Las Flores Water Company &mdash; a small, community-owned utility that <b>lost 75% of its customers</b> in the Altadena fire. Field crews photographing every water meter site. Hundreds of photos. No structured dispatch priority.<br><br>
+                FieldSight works inside the data collection tools crews already use. A technician photographs a site &mdash; the meter box, the surrounding lot &mdash; and FieldSight automatically classifies what it sees, writing the result directly into the survey record <b>without interrupting the workflow.</b>
+              </div>
+              <!-- Two problem cards -->
+              <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-top:24px;">
+                <div class="nlr-note">
+                  <div class="nlr-note__label">Manual Review Bottleneck</div>
+                  <div class="nlr-note__text">Hundreds of photos reviewed by hand &mdash; slow and inconsistent under crisis conditions</div>
+                </div>
+                <div class="nlr-note">
+                  <div class="nlr-note__label">Unstructured Photo Data</div>
+                  <div class="nlr-note__text">Raw images in Survey123 carry no condition data unless manually labeled</div>
+                </div>
+              </div>
+              <div class="stats-row" style="grid-template-columns:repeat(3,1fr);margin-top:28px;">
+                <div class="stat"><div class="stat__num">21</div><div class="stat__label">Sites evaluated</div></div>
+                <div class="stat"><div class="stat__num">10</div><div class="stat__label">Destroyed meters</div></div>
+                <div class="stat"><div class="stat__num">5</div><div class="stat__label">Auto-flagged for review</div></div>
+              </div>
+            </div>
+            <!-- Priority map with live badge -->
+            <div>
+              <a href="https://cospatial.xyz/FieldSight/" target="_blank" style="display:block;position:relative;">
+                <div class="proj-img">
+                  <img src="assets/NRL/Screenshot 2026-06-23 232648.png" alt="FieldSight priority map" style="aspect-ratio:4/3;" />
+                </div>
+                <div style="position:absolute;top:16px;left:16px;background:rgba(0,0,0,0.7);color:#fff;
+                  font-family:'Spline Sans Mono',monospace;font-size:10px;font-weight:300;
+                  letter-spacing:0.14em;text-transform:uppercase;padding:6px 12px;">
+                  &bull; Live &mdash; cospatial.xyz/FieldSight
+                </div>
+              </a>
+              <div class="proj-img" style="margin-top:8px;">
+                <img src="assets/NRL/Screenshot 2026-06-23 200850.png" alt="Priority dots zoomed" style="aspect-ratio:4/3;" />
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Section header -->
+        <div style="border-top:1px solid rgba(0,0,0,0.08);padding:48px 0 32px;">
+          <div class="proj-slide__label">Four Sections &mdash; Categories &middot; Pipeline &middot; Results &middot; Explore</div>
+          <div class="proj-slide__title" style="font-size:clamp(20px,2.2vw,36px);">The full ML pipeline documented: from field photo to ranked priority list — every design decision made explicit.</div>
+        </div>
+
+        <!-- Module 01: Classification Categories -->
+        <div class="module-row">
+          <div class="module-row__header">
+            <span class="module-row__num">01</span>
+            <span class="module-row__title">Categories &mdash; Four Conditions, One Photo</span>
+          </div>
+          <div class="module-row__body">
+            <div class="module-row__img">
+              <img src="assets/NRL/Screenshot 2026-06-23 232907.png" alt="Survey123 data collection" />
+            </div>
+            <div class="module-row__text">
+              FieldSight classifies every field image into one of four structural condition categories &mdash; enabling automated population of data collection records <b>without manual review</b>.<br><br>
+              Two separate binary PyTorch classifiers run on each submission: <b>Meter Condition</b> (Destroyed vs. Damaged) and <b>Site Condition</b> (Ruins/Debris vs. Cleared). Running them independently lets each model specialize and makes confidence thresholds easier to interpret.
+              <div class="module-chips">
+                <span class="chip">Burned &mdash; 10 sites</span>
+                <span class="chip">Missing &mdash; 0 sites</span>
+                <span class="chip">Debris &mdash; 9 sites</span>
+                <span class="chip">Not Burned &mdash; 12 sites</span>
+                <span class="chip">Two binary classifiers</span>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Module 02: Pipeline -->
+        <div class="module-row">
+          <div class="module-row__header">
+            <span class="module-row__num">02</span>
+            <span class="module-row__title">Pipeline &mdash; Six-Stage GPS Photo &rarr; Priority Score</span>
+          </div>
+          <div class="module-row__body" style="grid-template-columns:1fr 1.4fr;">
+            <div class="module-row__img" style="aspect-ratio:auto;min-height:280px;">
+              <img src="assets/NRL/Screenshot 2026-06-23 232828.png" alt="QGIS spatial processing" style="height:100%;object-fit:cover;" />
+            </div>
+            <div class="module-row__text">
+              <div class="pipeline" style="margin-top:0;">
+                <div class="pipeline-step">
+                  <div class="pipeline-step__num">01</div>
+                  <div class="pipeline-step__body">
+                    <div class="pipeline-step__title">Field Collection</div>
+                    <div class="pipeline-step__sub">~60 GPS-tagged photos captured via Survey123</div>
+                  </div>
+                </div>
+                <div class="pipeline-step">
+                  <div class="pipeline-step__num">02</div>
+                  <div class="pipeline-step__body">
+                    <div class="pipeline-step__title">Data Preparation</div>
+                    <div class="pipeline-step__sub">QGIS &middot; GPS correction, parcel join, spatial alignment</div>
+                  </div>
+                </div>
+                <div class="pipeline-step">
+                  <div class="pipeline-step__num">03</div>
+                  <div class="pipeline-step__body">
+                    <div class="pipeline-step__title">Manual Labeling</div>
+                    <div class="pipeline-step__sub">~20 expert ground-truth labels for model training</div>
+                  </div>
+                </div>
+                <div class="pipeline-step">
+                  <div class="pipeline-step__num">04</div>
+                  <div class="pipeline-step__body">
+                    <div class="pipeline-step__title">Model Training</div>
+                    <div class="pipeline-step__sub">Two binary PyTorch classifiers: meter condition + site condition</div>
+                  </div>
+                </div>
+                <div class="pipeline-step">
+                  <div class="pipeline-step__num">05</div>
+                  <div class="pipeline-step__body">
+                    <div class="pipeline-step__title">Priority Scoring</div>
+                    <div class="pipeline-step__sub">Confidence metrics combined into PriorityScore &middot; uncertain cases flagged</div>
+                  </div>
+                </div>
+                <div class="pipeline-step" style="border-bottom:none;">
+                  <div class="pipeline-step__num">06</div>
+                  <div class="pipeline-step__body">
+                    <div class="pipeline-step__title">Dashboard</div>
+                    <div class="pipeline-step__sub">Predictions joined to feature class &middot; displayed in Streamlit</div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Module 03: Results -->
+        <div class="module-row" style="margin-bottom:0;">
+          <div class="module-row__header">
+            <span class="module-row__num">03</span>
+            <span class="module-row__title">Results &mdash; Priority Rankings &amp; Model Design</span>
+          </div>
+          <div class="module-row__body">
+            <div class="module-row__img">
+              <img src="assets/NRL/Screenshot 2026-06-23 200850.png" alt="Priority rankings output" />
+            </div>
+            <div class="module-row__text">
+              All 21 evaluated sites ranked by combined confidence score. Sites with a <b>destroyed meter receive the highest priority</b> for crew dispatch.<br><br>
+              The critical design decision: low-confidence predictions are <b>automatically surfaced for human review</b> rather than silently passed to the dispatch queue. Only ~20 ground-truth examples to train on &mdash; the tradeoff between automation and human review is the real engineering judgment in the pipeline.<br><br>
+              This pattern &mdash; model assists, human decides &mdash; makes the tool deployable in crisis conditions where misclassification has real consequences.
+              <div class="nlr-note" style="margin-top:20px;">
+                <div class="nlr-note__label">Connection to NLR &mdash; Katy Schneider</div>
+                <div class="nlr-note__text">Binary classifiers on field photos = object-based image analysis. Same pattern-recognition challenge as rooftop PV detection from satellite imagery.</div>
+              </div>
+              <div class="module-chips" style="margin-top:16px;">
+                <span class="chip">Destroyed: 10 &middot; CLASS 0</span>
+                <span class="chip">Damaged: 11 &middot; CLASS 1</span>
+                <span class="chip">Ruins/Debris: 9 &middot; CLASS 0</span>
+                <span class="chip">Cleared: 12 &middot; CLASS 1</span>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Live link banner -->
+        <a href="https://cospatial.xyz/FieldSight/" target="_blank" class="live-banner">
+          <div>
+            <div class="live-banner__label">Live &mdash; StoryMap &amp; Dashboard</div>
+            <div class="live-banner__url">cospatial.xyz/FieldSight</div>
+          </div>
+          <div class="live-banner__arrow">&nearr;</div>
+        </a>
+
+      </div>
+      </div><!-- /project tab -->
+
+      <!-- CODE TAB: FieldSight -->
+      <div class="proj-tab-panel" data-tab="code">
+        <div class="container" style="padding-top:60px;padding-bottom:80px;">
+          <div style="padding-bottom:36px;border-bottom:1px solid rgba(0,0,0,0.08);margin-bottom:40px;">
+            <div class="proj-slide__label">Code walkthrough &mdash; app.py (Streamlit dashboard)</div>
+            <div class="proj-slide__title" style="font-size:clamp(20px,2.2vw,34px);">Three decisions worth explaining: portable paths, visual priority encoding, and the human-review flag.</div>
+          </div>
+
+          <div class="code-section">
+            <div class="code-section__hdr">
+              <span class="code-section__num">01</span>
+              <span class="code-section__title">find_first_existing() &mdash; Portable Path Resolution</span>
+            </div>
+            <div class="code-section__body">
+              <div class="code-section__explain">
+                The dashboard runs both <b>locally</b> (files alongside app.py) and on <b>Streamlit Community Cloud</b> (different directory). Hard-coded paths break one environment.<br><br>
+                <b>find_first_existing()</b> checks a list of candidate paths and returns the first one that exists. Each data file gets two candidates &mdash; one for each environment &mdash; so the same code runs everywhere without config flags.
+              </div>
+              <pre class="code-block">APP_DIR = Path(<span class="cf">__file__</span>).parent
+
+<span class="ck">def</span> <span class="cf">find_first_existing</span>(*paths):
+    <span class="ck">for</span> p <span class="ck">in</span> paths:
+        <span class="ck">if</span> Path(p).<span class="cf">exists</span>():
+            <span class="ck">return</span> <span class="cf">str</span>(p)
+    <span class="ck">return</span> <span class="ck">None</span>
+
+<span class="cc"># Works locally AND on Streamlit Cloud:</span>
+dashboard_csv = <span class="cf">find_first_existing</span>(
+    APP_DIR <span class="co">/</span> <span class="cs">"data/dashboard_data.csv"</span>,
+    APP_DIR <span class="co">/</span> <span class="cs">"dashboard_data.csv"</span>,
+)
+predictions_csv = <span class="cf">find_first_existing</span>(
+    APP_DIR <span class="co">/</span> <span class="cs">"data/predictions_with_priority.csv"</span>,
+    APP_DIR <span class="co">/</span> <span class="cs">"predictions_with_priority.csv"</span>,
+)</pre>
+            </div>
+          </div>
+
+          <div class="code-section">
+            <div class="code-section__hdr">
+              <span class="code-section__num">02</span>
+              <span class="code-section__title">marker_color() &mdash; Encoding Two Signals in One Marker</span>
+            </div>
+            <div class="code-section__body">
+              <div class="code-section__explain">
+                Every site on the map gets a colored marker. The color encodes <b>two independent signals</b>: priority score (red / orange / green) and confidence flag (gray = needs human review).<br><br>
+                <b>Gray takes precedence over score color.</b> A high-scoring but low-confidence prediction should appear uncertain on the map, not high-priority. The visual hierarchy mirrors the operational hierarchy.
+              </div>
+              <pre class="code-block"><span class="ck">def</span> <span class="cf">marker_color</span>(row):
+    <span class="cc"># Low confidence overrides score color</span>
+    <span class="ck">if</span> row.<span class="cf">get</span>(<span class="cs">'needs_review'</span>):
+        <span class="ck">return</span> <span class="cs">'gray'</span>
+
+    score = row.<span class="cf">get</span>(<span class="cs">'priority_score'</span>, <span class="cn">0</span>)
+
+    <span class="ck">if</span>   score <span class="co">&gt;=</span> <span class="cn">50</span>: <span class="ck">return</span> <span class="cs">'red'</span>
+    <span class="ck">elif</span> score <span class="co">&gt;=</span> <span class="cn">30</span>: <span class="ck">return</span> <span class="cs">'orange'</span>
+    <span class="ck">else</span>:             <span class="ck">return</span> <span class="cs">'green'</span>
+
+<span class="cc"># Applied row-by-row across the dataframe:</span>
+df[<span class="cs">'color'</span>] = df.<span class="cf">apply</span>(
+    marker_color, axis=<span class="cn">1</span>
+)</pre>
+            </div>
+          </div>
+
+          <div class="code-section" style="margin-bottom:0;">
+            <div class="code-section__hdr">
+              <span class="code-section__num">03</span>
+              <span class="code-section__title">Confidence Threshold &mdash; Surfacing Uncertainty</span>
+            </div>
+            <div class="code-section__body">
+              <div class="code-section__explain">
+                Only ~20 labeled training examples. At that scale, a model that never says &ldquo;I don&rsquo;t know&rdquo; is <b>overconfident by design</b>.<br><br>
+                Any prediction below the threshold goes to a separate review queue instead of the dispatch list. The threshold is <b>configurable</b> &mdash; the team can tighten or loosen it as the model gets more training data.<br><br>
+                This is the most important architectural decision: <b>model assists, human decides.</b>
+              </div>
+              <pre class="code-block"><span class="cc"># Threshold at 65% — tunable by the team</span>
+CONFIDENCE_THRESHOLD = <span class="cn">0.65</span>
+
+<span class="cc"># Flag any prediction below threshold</span>
+df[<span class="cs">'needs_review'</span>] = (
+    df[<span class="cs">'confidence'</span>] <span class="co">&lt;</span> CONFIDENCE_THRESHOLD
+)
+
+<span class="cc"># Split into two separate queues</span>
+dispatch = df[
+    <span class="co">~</span>df[<span class="cs">'needs_review'</span>]
+].<span class="cf">sort_values</span>(<span class="cs">'priority_score'</span>, ascending=<span class="ck">False</span>)
+
+review_queue = df[df[<span class="cs">'needs_review'</span>]]
+
+<span class="cc"># Result: 5 of 21 sites flagged for review</span>
+<span class="cc"># Those 5 never reach the dispatch list</span></pre>
+            </div>
+          </div>
+
+        </div>
+      </div><!-- /code tab -->
+    </section>
+
+    <!-- ═══════════════════════════════════
+         CLOSING — WHY NLR  12:45–14:15
+    ═══════════════════════════════════ -->
+    <section class="closing" id="closing">
+      <div class="container">
+        <div style="display:flex;justify-content:space-between;align-items:flex-start;">
+          <div class="sec-label" style="color:rgba(255,255,255,0.3);">06 &middot; Why This Role</div>
+          <span class="timing-badge" style="color:rgba(255,255,255,0.2);border-color:rgba(255,255,255,0.12);">12:45 &ndash; 14:15</span>
+        </div>
+
+        <div class="closing-statement reveal" id="closingStatement">
+          AN INDEX.<br>A TOOL.<br>A MODEL.
+        </div>
+
+        <!-- Thank you -->
+        <div style="padding:100px 0 80px;border-top:1px solid rgba(255,255,255,0.08);margin-top:0;text-align:center;" class="fade-up">
+          <div style="font-size:clamp(48px,9vw,140px);font-weight:700;letter-spacing:-0.06em;text-transform:uppercase;line-height:0.88;">Thank You</div>
+          <div style="font-family:'Spline Sans Mono',monospace;font-size:12px;font-weight:300;letter-spacing:0.12em;text-transform:uppercase;color:rgba(255,255,255,0.3);margin-top:32px;">Happy to take questions</div>
+        </div>
+
+      </div>
+    </section>
+
+  </main>
+
+  <footer>
+    <div class="container">
+      <div class="footer-top">
+        <div class="footer-note">Juan Sebastian Cortes &mdash; NLR GDS Intern Candidate</div>
+        <div class="footer-right">
+          <a href="mailto:sebastian.co.fe@gmail.com" class="footer-email">sebastian.co.fe@gmail.com</a>
+          <div class="footer-links">
+            <a href="https://cospatial.xyz" target="_blank">Portfolio</a>
+            <a href="https://cospatial.xyz/FieldSight/" target="_blank">FieldSight</a>
+            <a href="https://vanishingclouds.xyz" target="_blank">Vanishing Clouds</a>
+          </div>
+        </div>
+      </div>
+
+      <div class="footer-bottom">
+        <span>Juan Sebastian Cortes</span>
+        <span>M.S. GIST &middot; Expected Dec 2026</span>
+        <span>Denver, CO &middot; 2026</span>
+      </div>
+    </div>
+  </footer>
+
+  <script>
+    // ── Loader ──
+    const loader = document.getElementById('loader');
+    let n = 0;
+    const tick = setInterval(() => {
+      n += Math.floor(Math.random() * 6) + 2;
+      if (n >= 100) {
+        n = 100; clearInterval(tick);
+        document.getElementById('loaderCount').textContent = '100%';
+        setTimeout(() => {
+          loader.classList.add('done');
+          // Reveal hero images
+          document.getElementById('heroPanelL').classList.add('revealed');
+          setTimeout(() => document.getElementById('heroPanelR').classList.add('revealed'), 150);
+          // Slide in hero letters
+          document.querySelectorAll('.hero-word').forEach((el, i) => {
+            setTimeout(() => el.classList.add('visible'), i * 80);
+          });
+          setTimeout(() => {
+            document.getElementById('heroBottom').classList.add('visible');
+            document.getElementById('nav').classList.add('visible');
+          }, 400);
+          observe();
+        }, 320);
+      }
+      document.getElementById('loaderCount').textContent = n + '%';
+    }, 36);
+
+    // ── Progress bar ──
+    window.addEventListener('scroll', () => {
+      const pct = window.scrollY / (document.body.scrollHeight - window.innerHeight) * 100;
+      document.getElementById('progress').style.width = pct + '%';
+    });
+
+    // ── Scroll observers ──
+    function observe() {
+      // Single observer with generous rootMargin — triggers 200px before viewport
+      const earlyOpts = { threshold: 0, rootMargin: '0px 0px 200px 0px' };
+      const nowOpts   = { threshold: 0, rootMargin: '0px 0px 0px 0px' };
+
+      function watch(el, fn, opts) {
+        if (!el) return;
+        const obs = new IntersectionObserver((entries) => {
+          entries.forEach(e => {
+            if (e.isIntersecting) { fn(e.target); obs.unobserve(e.target); }
+          });
+        }, opts || earlyOpts);
+        obs.observe(el);
+      }
+
+      // Text clip-reveals
+      ['introBig','p1Big','p2Big','p3Big','closingStatement'].forEach(id => {
+        watch(document.getElementById(id), t => t.classList.add('revealed'));
+      });
+
+      // Roadmap images
+      document.querySelectorAll('[data-rimg]').forEach((el, i) => {
+        watch(el, t => setTimeout(() => t.classList.add('revealed'), i * 120));
+      });
+
+      // ALL project images (standalone + grid wrappers)
+      document.querySelectorAll('.proj-img, [data-img]').forEach(el => {
+        watch(el, t => t.classList.add('revealed'));
+      });
+
+      // Timeline items
+      document.querySelectorAll('[data-tl]').forEach((el, i) => {
+        watch(el, t => setTimeout(() => t.classList.add('visible'), i * 100));
+      });
+
+      // Panelists
+      document.querySelectorAll('[data-pan]').forEach((el, i) => {
+        watch(el, t => setTimeout(() => t.classList.add('visible'), i * 90));
+      });
+
+      // Fade-ups (sections, headers, etc.)
+      document.querySelectorAll('.fade-up').forEach(el => {
+        watch(el, t => t.classList.add('visible'));
+      });
+
+      // Fallback: reveal everything visible in current viewport immediately,
+      // then reveal remaining content after a short delay
+      requestAnimationFrame(() => {
+        const vh = window.innerHeight;
+        document.querySelectorAll('.proj-img, [data-rimg], .fade-up, .reveal').forEach(el => {
+          const r = el.getBoundingClientRect();
+          if (r.top < vh + 400) {
+            el.classList.add('revealed');
+            el.classList.add('visible');
+          }
+        });
+      });
+      setTimeout(() => {
+        document.querySelectorAll('.proj-img:not(.revealed)').forEach(el => el.classList.add('revealed'));
+        document.querySelectorAll('[data-rimg]:not(.revealed)').forEach(el => el.classList.add('revealed'));
+        document.querySelectorAll('.fade-up:not(.visible)').forEach(el => el.classList.add('visible'));
+        document.querySelectorAll('.reveal:not(.revealed)').forEach(el => el.classList.add('revealed'));
+      }, 800);
+    }
+  </script>
+  <script>
+    // Tab switcher for project sections
+    document.querySelectorAll('.proj-tab-btn').forEach(btn => {
+      btn.addEventListener('click', () => {
+        const group = btn.closest('.proj-tab-group');
+        group.querySelectorAll('.proj-tab-btn').forEach(b => b.classList.remove('active'));
+        group.querySelectorAll('.proj-tab-panel').forEach(p => p.classList.remove('active'));
+        btn.classList.add('active');
+        group.querySelector(`.proj-tab-panel[data-tab="${btn.dataset.tab}"]`).classList.add('active');
+      });
+    });
+  </script>
+</body>
+</html>
