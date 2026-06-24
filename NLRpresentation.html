@@ -851,10 +851,6 @@
                 An interactive web atlas documenting the decline of Colombia&rsquo;s paramo ecosystems &mdash; the high-altitude wetlands that supply drinking water to <b>48 million people</b>, host over 500 endemic species, and represent more than <b>70% of the world&rsquo;s paramos</b>.<br><br>
                 The central argument: Colombia holds an ecosystem that is endemic at the landscape scale &mdash; not just in its species, but in the very conditions that allow it to exist.
               </div>
-              <div class="nlr-note">
-                <div class="nlr-note__label">Connection to reV &mdash; Galen Maclaurin</div>
-                <div class="nlr-note__text">Same composite-index problem reV solves: where does the signal say to act when each input has a different native resolution, projection, and provider?</div>
-              </div>
               <!-- Four data sources -->
               <div class="data-source-grid">
                 <div class="ds-cell">
@@ -1125,10 +1121,6 @@
                 Relies only on attributes <b>almost every utility already maintains</b>: age, material, diameter, pressure class, relining history. Not a one-off Seattle analysis.
                 <br><br>
                 Parameterized so weights are adjustable at runtime. Writes all component scores back to every feature. Helper function prevents re-adding fields on repeat runs.
-              </div>
-              <div class="nlr-note">
-                <div class="nlr-note__label">Connection to NLR</div>
-                <div class="nlr-note__text">Reusable, parameterized geospatial tooling &mdash; the kind your team builds constantly across different energy technologies and regions.</div>
               </div>
             </div>
             <div>
@@ -1428,10 +1420,6 @@ sorted_rl = <span class="cf">sorted</span>(
               All 21 evaluated sites ranked by combined confidence score. Sites with a <b>destroyed meter receive the highest priority</b> for crew dispatch.<br><br>
               The critical design decision: low-confidence predictions are <b>automatically surfaced for human review</b> rather than silently passed to the dispatch queue. Only ~20 ground-truth examples to train on &mdash; the tradeoff between automation and human review is the real engineering judgment in the pipeline.<br><br>
               This pattern &mdash; model assists, human decides &mdash; makes the tool deployable in crisis conditions where misclassification has real consequences.
-              <div class="nlr-note" style="margin-top:20px;">
-                <div class="nlr-note__label">Connection to NLR &mdash; Katy Schneider</div>
-                <div class="nlr-note__text">Binary classifiers on field photos = object-based image analysis. Same pattern-recognition challenge as rooftop PV detection from satellite imagery.</div>
-              </div>
               <div class="module-chips" style="margin-top:16px;">
                 <span class="chip">Destroyed: 10 &middot; CLASS 0</span>
                 <span class="chip">Damaged: 11 &middot; CLASS 1</span>
