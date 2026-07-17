@@ -68,6 +68,12 @@
     .tag-list { display: flex; flex-wrap: wrap; gap: 6px; margin-top: 4px; }
     .tag { font-family: var(--head-font); font-weight: 500; font-size: 10px; letter-spacing: 0.06em; text-transform: uppercase; padding: 3px 8px; border: 0.8px solid var(--border); color: var(--muted); }
     .tag.green { border-color: var(--teal); color: var(--teal); }
+    .award-block { background: #fffbee; border: 0.8px solid #e8c840; border-left: 3px solid #c9a82a; padding: 12px 14px; margin-top: 4px; }
+    .award-icon { font-size: 15px; color: #c9a82a; margin-bottom: 5px; line-height: 1; }
+    .award-title { font-family: var(--head-font); font-weight: 700; font-size: 11.5px; color: #1a1a1a; margin-bottom: 3px; line-height: 1.3; }
+    .award-org { font-size: 11px; color: var(--muted); margin-bottom: 7px; line-height: 1.4; font-family: var(--body-font); }
+    .award-link { font-family: var(--head-font) !important; font-weight: 700 !important; font-size: 10px !important; letter-spacing: 0.06em; text-transform: uppercase; color: #c9a82a !important; }
+    .award-link:hover { text-decoration: underline !important; }
 
     /* ── MAIN ── */
     .main-content { padding-left: 56px; }
@@ -246,6 +252,15 @@
       <div class="sidebar-label">Live Project</div>
       <div class="sidebar-value">
         <a href="https://amphibianexplorer.fyi/" target="_blank" rel="noopener">&rarr; Open Web Map</a>
+      </div>
+    </div>
+    <div class="sidebar-block">
+      <div class="sidebar-label">Award</div>
+      <div class="award-block">
+        <div class="award-icon">★</div>
+        <div class="award-title">Award | Interactive Web Map</div>
+        <div class="award-org">Esri UC 2026 — Virtual Map Gallery</div>
+        <a class="award-link" href="https://www.esri.com/en-us/about/events/uc/agenda/virtual-map-gallery#/event/69209f990d5f072ce16a7d51/submission-detail/42369" target="_blank" rel="noopener">View submission &rarr;</a>
       </div>
     </div>
   </aside>
