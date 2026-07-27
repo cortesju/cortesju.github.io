@@ -103,6 +103,10 @@
     /* ── LIVE MAP EMBED ── */
     .map-embed-full { width: 100%; height: 520px; border: 0.8px solid var(--border); margin: 28px 0; overflow: hidden; position: relative; }
     .map-embed-full iframe { width: 100%; height: 100%; border: none; display: block; }
+    .map-embed-full a.embed-preview { display: block; width: 100%; height: 100%; position: relative; }
+    .map-embed-full a.embed-preview img { width: 100%; height: 100%; object-fit: cover; display: block; }
+    .map-embed-full .embed-launch { position: absolute; top: 50%; left: 50%; transform: translate(-50%,-50%); background: rgba(13,26,18,0.88); color: var(--gold); font-family: var(--head-font); font-weight: 700; font-size: 11px; letter-spacing: 0.12em; text-transform: uppercase; padding: 12px 24px; border: 1px solid var(--gold); transition: background 0.2s; pointer-events: none; }
+    .map-embed-full a.embed-preview:hover .embed-launch { background: rgba(13,26,18,1); }
     .map-embed-label { position: absolute; top: 12px; left: 12px; background: rgba(13,26,18,0.85); color: var(--gold); font-family: var(--head-font); font-weight: 700; font-size: 10px; letter-spacing: 0.10em; text-transform: uppercase; padding: 5px 12px; z-index: 10; pointer-events: none; }
 
     /* ── MODULE CARDS ── */
@@ -294,7 +298,10 @@
     <p class="body-p">Embedded below — explore all six modules using the top navigation. Click any green páramo polygon to open its detail card, toggle environmental layers in Build a Páramo, filter species by threat status, and step through land-cover change from 1986 to 2024 in the Threats timeline.</p>
     <div class="map-embed-full">
       <div class="map-embed-label">&#9679; Live &mdash; vanishingclouds.xyz</div>
-      <iframe src="https://vanishingclouds.xyz/" title="Vanishing Clouds — Colombia's Páramo Crisis" allowfullscreen loading="lazy"></iframe>
+      <a class="embed-preview" href="https://vanishingclouds.xyz/" target="_blank" rel="noopener">
+        <img src="assets/P12/Screenshot 2026-05-12 110036.png" alt="Vanishing Clouds — Live Atlas Preview">
+        <div class="embed-launch">&#9654; Launch Interactive Atlas</div>
+      </a>
     </div>
 
     <!-- SIX MODULES -->
