@@ -98,6 +98,13 @@ ul.bul li::before{content:"";position:absolute;left:0;top:14px;width:20px;height
 .footnote{position:absolute;left:88px;right:88px;bottom:34px;font-size:23px;color:var(--muted)}
 .fn{color:var(--accent);font-size:.62em;vertical-align:super;font-weight:500}
 
+/* ---- video links to our own YouTube content ---- */
+.vidlink{position:absolute;right:88px;font-size:22px;line-height:1.3;text-align:right;
+  color:var(--accent);text-decoration:none;max-width:760px;font-weight:500}
+.vidlink:hover,.vidlink:focus{text-decoration:underline}
+.vidlink .play{display:inline-block;margin-right:7px;font-size:.9em}
+.dark .vidlink{color:#FF6A55}
+
 /* ---- US coverage map (slide 13) ---- */
 #mapWrap{background:var(--gray);border-radius:18px;padding:10px 14px}
 #usMap{display:block;width:100%;height:auto}
@@ -280,7 +287,7 @@ ul.bul li::before{content:"";position:absolute;left:0;top:14px;width:20px;height
           <h3 style="font-size:30px">TX2</h3>
           <div style="font-family:'Archivo';font-weight:600;font-size:26px;color:var(--blue);margin-left:auto"><span data-cfg="prices.TX2"></span></div>
         </div>
-        <p style="font-size:24px;margin-top:8px">Handheld all-in-one. L1/L2/L5, four constellations, RTK to 8 mm, tilt compensation, browser setup.</p>
+        <p style="font-size:24px;margin-top:8px">Handheld all-in-one. L1/L2/L5, four constellations, RTK to 8 mm, IP67, browser setup.</p>
       </div>
       <div class="card" style="flex:1;padding:22px 26px">
         <div class="row" style="gap:12px;align-items:baseline">
@@ -324,15 +331,18 @@ ul.bul li::before{content:"";position:absolute;left:0;top:14px;width:20px;height
         <div style="font-family:'Archivo';font-weight:600;font-size:40px;color:var(--blue);margin-top:18px">
           <span data-cfg="prices.TX2"></span>
         </div>
-        <div class="small" style="font-size:24px;margin-top:2px">One configuration. Tilt included.</div>
+        <div class="small" style="font-size:24px;margin-top:2px">One configuration.</div>
       </div>
 
       <div style="flex:1">
         <div class="kicker">The handheld</div>
         <div class="rule sm"></div>
         <h2>Meet the TX2.</h2>
-        <p class="lead" style="margin:20px 0 26px;max-width:700px">
+        <p class="lead" style="margin:20px 0 18px;max-width:700px">
           The fastest way to put centimeter accuracy in a field crew's hand.
+        </p>
+        <p style="font-size:24px;margin-bottom:22px;max-width:700px;color:var(--body)">
+          No tilt compensation on the TX2. If your crews need it, that is the FP line, next slide.
         </p>
 
         <div style="display:grid;grid-template-columns:1fr 1fr;gap:20px 34px">
@@ -350,7 +360,7 @@ ul.bul li::before{content:"";position:absolute;left:0;top:14px;width:20px;height
           </div>
           <div>
             <div class="small" style="font-size:24px">Also on board</div>
-            <div style="font-size:28px;color:var(--ink);margin-top:2px">Tilt compensation, IP67, 50 h battery</div>
+            <div style="font-size:28px;color:var(--ink);margin-top:2px">IP67, 50 h battery, 2 Hz NMEA</div>
           </div>
           <div>
             <div class="small" style="font-size:24px">Base and rover</div>
@@ -366,6 +376,7 @@ ul.bul li::before{content:"";position:absolute;left:0;top:14px;width:20px;height
   </div>
   <a class="srclink" style="top:108px" href="https://www.sparkpnt.com/products/sparkpnt-tx2" target="_blank" rel="noopener">sparkpnt.com/products/sparkpnt-tx2 <span class="arw">&#8599;</span></a>
   <a class="srclink" href="https://docs.sparkpnt.com/TX2/specifications" target="_blank" rel="noopener">docs.sparkpnt.com/TX2/specifications <span class="arw">&#8599;</span></a>
+  <a class="vidlink" style="top:140px" href="https://www.youtube.com/watch?v=wCRin2KEDT8" target="_blank" rel="noopener"><span class="play">&#9654;</span>How to Set Up the SparkPNT TX2 (Step-by-Step)</a>
 </section>
 
 <section class="slide" id="s5">
@@ -487,6 +498,7 @@ ul.bul li::before{content:"";position:absolute;left:0;top:14px;width:20px;height
     </div>
   </div>
   <a class="srclink" href="https://www.sparkpnt.com/products/sparkpnt-fp" target="_blank" rel="noopener">sparkpnt.com/products/sparkpnt-fp <span class="arw">&#8599;</span></a>
+  <a class="vidlink" style="top:108px" href="https://www.youtube.com/watch?v=pNqCndyTUV8" target="_blank" rel="noopener"><span class="play">&#9654;</span>Meet the Facet FP: The First User-Upgradable GNSS Receiver</a>
 </section>
 
 <section class="slide" id="s7">
@@ -926,6 +938,7 @@ ul.bul li::before{content:"";position:absolute;left:0;top:14px;width:20px;height
     </div>
   </div>
   <a class="srclink" href="https://docs.sparkpnt.com/TX2/correction_services" target="_blank" rel="noopener">docs.sparkpnt.com/TX2/correction_services <span class="arw">&#8599;</span></a>
+  <a class="vidlink" style="top:108px" href="https://www.youtube.com/watch?v=VxC6Cc3_qw0" target="_blank" rel="noopener"><span class="play">&#9654;</span>NTRIP Explained: How GNSS Receivers Get RTK Corrections</a>
 </section>
 
 <section class="slide" id="s14">
@@ -1065,8 +1078,9 @@ ul.bul li::before{content:"";position:absolute;left:0;top:14px;width:20px;height
    Prices below are the LIVE STORE prices, verified against
    sparkpnt.com on 20 Aug 2026.
 
-   The TX2 has ONE configuration: $1,250, tilt compensation built in.
-   There is no no-tilt TX2 to quote.
+   The TX2 has ONE configuration: $1,250. It has NO IMU and NO tilt
+   compensation - confirmed on the sparkpnt.com TX2 FAQ. Tilt is an
+   FP-line feature only.
 
    The FP line is sold with or without tilt (-T = tilt included).
    An FP body with no GNSS module is $1,500: that is the Flex
@@ -1077,7 +1091,7 @@ const CONFIG = {
   meetingDate: 'August 21, 2026',
 
   prices: {
-    TX2:   '$1,250',        // one configuration only - tilt is built in
+    TX2:   '$1,250',        // one configuration; no tilt option exists
 
     FPL_T: '$1,700',  FPL: '$1,550',
     FPX_T: '$1,800',  FPX: '$1,650',
@@ -1256,6 +1270,9 @@ fit();
   paint('status');
 })();
 
+// ?export=1 strips the on-screen chrome so the PDF and PowerPoint
+// renders carry no nav arrows, hint, counter or progress bar.
+if (/(^|[?&])export/.test(location.search)) document.body.classList.add('export');
 show(parseInt((location.hash || '#1').slice(1), 10) - 1 || 0);
 setTimeout(function () { hint.classList.add('hide'); }, 6000);
 </script>
