@@ -104,6 +104,20 @@ ul.bul li::before{content:"";position:absolute;left:0;top:14px;width:20px;height
 .footnote{position:absolute;left:88px;right:88px;bottom:34px;font-size:23px;color:var(--muted)}
 .fn{color:var(--accent);font-size:.62em;vertical-align:super;font-weight:500}
 
+/* ---- click-to-enlarge for the screen recordings ----
+   The video is scaled with a transform rather than re-parented, so the card it
+   sits in keeps its place in the layout and playback is never interrupted. */
+.vdim{position:absolute;inset:0;background:rgba(12,12,12,.82);opacity:0;pointer-events:none;
+  transition:opacity .28s ease;z-index:70}
+.vdim.on{opacity:1;pointer-events:auto;cursor:zoom-out}
+.slide video{cursor:zoom-in;transform-origin:50% 50%;
+  transition:transform .34s cubic-bezier(.3,1,.3,1),box-shadow .34s ease}
+.slide video.vzoom{position:relative;z-index:80;cursor:zoom-out;
+  box-shadow:0 26px 70px rgba(0,0,0,.55)}
+/* exports are static: never leave a video mid-zoom in a render */
+.export .slide video,.exportall .slide video{transform:none!important;box-shadow:none!important}
+@media print{.slide video{transform:none!important}.vdim{display:none!important}}
+
 /* ---- embedded video: plays on the web, becomes a link in PDF/PowerPoint ---- */
 .vidbox{position:relative;border-radius:14px;overflow:hidden;background:#000;
   box-shadow:0 6px 30px rgba(23,23,23,.16)}
@@ -1136,6 +1150,7 @@ function show(n) {
   i = Math.max(0, Math.min(slides.length - 1, n));
   slides.forEach(function (s, k) { s.classList.toggle('active', k === i); });
 
+  if (window.__closeVideoZoom) window.__closeVideoZoom();
   counter.textContent = (i + 1) + ' / ' + slides.length;
   progress.style.width = ((i + 1) / slides.length * 100) + '%';
   stage.classList.toggle('onDark', slides[i].classList.contains('dark'));
@@ -1174,7 +1189,7 @@ document.getElementById('nextBtn').addEventListener('click', function (e) {
 
 document.addEventListener('click', function (e) {
   // anything interactive handles its own click
-  if (e.target.closest('a,button,input,select,textarea,[data-interactive]')) return;
+  if (e.target.closest('a,button,input,select,textarea,video,[data-interactive]')) return;
   var w = window.innerWidth || document.documentElement.clientWidth;
   if (e.clientX <= w * EDGE)      { prev(); hint.classList.add('hide'); }
   else if (e.clientX >= w * (1 - EDGE)) { next(); hint.classList.add('hide'); }
@@ -1274,6 +1289,85 @@ fit();
 
 // ?export=1 strips the on-screen chrome so the PDF and PowerPoint
 // renders carry no nav arrows, hint, counter or progress bar.
+// ---- enlarge a screen recording while it plays -------------------------
+// Pressing play (or clicking the frame) floats the video to the middle of the
+// slide at about 4x. Clicking the dimmed backdrop, pressing Escape, or moving
+// slides puts it back. Everything is done with a transform so the card the
+// video lives in never moves and playback is never interrupted.
+(function () {
+  var vids = [].slice.call(document.querySelectorAll('.slide video'));
+  if (!vids.length) return;
+  var STAGE_W = 1600, STAGE_H = 900, MARGIN = 60;
+  var open = null, dim = null;
+
+  function backdropFor(slide) {
+    var d = slide.querySelector('.vdim');
+    if (!d) {
+      d = document.createElement('div');
+      d.className = 'vdim';
+      d.setAttribute('data-interactive', '');
+      d.addEventListener('click', function (e) { e.stopPropagation(); close(); });
+      slide.appendChild(d);
+    }
+    return d;
+  }
+
+  function zoom(v) {
+    var stage = document.getElementById('stage');
+    var sr = stage.getBoundingClientRect();
+    var k = sr.width / STAGE_W;                 // the stage is scaled to fit
+    var r = v.getBoundingClientRect();
+    var w = r.width / k, h = r.height / k;      // measure in stage units
+    if (!w || !h) return;
+    var scale = Math.min((STAGE_H - MARGIN * 2) / h, (STAGE_W - MARGIN * 2) / w);
+    if (scale < 1) scale = 1;
+    var cx = (r.left + r.width / 2 - sr.left) / k;
+    var cy = (r.top + r.height / 2 - sr.top) / k;
+    v.style.transform = 'translate(' + (STAGE_W / 2 - cx) + 'px,' +
+                                       (STAGE_H / 2 - cy) + 'px) scale(' + scale + ')';
+    v.classList.add('vzoom');
+    dim = backdropFor(v.closest('.slide'));
+    dim.classList.add('on');
+    open = v;
+  }
+
+  // Reset every video, not just the tracked one: handing over from one clip to
+  // another must never leave the first stranded at 2x behind the backdrop.
+  function close() {
+    vids.forEach(function (v) {
+      if (!v.classList.contains('vzoom') && !v.style.transform) return;
+      v.style.transform = '';
+      v.classList.remove('vzoom');
+      try { v.pause(); } catch (e) {}
+    });
+    [].forEach.call(document.querySelectorAll('.vdim.on'), function (d) { d.classList.remove('on'); });
+    open = null; dim = null;
+  }
+
+  vids.forEach(function (v) {
+    v.addEventListener('play', function () {
+      vids.forEach(function (o) { if (o !== v) { try { o.pause(); } catch (e) {} } });
+      if (open !== v) { close(); zoom(v); }
+    });
+    v.addEventListener('click', function (e) {
+      e.stopPropagation();
+      if (open === v) return;                   // let the native controls work
+      close();                                  // drop whatever was open first
+      zoom(v);
+      v.play().catch(function () {});
+    });
+    v.addEventListener('ended', close);
+  });
+
+  document.addEventListener('keydown', function (e) {
+    if (e.key === 'Escape' && open) { e.stopPropagation(); close(); }
+  }, true);
+
+  window.addEventListener('resize', function () { if (open) zoom(open); });
+  document.addEventListener('claude:slidechange', close);
+  window.__closeVideoZoom = close;
+})();
+
 if (/(^|[?&])exportall/.test(location.search)) {
   document.documentElement.classList.add('exportall');
   document.body.classList.add('exportall');
